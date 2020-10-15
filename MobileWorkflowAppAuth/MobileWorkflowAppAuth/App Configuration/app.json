@@ -1,0 +1,62 @@
+{
+    "id": 295,
+    "name": "Dashboard",
+    "appleSystemTintColor": "blue",
+    "systemTintColor": "blue",
+    "navigationStyle": "list",
+    "gatherAnalytics": false,
+    "workflows": [
+        {
+            "steps": [
+                {
+                    "optional": false,
+                    "_class": "MobileWorkflowPieChartStep",
+                    "identifier": "pie_chart",
+                    "title": "Pie Chart",
+                    "items": [
+                        {
+                            "label": "Apples",
+                            "value": "10",
+                            "id": "36b134d0-449e-4a8d-8bff-e915505412d0",
+                            "listItemId": 1
+                        },
+                        {
+                            "label": "Oranges",
+                            "value": "20",
+                            "id": "bc238b08-0c1c-4532-9dd9-3badd46f8f14",
+                            "listItemId": 2
+                        },
+                        {
+                            "label": "Bannanas",
+                            "value": "5",
+                            "id": "0306123c-5155-41fd-ba18-f00e428bd208",
+                            "listItemId": 3
+                        }
+                    ],
+                    "type": "chartsPieChart"
+                }
+            ],
+            "navigationRules": [
+                {
+                    "from": "pie_chart",
+                    "rules": [
+                        {
+                            "to": "ORKNullStepIdentifier"
+                        }
+                    ]
+                }
+            ],
+            "id": 590,
+            "identifier": "Pie Chart",
+            "name": "Pie Chart",
+            "sfSymbolName": "",
+            "materialIconName": ""
+        }
+    ],
+    "servers": [
+
+    ],
+    "locales": [
+
+    ]
+}

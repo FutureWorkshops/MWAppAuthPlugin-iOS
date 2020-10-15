@@ -5,6 +5,9 @@
       location = "group:MobileWorkflowAppAuth/MobileWorkflowAppAuth.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:MobileWorkflowAppAuthPlugin/MobileWorkflowAppAuthPlugin.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		30A6D940F0EA91BE266FF590 /* Pods_MobileWorkflowAppAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D509ABCB348F4427F622CBF7 /* Pods_MobileWorkflowAppAuth.framework */; };
+		0DD9796130E9F9598B2C582D /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C6D404F98D25E18ED373337 /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework */; };
+		36E88C7E2538957400BC6A98 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88C7D2538957400BC6A98 /* SceneDelegate.swift */; };
+		36E88C832538961800BC6A98 /* app.json in Resources */ = {isa = PBXBuildFile; fileRef = 36E88C822538961800BC6A98 /* app.json */; };
+		36E88CB825389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E88CB725389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework */; };
+		36E88CB925389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36E88CB725389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B75028B51C5A3F94000EB3CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75028B41C5A3F94000EB3CF /* AppDelegate.swift */; };
-		B75028B71C5A3F94000EB3CF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75028B61C5A3F94000EB3CF /* ViewController.swift */; };
-		B75028BA1C5A3F94000EB3CF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B75028B81C5A3F94000EB3CF /* Main.storyboard */; };
 		B75028BC1C5A3F94000EB3CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B75028BB1C5A3F94000EB3CF /* Assets.xcassets */; };
 		B75028BF1C5A3F94000EB3CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B75028BD1C5A3F94000EB3CF /* LaunchScreen.storyboard */; };
 		B75028CA1C5A3F94000EB3CF /* MobileWorkflowAppAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75028C91C5A3F94000EB3CF /* MobileWorkflowAppAuthTests.swift */; };
+		D0C8A0DE6F4FF7BB05991EC5 /* Pods_MobileWorkflowAppAuthTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77F44689EBD129369FE1F153 /* Pods_MobileWorkflowAppAuthTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,13 +29,33 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		36E88CBA25389B8700BC6A98 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				36E88CB925389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		174AF42DE0C39CB4BFEC1962 /* Pods-MWAppAuth-MobileWorkflowAppAuth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuth-MobileWorkflowAppAuth.debug.xcconfig"; path = "Target Support Files/Pods-MWAppAuth-MobileWorkflowAppAuth/Pods-MWAppAuth-MobileWorkflowAppAuth.debug.xcconfig"; sourceTree = "<group>"; };
+		1C6D404F98D25E18ED373337 /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MWAppAuth_MobileWorkflowAppAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36E88C7D2538957400BC6A98 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		36E88C822538961800BC6A98 /* app.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = app.json; sourceTree = "<group>"; };
+		36E88CB725389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MobileWorkflowAppAuthPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50E391EFCE536F205DAC6CDB /* Pods-MobileWorkflowAppAuth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWorkflowAppAuth.release.xcconfig"; path = "Target Support Files/Pods-MobileWorkflowAppAuth/Pods-MobileWorkflowAppAuth.release.xcconfig"; sourceTree = "<group>"; };
+		5262FE7CC49938EBA6CFC374 /* Pods-MobileWorkflowAppAuthTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWorkflowAppAuthTests.debug.xcconfig"; path = "Target Support Files/Pods-MobileWorkflowAppAuthTests/Pods-MobileWorkflowAppAuthTests.debug.xcconfig"; sourceTree = "<group>"; };
+		77F44689EBD129369FE1F153 /* Pods_MobileWorkflowAppAuthTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MobileWorkflowAppAuthTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78C0E9BB20BC315100255055 /* MobileWorkflowAppAuth.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MobileWorkflowAppAuth.entitlements; sourceTree = "<group>"; };
+		ABAE515FEACEADCEC85181C4 /* Pods-MWAppAuth-MobileWorkflowAppAuth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuth-MobileWorkflowAppAuth.release.xcconfig"; path = "Target Support Files/Pods-MWAppAuth-MobileWorkflowAppAuth/Pods-MWAppAuth-MobileWorkflowAppAuth.release.xcconfig"; sourceTree = "<group>"; };
 		B75028B11C5A3F94000EB3CF /* MobileWorkflowAppAuth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileWorkflowAppAuth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B75028B41C5A3F94000EB3CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B75028B61C5A3F94000EB3CF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		B75028B91C5A3F94000EB3CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B75028BB1C5A3F94000EB3CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B75028BE1C5A3F94000EB3CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B75028C01C5A3F94000EB3CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -40,8 +63,8 @@
 		B75028C91C5A3F94000EB3CF /* MobileWorkflowAppAuthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileWorkflowAppAuthTests.swift; sourceTree = "<group>"; };
 		B75028CB1C5A3F94000EB3CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B75028D71C5A4093000EB3CF /* fw-shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "fw-shared.xcconfig"; sourceTree = "<group>"; };
+		D193E6812A5E2140DB22B2D9 /* Pods-MobileWorkflowAppAuthTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWorkflowAppAuthTests.release.xcconfig"; path = "Target Support Files/Pods-MobileWorkflowAppAuthTests/Pods-MobileWorkflowAppAuthTests.release.xcconfig"; sourceTree = "<group>"; };
 		D4E0B2743FBBB8B56EA2A87E /* Pods-MobileWorkflowAppAuth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWorkflowAppAuth.debug.xcconfig"; path = "Target Support Files/Pods-MobileWorkflowAppAuth/Pods-MobileWorkflowAppAuth.debug.xcconfig"; sourceTree = "<group>"; };
-		D509ABCB348F4427F622CBF7 /* Pods_MobileWorkflowAppAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MobileWorkflowAppAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,7 +72,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30A6D940F0EA91BE266FF590 /* Pods_MobileWorkflowAppAuth.framework in Frameworks */,
+				36E88CB825389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Frameworks */,
+				0DD9796130E9F9598B2C582D /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,16 +81,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0C8A0DE6F4FF7BB05991EC5 /* Pods_MobileWorkflowAppAuthTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		36E88C812538961800BC6A98 /* App Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				36E88C822538961800BC6A98 /* app.json */,
+			);
+			path = "App Configuration";
+			sourceTree = "<group>";
+		};
 		36FEFF9055C06EFD5B721CC3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D509ABCB348F4427F622CBF7 /* Pods_MobileWorkflowAppAuth.framework */,
+				36E88CB725389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework */,
+				1C6D404F98D25E18ED373337 /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework */,
+				77F44689EBD129369FE1F153 /* Pods_MobileWorkflowAppAuthTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -76,6 +111,10 @@
 			children = (
 				D4E0B2743FBBB8B56EA2A87E /* Pods-MobileWorkflowAppAuth.debug.xcconfig */,
 				50E391EFCE536F205DAC6CDB /* Pods-MobileWorkflowAppAuth.release.xcconfig */,
+				174AF42DE0C39CB4BFEC1962 /* Pods-MWAppAuth-MobileWorkflowAppAuth.debug.xcconfig */,
+				ABAE515FEACEADCEC85181C4 /* Pods-MWAppAuth-MobileWorkflowAppAuth.release.xcconfig */,
+				5262FE7CC49938EBA6CFC374 /* Pods-MobileWorkflowAppAuthTests.debug.xcconfig */,
+				D193E6812A5E2140DB22B2D9 /* Pods-MobileWorkflowAppAuthTests.release.xcconfig */,
 			);
 			name = Pods;
 			path = ../Pods;
@@ -104,10 +143,11 @@
 		B75028B31C5A3F94000EB3CF /* MobileWorkflowAppAuth */ = {
 			isa = PBXGroup;
 			children = (
+				36E88C812538961800BC6A98 /* App Configuration */,
 				B75028D51C5A404A000EB3CF /* Resources */,
 				B75028D41C5A4045000EB3CF /* Supporting Files */,
 				B75028B41C5A3F94000EB3CF /* AppDelegate.swift */,
-				B75028B61C5A3F94000EB3CF /* ViewController.swift */,
+				36E88C7D2538957400BC6A98 /* SceneDelegate.swift */,
 			);
 			path = MobileWorkflowAppAuth;
 			sourceTree = "<group>";
@@ -136,7 +176,6 @@
 			children = (
 				B75028BB1C5A3F94000EB3CF /* Assets.xcassets */,
 				B75028BD1C5A3F94000EB3CF /* LaunchScreen.storyboard */,
-				B75028B81C5A3F94000EB3CF /* Main.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -160,6 +199,8 @@
 				B75028AD1C5A3F94000EB3CF /* Sources */,
 				B75028AE1C5A3F94000EB3CF /* Frameworks */,
 				B75028AF1C5A3F94000EB3CF /* Resources */,
+				36E88CBA25389B8700BC6A98 /* Embed Frameworks */,
+				231E327AAA9E83881F089BF0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -174,6 +215,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B75028D11C5A3F94000EB3CF /* Build configuration list for PBXNativeTarget "MobileWorkflowAppAuthTests" */;
 			buildPhases = (
+				778ED4A7D5095577889715CD /* [CP] Check Pods Manifest.lock */,
 				B75028C11C5A3F94000EB3CF /* Sources */,
 				B75028C21C5A3F94000EB3CF /* Frameworks */,
 				B75028C31C5A3F94000EB3CF /* Resources */,
@@ -200,6 +242,7 @@
 				TargetAttributes = {
 					B75028B01C5A3F94000EB3CF = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = BQHMJ2C6RL;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
@@ -242,7 +285,7 @@
 			files = (
 				B75028BF1C5A3F94000EB3CF /* LaunchScreen.storyboard in Resources */,
 				B75028BC1C5A3F94000EB3CF /* Assets.xcassets in Resources */,
-				B75028BA1C5A3F94000EB3CF /* Main.storyboard in Resources */,
+				36E88C832538961800BC6A98 /* app.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +299,50 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		231E327AAA9E83881F089BF0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MWAppAuth-MobileWorkflowAppAuth/Pods-MWAppAuth-MobileWorkflowAppAuth-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MobileWorkflowCore/MobileWorkflowCore.framework/MobileWorkflowCore",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ResearchKit/ResearchKit.framework/ResearchKit",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MobileWorkflowCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ResearchKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MWAppAuth-MobileWorkflowAppAuth/Pods-MWAppAuth-MobileWorkflowAppAuth-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		778ED4A7D5095577889715CD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MobileWorkflowAppAuthTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		B4DA82AABEB2D9BA10EDDDAE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -271,7 +358,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MobileWorkflowAppAuth-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MWAppAuth-MobileWorkflowAppAuth-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -285,8 +372,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B75028B71C5A3F94000EB3CF /* ViewController.swift in Sources */,
 				B75028B51C5A3F94000EB3CF /* AppDelegate.swift in Sources */,
+				36E88C7E2538957400BC6A98 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,15 +396,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B75028B81C5A3F94000EB3CF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B75028B91C5A3F94000EB3CF /* Base */,
-			);
-			name = Main.storyboard;
-			path = .;
-			sourceTree = "<group>";
-		};
 		B75028BD1C5A3F94000EB3CF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -436,40 +514,43 @@
 		};
 		B75028CF1C5A3F94000EB3CF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D4E0B2743FBBB8B56EA2A87E /* Pods-MobileWorkflowAppAuth.debug.xcconfig */;
+			baseConfigurationReference = 174AF42DE0C39CB4BFEC1962 /* Pods-MWAppAuth-MobileWorkflowAppAuth.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "MobileWorkflowAppAuth/Supporting Files/MobileWorkflowAppAuth.entitlements";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = BQHMJ2C6RL;
 				INFOPLIST_FILE = "MobileWorkflowAppAuth/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MobileWorkflowAppAuth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "FW-Ent-All-Development";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		B75028D01C5A3F94000EB3CF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50E391EFCE536F205DAC6CDB /* Pods-MobileWorkflowAppAuth.release.xcconfig */;
+			baseConfigurationReference = ABAE515FEACEADCEC85181C4 /* Pods-MWAppAuth-MobileWorkflowAppAuth.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "MobileWorkflowAppAuth/Supporting Files/MobileWorkflowAppAuth.entitlements";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = BQHMJ2C6RL;
 				INFOPLIST_FILE = "MobileWorkflowAppAuth/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MobileWorkflowAppAuth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "FW-Ent-All-Development";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 		B75028D21C5A3F94000EB3CF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5262FE7CC49938EBA6CFC374 /* Pods-MobileWorkflowAppAuthTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
@@ -486,6 +567,7 @@
 		};
 		B75028D31C5A3F94000EB3CF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D193E6812A5E2140DB22B2D9 /* Pods-MobileWorkflowAppAuthTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
