@@ -1,14 +1,14 @@
 //
-//  MobileWorkflowAppAuthPluginTests.swift
-//  MobileWorkflowAppAuthPluginTests
+//  MWAppAuthPluginTests.swift
+//  MWAppAuthPluginTests
 //
 //  Created by Jonathan Flintham on 15/10/2020.
 //
 
 import XCTest
-@testable import MobileWorkflowAppAuthPlugin
+@testable import MWAppAuthPlugin
 
-class MobileWorkflowAppAuthPluginTests: XCTestCase {
+class MWAppAuthPluginTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

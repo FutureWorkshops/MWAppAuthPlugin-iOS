@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		36E88C9A2538965600BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E88C902538965500BC6A98 /* MobileWorkflowAppAuthPlugin.framework */; };
-		36E88C9F2538965600BC6A98 /* MobileWorkflowAppAuthPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88C9E2538965600BC6A98 /* MobileWorkflowAppAuthPluginTests.swift */; };
-		36E88CA12538965600BC6A98 /* MobileWorkflowAppAuthPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 36E88C932538965500BC6A98 /* MobileWorkflowAppAuthPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		36E88CDF2538AA8B00BC6A98 /* MobileWorkflowAppAuthStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88CDD2538AA8B00BC6A98 /* MobileWorkflowAppAuthStep.swift */; };
-		36E88CE02538AA8B00BC6A98 /* MobileWorkflowAppAuthStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88CDE2538AA8B00BC6A98 /* MobileWorkflowAppAuthStepViewController.swift */; };
+		36C18355256E9D5D0044A74B /* MWAppAuthPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C18354256E9D5D0044A74B /* MWAppAuthPlugin.swift */; };
+		36E88C9A2538965600BC6A98 /* MWAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E88C902538965500BC6A98 /* MWAppAuthPlugin.framework */; };
+		36E88C9F2538965600BC6A98 /* MWAppAuthPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88C9E2538965600BC6A98 /* MWAppAuthPluginTests.swift */; };
+		36E88CA12538965600BC6A98 /* MWAppAuthPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 36E88C932538965500BC6A98 /* MWAppAuthPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36E88CDF2538AA8B00BC6A98 /* MWAppAuthStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88CDD2538AA8B00BC6A98 /* MWAppAuthStep.swift */; };
+		36E88CE02538AA8B00BC6A98 /* MWAppAuthStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88CDE2538AA8B00BC6A98 /* MWAppAuthStepViewController.swift */; };
 		4106502D40F9C4F52D7E71CB /* Pods_MWAppAuth_MobileWorkflowAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B5731913B66AE776137FADF /* Pods_MWAppAuth_MobileWorkflowAppAuthPlugin.framework */; };
 		4D6ED4450A1C8A76FEA20CE8 /* Pods_MobileWorkflowAppAuthPluginTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580A3E5ADD75083C67160DB0 /* Pods_MobileWorkflowAppAuthPluginTests.framework */; };
 /* End PBXBuildFile section */
@@ -29,14 +30,15 @@
 /* Begin PBXFileReference section */
 		0B5731913B66AE776137FADF /* Pods_MWAppAuth_MobileWorkflowAppAuthPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MWAppAuth_MobileWorkflowAppAuthPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F7349BC690012EC1F9F3F7E /* Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.debug.xcconfig"; path = "Target Support Files/Pods-MWAppAuth-MobileWorkflowAppAuthPlugin/Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.debug.xcconfig"; sourceTree = "<group>"; };
-		36E88C902538965500BC6A98 /* MobileWorkflowAppAuthPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MobileWorkflowAppAuthPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		36E88C932538965500BC6A98 /* MobileWorkflowAppAuthPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MobileWorkflowAppAuthPlugin.h; sourceTree = "<group>"; };
+		36C18354256E9D5D0044A74B /* MWAppAuthPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWAppAuthPlugin.swift; sourceTree = "<group>"; };
+		36E88C902538965500BC6A98 /* MWAppAuthPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MWAppAuthPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36E88C932538965500BC6A98 /* MWAppAuthPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MWAppAuthPlugin.h; sourceTree = "<group>"; };
 		36E88C942538965500BC6A98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		36E88C992538965600BC6A98 /* MobileWorkflowAppAuthPluginTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MobileWorkflowAppAuthPluginTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		36E88C9E2538965600BC6A98 /* MobileWorkflowAppAuthPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileWorkflowAppAuthPluginTests.swift; sourceTree = "<group>"; };
+		36E88C992538965600BC6A98 /* MWAppAuthPluginTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MWAppAuthPluginTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		36E88C9E2538965600BC6A98 /* MWAppAuthPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWAppAuthPluginTests.swift; sourceTree = "<group>"; };
 		36E88CA02538965600BC6A98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		36E88CDD2538AA8B00BC6A98 /* MobileWorkflowAppAuthStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileWorkflowAppAuthStep.swift; sourceTree = "<group>"; };
-		36E88CDE2538AA8B00BC6A98 /* MobileWorkflowAppAuthStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileWorkflowAppAuthStepViewController.swift; sourceTree = "<group>"; };
+		36E88CDD2538AA8B00BC6A98 /* MWAppAuthStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MWAppAuthStep.swift; sourceTree = "<group>"; };
+		36E88CDE2538AA8B00BC6A98 /* MWAppAuthStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MWAppAuthStepViewController.swift; sourceTree = "<group>"; };
 		580A3E5ADD75083C67160DB0 /* Pods_MobileWorkflowAppAuthPluginTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MobileWorkflowAppAuthPluginTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F7DF44E2882D3BFB8B3DF20 /* Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.release.xcconfig"; path = "Target Support Files/Pods-MWAppAuth-MobileWorkflowAppAuthPlugin/Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.release.xcconfig"; sourceTree = "<group>"; };
 		C86924D5A2ABD951D5AA7023 /* Pods-MobileWorkflowAppAuthPluginTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWorkflowAppAuthPluginTests.debug.xcconfig"; path = "Target Support Files/Pods-MobileWorkflowAppAuthPluginTests/Pods-MobileWorkflowAppAuthPluginTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -56,7 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36E88C9A2538965600BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Frameworks */,
+				36E88C9A2538965600BC6A98 /* MWAppAuthPlugin.framework in Frameworks */,
 				4D6ED4450A1C8A76FEA20CE8 /* Pods_MobileWorkflowAppAuthPluginTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,8 +69,8 @@
 		36E88C862538965500BC6A98 = {
 			isa = PBXGroup;
 			children = (
-				36E88C922538965500BC6A98 /* MobileWorkflowAppAuthPlugin */,
-				36E88C9D2538965600BC6A98 /* MobileWorkflowAppAuthPluginTests */,
+				36E88C922538965500BC6A98 /* MWAppAuthPlugin */,
+				36E88C9D2538965600BC6A98 /* MWAppAuthPluginTests */,
 				36E88C912538965500BC6A98 /* Products */,
 				673B4C069F651BDCA7421FF3 /* Pods */,
 				D78D4C5CFC0BC9A66FD2EE79 /* Frameworks */,
@@ -78,36 +80,37 @@
 		36E88C912538965500BC6A98 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				36E88C902538965500BC6A98 /* MobileWorkflowAppAuthPlugin.framework */,
-				36E88C992538965600BC6A98 /* MobileWorkflowAppAuthPluginTests.xctest */,
+				36E88C902538965500BC6A98 /* MWAppAuthPlugin.framework */,
+				36E88C992538965600BC6A98 /* MWAppAuthPluginTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		36E88C922538965500BC6A98 /* MobileWorkflowAppAuthPlugin */ = {
+		36E88C922538965500BC6A98 /* MWAppAuthPlugin */ = {
 			isa = PBXGroup;
 			children = (
 				36E88CDC2538AA7200BC6A98 /* AppAuthStep */,
-				36E88C932538965500BC6A98 /* MobileWorkflowAppAuthPlugin.h */,
+				36E88C932538965500BC6A98 /* MWAppAuthPlugin.h */,
 				36E88C942538965500BC6A98 /* Info.plist */,
 			);
-			path = MobileWorkflowAppAuthPlugin;
+			path = MWAppAuthPlugin;
 			sourceTree = "<group>";
 		};
-		36E88C9D2538965600BC6A98 /* MobileWorkflowAppAuthPluginTests */ = {
+		36E88C9D2538965600BC6A98 /* MWAppAuthPluginTests */ = {
 			isa = PBXGroup;
 			children = (
-				36E88C9E2538965600BC6A98 /* MobileWorkflowAppAuthPluginTests.swift */,
+				36E88C9E2538965600BC6A98 /* MWAppAuthPluginTests.swift */,
 				36E88CA02538965600BC6A98 /* Info.plist */,
 			);
-			path = MobileWorkflowAppAuthPluginTests;
+			path = MWAppAuthPluginTests;
 			sourceTree = "<group>";
 		};
 		36E88CDC2538AA7200BC6A98 /* AppAuthStep */ = {
 			isa = PBXGroup;
 			children = (
-				36E88CDD2538AA8B00BC6A98 /* MobileWorkflowAppAuthStep.swift */,
-				36E88CDE2538AA8B00BC6A98 /* MobileWorkflowAppAuthStepViewController.swift */,
+				36C18354256E9D5D0044A74B /* MWAppAuthPlugin.swift */,
+				36E88CDD2538AA8B00BC6A98 /* MWAppAuthStep.swift */,
+				36E88CDE2538AA8B00BC6A98 /* MWAppAuthStepViewController.swift */,
 			);
 			path = AppAuthStep;
 			sourceTree = "<group>";
@@ -140,16 +143,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36E88CA12538965600BC6A98 /* MobileWorkflowAppAuthPlugin.h in Headers */,
+				36E88CA12538965600BC6A98 /* MWAppAuthPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		36E88C8F2538965500BC6A98 /* MobileWorkflowAppAuthPlugin */ = {
+		36E88C8F2538965500BC6A98 /* MWAppAuthPlugin */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 36E88CA42538965600BC6A98 /* Build configuration list for PBXNativeTarget "MobileWorkflowAppAuthPlugin" */;
+			buildConfigurationList = 36E88CA42538965600BC6A98 /* Build configuration list for PBXNativeTarget "MWAppAuthPlugin" */;
 			buildPhases = (
 				8EB550DB349CB94767510916 /* [CP] Check Pods Manifest.lock */,
 				36E88C8B2538965500BC6A98 /* Headers */,
@@ -161,14 +164,14 @@
 			);
 			dependencies = (
 			);
-			name = MobileWorkflowAppAuthPlugin;
+			name = MWAppAuthPlugin;
 			productName = MobileWorkflowAppAuthPlugin;
-			productReference = 36E88C902538965500BC6A98 /* MobileWorkflowAppAuthPlugin.framework */;
+			productReference = 36E88C902538965500BC6A98 /* MWAppAuthPlugin.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		36E88C982538965600BC6A98 /* MobileWorkflowAppAuthPluginTests */ = {
+		36E88C982538965600BC6A98 /* MWAppAuthPluginTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 36E88CA72538965600BC6A98 /* Build configuration list for PBXNativeTarget "MobileWorkflowAppAuthPluginTests" */;
+			buildConfigurationList = 36E88CA72538965600BC6A98 /* Build configuration list for PBXNativeTarget "MWAppAuthPluginTests" */;
 			buildPhases = (
 				9ADF71A1CFBE6F50DFB30B45 /* [CP] Check Pods Manifest.lock */,
 				36E88C952538965600BC6A98 /* Sources */,
@@ -180,9 +183,9 @@
 			dependencies = (
 				36E88C9C2538965600BC6A98 /* PBXTargetDependency */,
 			);
-			name = MobileWorkflowAppAuthPluginTests;
+			name = MWAppAuthPluginTests;
 			productName = MobileWorkflowAppAuthPluginTests;
-			productReference = 36E88C992538965600BC6A98 /* MobileWorkflowAppAuthPluginTests.xctest */;
+			productReference = 36E88C992538965600BC6A98 /* MWAppAuthPluginTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -203,7 +206,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 36E88C8A2538965500BC6A98 /* Build configuration list for PBXProject "MobileWorkflowAppAuthPlugin" */;
+			buildConfigurationList = 36E88C8A2538965500BC6A98 /* Build configuration list for PBXProject "MWAppAuthPlugin" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -216,8 +219,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				36E88C8F2538965500BC6A98 /* MobileWorkflowAppAuthPlugin */,
-				36E88C982538965600BC6A98 /* MobileWorkflowAppAuthPluginTests */,
+				36E88C8F2538965500BC6A98 /* MWAppAuthPlugin */,
+				36E88C982538965600BC6A98 /* MWAppAuthPluginTests */,
 			);
 		};
 /* End PBXProject section */
@@ -291,8 +294,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36E88CE02538AA8B00BC6A98 /* MobileWorkflowAppAuthStepViewController.swift in Sources */,
-				36E88CDF2538AA8B00BC6A98 /* MobileWorkflowAppAuthStep.swift in Sources */,
+				36E88CE02538AA8B00BC6A98 /* MWAppAuthStepViewController.swift in Sources */,
+				36C18355256E9D5D0044A74B /* MWAppAuthPlugin.swift in Sources */,
+				36E88CDF2538AA8B00BC6A98 /* MWAppAuthStep.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,7 +304,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36E88C9F2538965600BC6A98 /* MobileWorkflowAppAuthPluginTests.swift in Sources */,
+				36E88C9F2538965600BC6A98 /* MWAppAuthPluginTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,7 +313,7 @@
 /* Begin PBXTargetDependency section */
 		36E88C9C2538965600BC6A98 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 36E88C8F2538965500BC6A98 /* MobileWorkflowAppAuthPlugin */;
+			target = 36E88C8F2538965500BC6A98 /* MWAppAuthPlugin */;
 			targetProxy = 36E88C9B2538965600BC6A98 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -367,7 +371,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -425,7 +429,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -448,14 +452,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MobileWorkflowAppAuthPlugin/Info.plist;
+				INFOPLIST_FILE = MWAppAuthPlugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MobileWorkflowAppAuthPlugin;
+				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MWAppAuthPlugin;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -475,14 +479,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MobileWorkflowAppAuthPlugin/Info.plist;
+				INFOPLIST_FILE = MWAppAuthPlugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MobileWorkflowAppAuthPlugin;
+				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MWAppAuthPlugin;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -497,13 +501,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = BQHMJ2C6RL;
-				INFOPLIST_FILE = MobileWorkflowAppAuthPluginTests/Info.plist;
+				INFOPLIST_FILE = MWAppAuthPluginTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MobileWorkflowAppAuthPluginTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MWAppAuthPluginTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -517,13 +521,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = BQHMJ2C6RL;
-				INFOPLIST_FILE = MobileWorkflowAppAuthPluginTests/Info.plist;
+				INFOPLIST_FILE = MWAppAuthPluginTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MobileWorkflowAppAuthPluginTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MWAppAuthPluginTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -533,7 +537,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		36E88C8A2538965500BC6A98 /* Build configuration list for PBXProject "MobileWorkflowAppAuthPlugin" */ = {
+		36E88C8A2538965500BC6A98 /* Build configuration list for PBXProject "MWAppAuthPlugin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				36E88CA22538965600BC6A98 /* Debug */,
@@ -542,7 +546,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		36E88CA42538965600BC6A98 /* Build configuration list for PBXNativeTarget "MobileWorkflowAppAuthPlugin" */ = {
+		36E88CA42538965600BC6A98 /* Build configuration list for PBXNativeTarget "MWAppAuthPlugin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				36E88CA52538965600BC6A98 /* Debug */,
@@ -551,7 +555,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		36E88CA72538965600BC6A98 /* Build configuration list for PBXNativeTarget "MobileWorkflowAppAuthPluginTests" */ = {
+		36E88CA72538965600BC6A98 /* Build configuration list for PBXNativeTarget "MWAppAuthPluginTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				36E88CA82538965600BC6A98 /* Debug */,

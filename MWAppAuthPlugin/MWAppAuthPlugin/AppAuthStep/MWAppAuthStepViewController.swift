@@ -1,5 +1,5 @@
 //
-//  MobileWorkflowAppAuthStepViewController.swift
+//  MWAppAuthStepViewController.swift
 //  MobileWorkflow
 //
 //  Created by Igor Ferreira on 19/05/2020.
@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import ResearchKit
 import MobileWorkflowCore
 import AppAuth
 
@@ -20,11 +19,11 @@ enum OAuthPaths {
     static let token = "/token"
 }
 
-class MobileWorkflowAppAuthStepViewController: MobileWorkflowButtonViewController {
+class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
     
     //MARK: - Support variables
-    var appAuthStep: MobileWorkflowAppAuthStep! {
-        return self.step as? MobileWorkflowAppAuthStep
+    var appAuthStep: MWAppAuthStep! {
+        return self.step as? MWAppAuthStep
     }
     
     var networkManager: NetworkManager {
@@ -38,8 +37,14 @@ class MobileWorkflowAppAuthStepViewController: MobileWorkflowButtonViewControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // configureWithTitle
+
+        self.configureWithTitle(
+            self.appAuthStep.title ?? "",
+            body: self.appAuthStep.text ?? "",
+            buttonTitle: self.appAuthStep.buttonTitle) { [weak self] in
+            self?.showLoading()
+            self?.login()
+        }
     }
 
     @objc func login() {
@@ -82,11 +87,14 @@ class MobileWorkflowAppAuthStepViewController: MobileWorkflowButtonViewControlle
         }
         
         step.networkManager.authenticateWithProvider(authProvider) { [weak self] response in
-            switch response {
-            case .success:
-                self?.goForward()
-            case .failure(let error):
-                self?.show(error)
+            DispatchQueue.main.async {
+                self?.hideLoading()
+                switch response {
+                case .success:
+                    self?.goForward()
+                case .failure(let error):
+                    self?.show(error)
+                }
             }
         }
     }

@@ -1,7 +1,6 @@
 {
-    "id": 295,
-    "name": "Dashboard",
-    "appleSystemTintColor": "blue",
+    "id": 208,
+    "name": "OAuth2Test",
     "systemTintColor": "blue",
     "navigationStyle": "list",
     "gatherAnalytics": false,
@@ -10,35 +9,38 @@
             "steps": [
                 {
                     "optional": false,
-                    "_class": "MobileWorkflowPieChartStep",
-                    "identifier": "pie_chart",
-                    "title": "Pie Chart",
-                    "items": [
-                        {
-                            "label": "Apples",
-                            "value": "10",
-                            "id": "36b134d0-449e-4a8d-8bff-e915505412d0",
-                            "listItemId": 1
-                        },
-                        {
-                            "label": "Oranges",
-                            "value": "20",
-                            "id": "bc238b08-0c1c-4532-9dd9-3badd46f8f14",
-                            "listItemId": 2
-                        },
-                        {
-                            "label": "Bannanas",
-                            "value": "5",
-                            "id": "0306123c-5155-41fd-ba18-f00e428bd208",
-                            "listItemId": 3
-                        }
-                    ],
-                    "type": "chartsPieChart"
+                    "_class": "ORKInstructionStep",
+                    "identifier": "welcome",
+                    "title": "Welcome",
+                    "imageContentMode": 2,
+                    "uuid": "d762509f-320e-4475-8394-505472dc76c6",
+                    "type": "instructions"
+                },
+                {
+                    "optional": false,
+                    "_class": "MobileWorkflowOAuth2Step",
+                    "identifier": "login",
+                    "title": "Login",
+                    "text": "Please tap on the button below to login",
+                    "oAuth2Url": "https://mw-aramco-2.herokuapp.com/oauth",
+                    "oAuth2ClientId": "wXsD6dZ9VxxXToVGJe1A5UsEuTxj4FrJv08U_07i_PM",
+                    "oAuth2ClientSecret": "mGBDVyc8XMBK8I8rdtd7LuSBKGg6Re3-8cjRb4hQuWY",
+                    "oAuth2Scope": "public",
+                    "uuid": "0cc769d3-c04f-4f47-9b6f-d00e02434114",
+                    "type": "networkOAuth2"
                 }
             ],
             "navigationRules": [
                 {
-                    "from": "pie_chart",
+                    "from": "welcome",
+                    "rules": [
+                        {
+                            "to": "login"
+                        }
+                    ]
+                },
+                {
+                    "from": "login",
                     "rules": [
                         {
                             "to": "ORKNullStepIdentifier"
@@ -46,17 +48,21 @@
                     ]
                 }
             ],
-            "id": 590,
-            "identifier": "Pie Chart",
-            "name": "Pie Chart",
-            "sfSymbolName": "",
-            "materialIconName": ""
+            "id": 338,
+            "identifier": "Welcome",
+            "name": "Welcome",
+            "sfSymbolName": "person",
+            "materialIconName": "person"
         }
     ],
     "servers": [
-
+        {
+            "id": 88,
+            "url": "https://mobile-workflow-mock-upload.herokuapp.com/"
+        }
     ],
     "locales": [
 
-    ]
+    ],
+    "navigationWorkflow1Id": 338
 }

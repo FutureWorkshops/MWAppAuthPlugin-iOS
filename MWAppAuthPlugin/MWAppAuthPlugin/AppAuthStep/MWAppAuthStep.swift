@@ -1,5 +1,5 @@
 //
-//  MobileWorkflowAppAuthStep.swift
+//  MWAppAuthStep.swift
 //  MobileWorkflow
 //
 //  Created by Igor Ferreira on 14/05/2020.
@@ -8,7 +8,6 @@
 
 import Foundation
 import MobileWorkflowCore
-import ResearchKit
 
 enum L10n {
     enum AppAuth {
@@ -27,7 +26,7 @@ public enum ParseError: LocalizedError, CustomStringConvertible {
     }
     
     public var domain: String {
-        return "MobileWorkflow.MobileWorkflowAppAuthStep"
+        return "MobileWorkflow.MWAppAuthStep"
     }
     
     public var errorDescription: String? {
@@ -42,7 +41,7 @@ public enum ParseError: LocalizedError, CustomStringConvertible {
     }
 }
 
-class MobileWorkflowAppAuthStep: ORKStep {
+class MWAppAuthStep: ORKStep {
     
     let url: String
     let clientId: String
@@ -68,11 +67,11 @@ class MobileWorkflowAppAuthStep: ORKStep {
     }
     
     override func stepViewControllerClass() -> AnyClass {
-        return MobileWorkflowAppAuthStepViewController.self
+        return MWAppAuthStepViewController.self
     }
 }
 
-extension MobileWorkflowAppAuthStep: MobileWorkflowStep {
+extension MWAppAuthStep: MobileWorkflowStep {
 
     static func build(data: StepData, context: StepContext, networkManager: NetworkManager, imageLoader: ImageLoader, localizationManager: Localization) throws -> ORKStep {
         
@@ -102,14 +101,16 @@ extension MobileWorkflowAppAuthStep: MobileWorkflowStep {
 
         let buttonTitle = localizationManager.translate(data.content["buttonTitle"] as? String) ?? L10n.AppAuth.loginTitle
 
-        return MobileWorkflowAppAuthStep(identifier: data.identifier,
-                                        title: localizationManager.translate(title),
-                                        text: localizationManager.translate(text),
-                                        buttonTitle: buttonTitle,
-                                        url: url,
-                                        clientId: clientId,
-                                        clientSecret: clientSecret,
-                                        scope: scope,
-                                        networkManager: networkManager)
+        return MWAppAuthStep(
+            identifier: data.identifier,
+            title: localizationManager.translate(title) ?? title,
+            text: localizationManager.translate(text) ?? text,
+            buttonTitle: buttonTitle,
+            url: url,
+            clientId: clientId,
+            clientSecret: clientSecret,
+            scope: scope,
+            networkManager: networkManager
+        )
     }
 }

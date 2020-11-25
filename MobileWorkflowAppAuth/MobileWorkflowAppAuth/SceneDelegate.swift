@@ -16,13 +16,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     var window: UIWindow?
+    private var urlSchemeManagers: [URLSchemeManager] = []
     private var rootViewController: MobileWorkflowRootViewController!
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
         
         let manager = AppConfigurationManager(
-            withAdditionalSteps: [],
+            withPlugins: [],
+            fileManager: .default,
             authRedirectHandler: session.userInfo?[SessionUserInfoKey.authRedirectHandler] as? AuthRedirectHandler
         )
         let preferredConfigurations = self.preferredConfigurations(urlContexts: connectionOptions.urlContexts)
@@ -35,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        guard let context = AppConfigurationContext(from: URLContexts) else { return }
+        guard let context = self.urlSchemeManagers.firstValidConfiguration(from: URLContexts) else { return }
         self.rootViewController.loadAppConfiguration(context)
     }
 }
@@ -47,7 +49,7 @@ extension SceneDelegate {
         var preferredConfigurations = [AppConfigurationContext]()
         
         if let samplePath = Bundle.main.path(forResource: "app", ofType: "json") {
-            preferredConfigurations.append(AppConfigurationContext(with: samplePath, serverId: nil))
+            preferredConfigurations.append(.file(path: samplePath, serverId: nil, workflowId: nil, sessionValues: nil))
         }
         
         return preferredConfigurations
