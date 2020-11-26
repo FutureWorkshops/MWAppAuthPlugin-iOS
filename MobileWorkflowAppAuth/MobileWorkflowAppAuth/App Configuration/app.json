@@ -1,6 +1,6 @@
 {
-    "id": 208,
-    "name": "OAuth2Test",
+    "id": 249,
+    "name": "Health Check",
     "systemTintColor": "blue",
     "navigationStyle": "list",
     "gatherAnalytics": false,
@@ -9,36 +9,48 @@
             "steps": [
                 {
                     "optional": false,
-                    "_class": "ORKInstructionStep",
-                    "identifier": "welcome",
-                    "title": "Welcome",
-                    "imageContentMode": 2,
-                    "uuid": "d762509f-320e-4475-8394-505472dc76c6",
-                    "type": "instructions"
-                },
+                    "_class": "MobileWorkflowNetworkDisplayStep",
+                    "identifier": "current_user",
+                    "title": "Current User",
+                    "url": "/users/current",
+                    "uuid": "0dea5294-b253-46f1-b4bc-a61ccbd2bf1f",
+                    "type": "networkDisplay"
+                }
+            ],
+            "navigationRules": [
+                {
+                    "from": "current_user",
+                    "rules": [
+                        {
+                            "to": "ORKNullStepIdentifier"
+                        }
+                    ]
+                }
+            ],
+            "id": 517,
+            "identifier": "Login - Current User",
+            "name": "Login - Current User",
+            "sfSymbolName": "",
+            "materialIconName": ""
+        },
+        {
+            "steps": [
                 {
                     "optional": false,
                     "_class": "MobileWorkflowOAuth2Step",
                     "identifier": "login",
                     "title": "Login",
-                    "text": "Please tap on the button below to login",
-                    "oAuth2Url": "https://mw-aramco-2.herokuapp.com/oauth",
-                    "oAuth2ClientId": "wXsD6dZ9VxxXToVGJe1A5UsEuTxj4FrJv08U_07i_PM",
-                    "oAuth2ClientSecret": "mGBDVyc8XMBK8I8rdtd7LuSBKGg6Re3-8cjRb4hQuWY",
+                    "text": "Login with Doorkeeper",
+                    "oAuth2Url": "https://mw-health-check.herokuapp.com/oauth",
+                    "oAuth2ClientId": "K6rCtOXPFQLa5XTL8DCqAPa24atiX5o1N6PVCpqrGA0",
+                    "oAuth2ClientSecret": "1mMg3L1hcYvysKGXf7Cnp8W5UHdosow7Q2W1ar94zw4",
                     "oAuth2Scope": "public",
-                    "uuid": "0cc769d3-c04f-4f47-9b6f-d00e02434114",
+                    "oAuth2RedirectScheme": "mww",
+                    "uuid": "16da25e8-0875-47e2-af3a-e539bc8c722b",
                     "type": "networkOAuth2"
                 }
             ],
             "navigationRules": [
-                {
-                    "from": "welcome",
-                    "rules": [
-                        {
-                            "to": "login"
-                        }
-                    ]
-                },
                 {
                     "from": "login",
                     "rules": [
@@ -48,21 +60,195 @@
                     ]
                 }
             ],
-            "id": 338,
-            "identifier": "Welcome",
-            "name": "Welcome",
-            "sfSymbolName": "person",
-            "materialIconName": "person"
+            "id": 519,
+            "identifier": "Login - Doorkeeper",
+            "name": "Login - Doorkeeper",
+            "sfSymbolName": "",
+            "materialIconName": ""
+        },
+        {
+            "steps": [
+                {
+                    "optional": false,
+                    "_class": "MobileWorkflowOAuth2Step",
+                    "identifier": "login",
+                    "title": "Login",
+                    "text": "Login with Okta",
+                    "oAuth2Url": "https://dev-379980.okta.com/oauth2/v1",
+                    "oAuth2ClientId": "0oa5lydq53ISN9O9A357",
+                    "oAuth2Scope": "openid",
+                    "oAuth2RedirectScheme": "mww",
+                    "uuid": "d36748f1-45e8-4917-b93b-3645294699fc",
+                    "type": "networkOAuth2"
+                }
+            ],
+            "navigationRules": [
+                {
+                    "from": "login",
+                    "rules": [
+                        {
+                            "to": "ORKNullStepIdentifier"
+                        }
+                    ]
+                }
+            ],
+            "id": 518,
+            "identifier": "Login - OAuth (Okta)",
+            "name": "Login - OAuth (Okta)",
+            "sfSymbolName": "",
+            "materialIconName": ""
+        },
+        {
+            "steps": [
+                {
+                    "optional": false,
+                    "_class": "MobileWorkflowDocumentCaptureStep",
+                    "identifier": "document",
+                    "title": "Document",
+                    "uuid": "3b2c2cbb-2659-4822-a16b-00be3866888d",
+                    "type": "documentCapture"
+                },
+                {
+                    "optional": false,
+                    "_class": "MobileWorkflowNetworkStep",
+                    "identifier": "uploading",
+                    "title": "Uploading",
+                    "url": "/documents",
+                    "requestPropertyIdentifiers": [
+                        "document.pdf"
+                    ],
+                    "uuid": "3b055fb5-d56c-4e83-a5a7-cfcd7b9054b3",
+                    "type": "network"
+                }
+            ],
+            "navigationRules": [
+                {
+                    "from": "document",
+                    "rules": [
+                        {
+                            "to": "uploading"
+                        }
+                    ]
+                },
+                {
+                    "from": "uploading",
+                    "rules": [
+                        {
+                            "to": "ORKNullStepIdentifier"
+                        }
+                    ]
+                }
+            ],
+            "id": 474,
+            "identifier": "Upload Document",
+            "name": "Upload Document",
+            "sfSymbolName": "",
+            "materialIconName": ""
+        },
+        {
+            "steps": [
+                {
+                    "optional": false,
+                    "_class": "ORKImageCaptureStep",
+                    "identifier": "image",
+                    "title": "Image",
+                    "devicePosition": 1,
+                    "uuid": "5c70bc8a-3e27-482b-9ffa-0cdac14226b1",
+                    "type": "imageCapture"
+                },
+                {
+                    "optional": false,
+                    "_class": "MobileWorkflowNetworkStep",
+                    "identifier": "uploading",
+                    "title": "Uploading",
+                    "url": "/back_images",
+                    "requestPropertyIdentifiers": [
+                        "image.jpg"
+                    ],
+                    "uuid": "873d4fd0-fe62-4813-9023-a1e19dc820f6",
+                    "type": "network"
+                }
+            ],
+            "navigationRules": [
+                {
+                    "from": "image",
+                    "rules": [
+                        {
+                            "to": "uploading"
+                        }
+                    ]
+                },
+                {
+                    "from": "uploading",
+                    "rules": [
+                        {
+                            "to": "ORKNullStepIdentifier"
+                        }
+                    ]
+                }
+            ],
+            "id": 472,
+            "identifier": "Upload Image (Back)",
+            "name": "Upload Image (Back)",
+            "sfSymbolName": "",
+            "materialIconName": ""
+        },
+        {
+            "steps": [
+                {
+                    "optional": false,
+                    "_class": "ORKImageCaptureStep",
+                    "identifier": "image",
+                    "title": "Image",
+                    "devicePosition": 2,
+                    "uuid": "a91ee13b-83c9-4515-b862-caad86e7efcd",
+                    "type": "imageCapture"
+                },
+                {
+                    "optional": false,
+                    "_class": "MobileWorkflowNetworkStep",
+                    "identifier": "uploading",
+                    "title": "Uploading",
+                    "url": "/front_images",
+                    "requestPropertyIdentifiers": [
+                        "image.jpg"
+                    ],
+                    "uuid": "18c45f17-8027-46d1-9e17-154403eb447b",
+                    "type": "network"
+                }
+            ],
+            "navigationRules": [
+                {
+                    "from": "image",
+                    "rules": [
+                        {
+                            "to": "uploading"
+                        }
+                    ]
+                },
+                {
+                    "from": "uploading",
+                    "rules": [
+                        {
+                            "to": "ORKNullStepIdentifier"
+                        }
+                    ]
+                }
+            ],
+            "id": 473,
+            "identifier": "Upload Image (Front)",
+            "name": "Upload Image (Front)",
+            "sfSymbolName": "",
+            "materialIconName": ""
         }
     ],
     "servers": [
         {
-            "id": 88,
-            "url": "https://mobile-workflow-mock-upload.herokuapp.com/"
+            "id": 125,
+            "url": "https://mw-health-check.herokuapp.com"
         }
     ],
     "locales": [
 
-    ],
-    "navigationWorkflow1Id": 338
+    ]
 }
