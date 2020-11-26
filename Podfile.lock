@@ -1,3 +1,27 @@
-PODFILE CHECKSUM: 1b730b328215115ba003e67af254268688ebb149
+PODS:
+  - AppAuth (1.4.0):
+    - AppAuth/Core (= 1.4.0)
+    - AppAuth/ExternalUserAgent (= 1.4.0)
+  - AppAuth/Core (1.4.0)
+  - AppAuth/ExternalUserAgent (1.4.0)
+  - MobileWorkflow (0.0.41):
+    - MobileWorkflow/Core (= 0.0.41)
+  - MobileWorkflow/Core (0.0.41)
 
-COCOAPODS: 1.9.3
+DEPENDENCIES:
+  - AppAuth
+  - MobileWorkflow
+
+SPEC REPOS:
+  https://github.com/FutureWorkshops/FWTPodspecs.git:
+    - MobileWorkflow
+  trunk:
+    - AppAuth
+
+SPEC CHECKSUMS:
+  AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  MobileWorkflow: ff4d5a07cf5851b4d6916da9d7d1a43b9d3040ed
+
+PODFILE CHECKSUM: e6de3cb3dcd740b0b49189056f882e1a844299e5
+
+COCOAPODS: 1.10.0
