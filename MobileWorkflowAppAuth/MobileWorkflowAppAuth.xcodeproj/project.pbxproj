@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		0DD9796130E9F9598B2C582D /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C6D404F98D25E18ED373337 /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework */; };
+		36C18373256EA08D0044A74B /* MWAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C18372256EA08D0044A74B /* MWAppAuthPlugin.framework */; };
+		36C18374256EA08D0044A74B /* MWAppAuthPlugin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36C18372256EA08D0044A74B /* MWAppAuthPlugin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36E88C7E2538957400BC6A98 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88C7D2538957400BC6A98 /* SceneDelegate.swift */; };
 		36E88C832538961800BC6A98 /* app.json in Resources */ = {isa = PBXBuildFile; fileRef = 36E88C822538961800BC6A98 /* app.json */; };
-		36E88CB825389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E88CB725389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework */; };
-		36E88CB925389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36E88CB725389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B75028B51C5A3F94000EB3CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75028B41C5A3F94000EB3CF /* AppDelegate.swift */; };
 		B75028BC1C5A3F94000EB3CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B75028BB1C5A3F94000EB3CF /* Assets.xcassets */; };
 		B75028BF1C5A3F94000EB3CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B75028BD1C5A3F94000EB3CF /* LaunchScreen.storyboard */; };
@@ -30,13 +30,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		36E88CBA25389B8700BC6A98 /* Embed Frameworks */ = {
+		36C18375256EA08D0044A74B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				36E88CB925389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Embed Frameworks */,
+				36C18374256EA08D0044A74B /* MWAppAuthPlugin.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -46,6 +46,7 @@
 /* Begin PBXFileReference section */
 		174AF42DE0C39CB4BFEC1962 /* Pods-MWAppAuth-MobileWorkflowAppAuth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuth-MobileWorkflowAppAuth.debug.xcconfig"; path = "Target Support Files/Pods-MWAppAuth-MobileWorkflowAppAuth/Pods-MWAppAuth-MobileWorkflowAppAuth.debug.xcconfig"; sourceTree = "<group>"; };
 		1C6D404F98D25E18ED373337 /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MWAppAuth_MobileWorkflowAppAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36C18372256EA08D0044A74B /* MWAppAuthPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MWAppAuthPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36E88C7D2538957400BC6A98 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		36E88C822538961800BC6A98 /* app.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = app.json; sourceTree = "<group>"; };
 		36E88CB725389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MobileWorkflowAppAuthPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,8 +73,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36E88CB825389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework in Frameworks */,
 				0DD9796130E9F9598B2C582D /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework in Frameworks */,
+				36C18373256EA08D0044A74B /* MWAppAuthPlugin.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +100,7 @@
 		36FEFF9055C06EFD5B721CC3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				36C18372256EA08D0044A74B /* MWAppAuthPlugin.framework */,
 				36E88CB725389B8700BC6A98 /* MobileWorkflowAppAuthPlugin.framework */,
 				1C6D404F98D25E18ED373337 /* Pods_MWAppAuth_MobileWorkflowAppAuth.framework */,
 				77F44689EBD129369FE1F153 /* Pods_MobileWorkflowAppAuthTests.framework */,
@@ -199,8 +201,8 @@
 				B75028AD1C5A3F94000EB3CF /* Sources */,
 				B75028AE1C5A3F94000EB3CF /* Frameworks */,
 				B75028AF1C5A3F94000EB3CF /* Resources */,
-				36E88CBA25389B8700BC6A98 /* Embed Frameworks */,
 				231E327AAA9E83881F089BF0 /* [CP] Embed Pods Frameworks */,
+				36C18375256EA08D0044A74B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

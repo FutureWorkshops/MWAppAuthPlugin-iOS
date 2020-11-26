@@ -8,7 +8,7 @@
 
 import UIKit
 import MobileWorkflowCore
-import MobileWorkflowAppAuthPlugin
+import MWAppAuthPlugin
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     enum SessionUserInfoKey {
@@ -18,12 +18,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var urlSchemeManagers: [URLSchemeManager] = []
     private var rootViewController: MobileWorkflowRootViewController!
-    
+        
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
         
         let manager = AppConfigurationManager(
-            withPlugins: [],
+            withPlugins: [MWAppAuthPlugin.self],
             fileManager: .default,
             authRedirectHandler: session.userInfo?[SessionUserInfoKey.authRedirectHandler] as? AuthRedirectHandler
         )
@@ -49,7 +49,7 @@ extension SceneDelegate {
         var preferredConfigurations = [AppConfigurationContext]()
         
         if let samplePath = Bundle.main.path(forResource: "app", ofType: "json") {
-            preferredConfigurations.append(.file(path: samplePath, serverId: nil, workflowId: nil, sessionValues: nil))
+            preferredConfigurations.append(.file(path: samplePath, serverId: 125, workflowId: nil, sessionValues: nil))
         }
         
         return preferredConfigurations

@@ -47,14 +47,16 @@ class MWAppAuthStep: ORKStep {
     let clientId: String
     let clientSecret: String?
     let scope: String
+    let redirectScheme: String
     let networkManager: NetworkManager
     let buttonTitle: String
     
-    init(identifier: String, title: String, text: String, buttonTitle: String, url: String, clientId: String, clientSecret: String?, scope: String, networkManager: NetworkManager) {
+    init(identifier: String, title: String, text: String, buttonTitle: String, url: String, clientId: String, clientSecret: String?, scope: String, redirectScheme: String, networkManager: NetworkManager) {
         self.url = url
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.scope = scope
+        self.redirectScheme = redirectScheme
         self.networkManager = networkManager
         self.buttonTitle = buttonTitle
         super.init(identifier: identifier)
@@ -91,6 +93,10 @@ extension MWAppAuthStep: MobileWorkflowStep {
             throw ParseError.invalidStepData(cause: "Invalid scope for \(data.identifier)")
         }
         
+        guard let redirectScheme = data.content["oAuth2RedirectScheme"] as? String else {
+            throw ParseError.invalidStepData(cause: "Invalid redirect scheme for \(data.identifier)")
+        }
+        
         guard let title = data.content["title"] as? String else {
             throw ParseError.invalidStepData(cause: "Invalid title for \(data.identifier)")
         }
@@ -110,6 +116,7 @@ extension MWAppAuthStep: MobileWorkflowStep {
             clientId: clientId,
             clientSecret: clientSecret,
             scope: scope,
+            redirectScheme: redirectScheme,
             networkManager: networkManager
         )
     }

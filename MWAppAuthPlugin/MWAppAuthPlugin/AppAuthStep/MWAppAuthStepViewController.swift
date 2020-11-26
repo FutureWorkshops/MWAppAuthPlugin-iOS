@@ -10,10 +10,6 @@ import Foundation
 import MobileWorkflowCore
 import AppAuth
 
-enum Constants {
-    static let redirectScheme = "mww"
-}
-
 enum OAuthPaths {
     static let authorization = "/authorize"
     static let token = "/token"
@@ -52,7 +48,7 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
             let step = self.appAuthStep,
             let authorizationEndpoint = URL(string: step.url.appending(OAuthPaths.authorization)),
             let tokenEndpoint = URL(string: step.url.appending(OAuthPaths.token)),
-            let redirectURL = URL(string: Constants.redirectScheme + "://callback")
+            let redirectURL = URL(string: step.redirectScheme + "://callback")
             else { return }
         
         let configuration = OIDServiceConfiguration(
@@ -102,7 +98,7 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
 
 class AppAuthFlowResumer: AuthFlowResumer {
     
-    private weak var session: OIDExternalUserAgentSession?
+    private var session: OIDExternalUserAgentSession?
     
     init(session: OIDExternalUserAgentSession) {
         self.session = session
