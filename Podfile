@@ -8,7 +8,7 @@ inhibit_all_warnings!
 use_frameworks!
 
 project 'MobileWorkflowAppAuth/MobileWorkflowAppAuth.xcodeproj'
-project 'MobileWorkflowAppAuthPlugin/MobileWorkflowAppAuthPlugin.xcodeproj'
+project 'MWAppAuthPlugin/MWAuthPlugin.xcodeproj'
 
 abstract_target 'MWAppAuth' do
   pod 'MobileWorkflow'
@@ -22,10 +22,10 @@ abstract_target 'MWAppAuth' do
     end
   end
 
-  target 'MobileWorkflowAppAuthPlugin' do
-    project 'MobileWorkflowAppAuthPlugin/MobileWorkflowAppAuthPlugin.xcodeproj'
+  target 'MWAppAuthPlugin' do
+    project 'MWAppAuthPlugin/MWAppAuthPlugin.xcodeproj'
 
-    target 'MobileWorkflowAppAuthPluginTests' do
+    target 'MWAppAuthPluginTests' do
       inherit! :search_paths
     end
   end

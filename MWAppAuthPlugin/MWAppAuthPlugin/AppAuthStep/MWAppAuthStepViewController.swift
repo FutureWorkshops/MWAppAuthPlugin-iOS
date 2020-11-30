@@ -22,8 +22,8 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
         return self.step as? MWAppAuthStep
     }
     
-    var networkManager: NetworkManager {
-        return self.appAuthStep.networkManager
+    var networkService: NetworkService {
+        return self.appAuthStep.networkService
     }
     
     private var loginButton: UIButton!
@@ -82,7 +82,7 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
             return AppAuthFlowResumer(session: session)
         }
         
-        step.networkManager.authenticateWithProvider(authProvider) { [weak self] response in
+        step.networkService.authenticateWithProvider(authProvider) { [weak self] response in
             DispatchQueue.main.async {
                 self?.hideLoading()
                 switch response {

@@ -48,16 +48,16 @@ class MWAppAuthStep: ORKStep {
     let clientSecret: String?
     let scope: String
     let redirectScheme: String
-    let networkManager: NetworkManager
+    let networkService: NetworkService
     let buttonTitle: String
     
-    init(identifier: String, title: String, text: String, buttonTitle: String, url: String, clientId: String, clientSecret: String?, scope: String, redirectScheme: String, networkManager: NetworkManager) {
+    init(identifier: String, title: String, text: String, buttonTitle: String, url: String, clientId: String, clientSecret: String?, scope: String, redirectScheme: String, networkService: NetworkService) {
         self.url = url
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.scope = scope
         self.redirectScheme = redirectScheme
-        self.networkManager = networkManager
+        self.networkService = networkService
         self.buttonTitle = buttonTitle
         super.init(identifier: identifier)
         self.title = title
@@ -75,7 +75,9 @@ class MWAppAuthStep: ORKStep {
 
 extension MWAppAuthStep: MobileWorkflowStep {
 
-    static func build(data: StepData, context: StepContext, networkManager: NetworkManager, imageLoader: ImageLoader, localizationManager: Localization) throws -> ORKStep {
+    static func build(step: StepInfo, services: MobileWorkflowServices) throws -> ORKStep {
+        let data = step.data
+        let localizationService = services.localizationService
         
         guard let url = data.content["oAuth2Url"] as? String else {
             throw ParseError.invalidStepData(cause: "Invalid url for \(data.identifier)")
@@ -105,19 +107,19 @@ extension MWAppAuthStep: MobileWorkflowStep {
             throw ParseError.invalidStepData(cause: "Invalid text for \(data.identifier)")
         }
 
-        let buttonTitle = localizationManager.translate(data.content["buttonTitle"] as? String) ?? L10n.AppAuth.loginTitle
+        let buttonTitle = localizationService.translate(data.content["buttonTitle"] as? String) ?? L10n.AppAuth.loginTitle
 
         return MWAppAuthStep(
             identifier: data.identifier,
-            title: localizationManager.translate(title) ?? title,
-            text: localizationManager.translate(text) ?? text,
+            title: localizationService.translate(title) ?? title,
+            text: localizationService.translate(text) ?? text,
             buttonTitle: buttonTitle,
             url: url,
             clientId: clientId,
             clientSecret: clientSecret,
             scope: scope,
             redirectScheme: redirectScheme,
-            networkManager: networkManager
+            networkService: services.networkService
         )
     }
 }
