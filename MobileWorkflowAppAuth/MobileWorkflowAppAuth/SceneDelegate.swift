@@ -11,21 +11,26 @@ import MobileWorkflowCore
 import MWAppAuthPlugin
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    enum SessionUserInfoKey {
-        static let authRedirectHandler = "authRedirectHandler"
-    }
-    
+
     var window: UIWindow?
     private var urlSchemeManagers: [URLSchemeManager] = []
     private var rootViewController: MobileWorkflowRootViewController!
-        
+    
+    private var appDelegate: AppDelegate? { UIApplication.shared.delegate as? AppDelegate }
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
         
+        let eventService = EventServiceImplementation()
+        self.appDelegate?.eventDelegate = eventService
+        
+        let networkService = NetworkServiceImplementation(authRedirectHandler: eventService.authRedirectHandler())
+        
         let manager = AppConfigurationManager(
             withPlugins: [MWAppAuthPlugin.self],
-            fileManager: .default,
-            authRedirectHandler: session.userInfo?[SessionUserInfoKey.authRedirectHandler] as? AuthRedirectHandler
+            fileManager: FileManager.default,
+            networkService: networkService,
+            eventService: eventService
         )
         let preferredConfigurations = self.preferredConfigurations(urlContexts: connectionOptions.urlContexts)
         self.rootViewController = MobileWorkflowRootViewController(manager: manager, preferredConfigurations: preferredConfigurations)
@@ -48,8 +53,8 @@ extension SceneDelegate {
         
         var preferredConfigurations = [AppConfigurationContext]()
         
-        if let samplePath = Bundle.main.path(forResource: "app", ofType: "json") {
-            preferredConfigurations.append(.file(path: samplePath, serverId: 125, workflowId: nil, sessionValues: nil))
+        if let appPath = Bundle.main.path(forResource: "app", ofType: "json") {
+            preferredConfigurations.append(.file(path: appPath, serverId: 125, workflowId: nil, sessionValues: nil))
         }
         
         return preferredConfigurations

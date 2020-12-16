@@ -4,9 +4,9 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
-  - MobileWorkflow (0.0.42):
-    - MobileWorkflow/Core (= 0.0.42)
-  - MobileWorkflow/Core (0.0.42)
+  - MobileWorkflow (0.0.53):
+    - MobileWorkflow/Core (= 0.0.53)
+  - MobileWorkflow/Core (0.0.53)
 
 DEPENDENCIES:
   - AppAuth
@@ -20,7 +20,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
-  MobileWorkflow: 9a5a5fc315661e3d6fed1f72e25c8d083f95c251
+  MobileWorkflow: 0a884335a82a17ceb1d72e038bf815ad0c22054a
 
 PODFILE CHECKSUM: 26e2afef30d8057a131acf4f310061a9877fbf19
 
