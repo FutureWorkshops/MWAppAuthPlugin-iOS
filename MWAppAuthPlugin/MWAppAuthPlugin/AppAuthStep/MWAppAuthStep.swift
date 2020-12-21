@@ -48,16 +48,16 @@ class MWAppAuthStep: ORKStep {
     let clientSecret: String?
     let scope: String
     let redirectScheme: String
-    let networkService: NetworkService
+    let services: MobileWorkflowServices
     let buttonTitle: String
     
-    init(identifier: String, title: String, text: String, buttonTitle: String, url: String, clientId: String, clientSecret: String?, scope: String, redirectScheme: String, networkService: NetworkService) {
+    init(identifier: String, title: String, text: String, buttonTitle: String, url: String, clientId: String, clientSecret: String?, scope: String, redirectScheme: String, services: MobileWorkflowServices) {
         self.url = url
         self.clientId = clientId
         self.clientSecret = clientSecret
         self.scope = scope
         self.redirectScheme = redirectScheme
-        self.networkService = networkService
+        self.services = services
         self.buttonTitle = buttonTitle
         super.init(identifier: identifier)
         self.title = title
@@ -119,7 +119,7 @@ extension MWAppAuthStep: MobileWorkflowStep {
             clientSecret: clientSecret,
             scope: scope,
             redirectScheme: redirectScheme,
-            networkService: services.networkService
+            services: services
         )
     }
 }
