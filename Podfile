@@ -1,5 +1,5 @@
 source 'https://cdn.cocoapods.org/'
-source 'https://github.com/FutureWorkshops/FWTPodspecs.git'
+source 'https://github.com/FutureWorkshops/MWPodspecs.git'
 
 workspace 'MobileWorkflowAppAuth'
 platform :ios, '13.0'
