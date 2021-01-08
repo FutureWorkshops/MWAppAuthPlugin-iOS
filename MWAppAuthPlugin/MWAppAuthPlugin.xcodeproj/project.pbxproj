@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		36542B3325A887E6001CECE6 /* AuthItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36542B3225A887E6001CECE6 /* AuthItem.swift */; };
 		36C18355256E9D5D0044A74B /* MWAppAuthPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C18354256E9D5D0044A74B /* MWAppAuthPlugin.swift */; };
 		36E88C9A2538965600BC6A98 /* MWAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E88C902538965500BC6A98 /* MWAppAuthPlugin.framework */; };
 		36E88C9F2538965600BC6A98 /* MWAppAuthPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88C9E2538965600BC6A98 /* MWAppAuthPluginTests.swift */; };
@@ -30,6 +31,7 @@
 /* Begin PBXFileReference section */
 		02BAD96F111AAA0652780E40 /* Pods-MWAppAuthPluginTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuthPluginTests.debug.xcconfig"; path = "Target Support Files/Pods-MWAppAuthPluginTests/Pods-MWAppAuthPluginTests.debug.xcconfig"; sourceTree = "<group>"; };
 		0F7349BC690012EC1F9F3F7E /* Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.debug.xcconfig"; path = "Target Support Files/Pods-MWAppAuth-MobileWorkflowAppAuthPlugin/Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.debug.xcconfig"; sourceTree = "<group>"; };
+		36542B3225A887E6001CECE6 /* AuthItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthItem.swift; sourceTree = "<group>"; };
 		36C18354256E9D5D0044A74B /* MWAppAuthPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWAppAuthPlugin.swift; sourceTree = "<group>"; };
 		36E88C902538965500BC6A98 /* MWAppAuthPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MWAppAuthPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36E88C932538965500BC6A98 /* MWAppAuthPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MWAppAuthPlugin.h; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				36C18354256E9D5D0044A74B /* MWAppAuthPlugin.swift */,
 				36E88CDD2538AA8B00BC6A98 /* MWAppAuthStep.swift */,
 				36E88CDE2538AA8B00BC6A98 /* MWAppAuthStepViewController.swift */,
+				36542B3225A887E6001CECE6 /* AuthItem.swift */,
 			);
 			path = AppAuthStep;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 			files = (
 				36E88CE02538AA8B00BC6A98 /* MWAppAuthStepViewController.swift in Sources */,
 				36C18355256E9D5D0044A74B /* MWAppAuthPlugin.swift in Sources */,
+				36542B3325A887E6001CECE6 /* AuthItem.swift in Sources */,
 				36E88CDF2538AA8B00BC6A98 /* MWAppAuthStep.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

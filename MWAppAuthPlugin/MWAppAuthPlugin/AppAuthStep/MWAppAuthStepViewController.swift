@@ -22,6 +22,12 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
         return self.step as? MWAppAuthStep
     }
     
+    var oauthItem: AuthItem? {
+        return self.appAuthStep.items.first {
+            $0.type == .oauth
+        }
+    }
+    
     private var loginButton: UIButton!
     private var buttonsRow: UIView!
     private var titleLabel: ORKTitleLabel!
@@ -30,21 +36,32 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        guard let oauthItem = self.oauthItem else { return }
+        
         self.configureWithTitle(
             self.appAuthStep.title ?? "",
             body: self.appAuthStep.text ?? "",
-            buttonTitle: self.appAuthStep.buttonTitle) { [weak self] in
+            buttonTitle: oauthItem.buttonTitle) { [weak self] in
             self?.showLoading()
             self?.login()
         }
     }
 
     @objc func login() {
+        guard let respresentation = try? self.oauthItem?.respresentation() else { return }
+        switch respresentation {
+        case .oauth(_, let config):
+            self.performOAuth(config: config)
+        case .twitter, .modalWorkflowId:
+            return
+        }
+    }
+    
+    private func performOAuth(config: OAuth2Config) {
         guard
-            let step = self.appAuthStep,
-            let authorizationEndpoint = URL(string: step.url.appending(OAuthPaths.authorization)),
-            let tokenEndpoint = URL(string: step.url.appending(OAuthPaths.token)),
-            let redirectURL = URL(string: step.redirectScheme + "://callback")
+            let authorizationEndpoint = URL(string: config.oAuth2Url.appending(OAuthPaths.authorization)),
+            let tokenEndpoint = URL(string: config.oAuth2Url.appending(OAuthPaths.token)),
+            let redirectURL = URL(string: config.oAuth2RedirectScheme + "://callback")
             else { return }
         
         let configuration = OIDServiceConfiguration(
@@ -54,9 +71,9 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
         
         let request = OIDAuthorizationRequest(
             configuration: configuration,
-            clientId: step.clientId,
-            clientSecret: (step.clientSecret?.isEmpty ?? true) ? nil : step.clientSecret,
-            scopes: [step.scope],
+            clientId: config.oAuth2ClientId,
+            clientSecret: (config.oAuth2ClientSecret?.isEmpty ?? true) ? nil : config.oAuth2ClientSecret,
+            scopes: [config.oAuth2Scope],
             redirectURL: redirectURL,
             responseType: OIDResponseTypeCode,
             additionalParameters: nil
@@ -78,7 +95,7 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
             return AppAuthFlowResumer(session: session)
         }
         let authenticationTask = AuthenticationTask(input: authProvider)
-        step.services.perform(task: authenticationTask) { [weak self] (response) in
+        self.appAuthStep?.services.perform(task: authenticationTask) { [weak self] (response) in
             DispatchQueue.main.async {
                 self?.hideLoading()
                 switch response {
