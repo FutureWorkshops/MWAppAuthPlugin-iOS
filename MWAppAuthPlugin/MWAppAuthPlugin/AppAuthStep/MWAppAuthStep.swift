@@ -74,7 +74,7 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
             buttonCell.configureButton(label: buttonTitle, style: .primary)
         case .twitter(let buttonTitle):
             buttonCell.configureButton(label: buttonTitle, style: .primary)
-        case .modalWorkflowId(let buttonTitle, let modalWorkflowId):
+        case .modalWorkflowId(let buttonTitle, _):
             buttonCell.configureButton(label: buttonTitle, style: .primary)
         }
     }
