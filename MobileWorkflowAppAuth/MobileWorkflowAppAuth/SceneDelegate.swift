@@ -24,13 +24,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let eventService = EventServiceImplementation()
         self.appDelegate?.eventDelegate = eventService
         
-        let networkService = NetworkServiceImplementation(authRedirectHandler: eventService.authRedirectHandler())
+        let networkService = NetworkAsyncTaskService()
+        let credentialsStore = CredentialsStore()
+        let authenticationService = AuthenticationService(credentialsStore: credentialsStore, authRedirectHandler: eventService.authRedirectHandler())
         
         let manager = AppConfigurationManager(
             withPlugins: [MWAppAuthPlugin.self],
-            fileManager: FileManager.default,
+            fileManager: .default,
+            credentialsStore: credentialsStore,
             networkService: networkService,
-            eventService: eventService
+            eventService: eventService,
+            asyncServices: [authenticationService]
         )
         let preferredConfigurations = self.preferredConfigurations(urlContexts: connectionOptions.urlContexts)
         self.rootViewController = MobileWorkflowRootViewController(manager: manager, preferredConfigurations: preferredConfigurations)

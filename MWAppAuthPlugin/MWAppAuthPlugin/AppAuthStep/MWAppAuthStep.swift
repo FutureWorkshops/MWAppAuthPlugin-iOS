@@ -12,22 +12,18 @@ import MobileWorkflowCore
 enum L10n {
     enum AppAuth {
         static let loginTitle = "Log In"
+        static func invalidStepDataError(cause: String) -> String {
+            "Invalid step data: \(cause)"
+        }
+        static func unsupportedItemTypeError(type: String) -> String {
+            "Unsupported item type: \(type)"
+        }
     }
 }
 
-public enum ParseError: LocalizedError, CustomStringConvertible {
+public enum ParseError: LocalizedError {
     case invalidStepData(cause: String)
-    
-    var code: Int {
-        switch self {
-        case .invalidStepData:
-            return 1001
-        }
-    }
-    
-    public var domain: String {
-        return "MobileWorkflow.MWAppAuthStep"
-    }
+    case unsupportedItemType(type: String)
     
     public var errorDescription: String? {
         return self.description
@@ -36,32 +32,51 @@ public enum ParseError: LocalizedError, CustomStringConvertible {
     public var description: String {
         switch self {
         case .invalidStepData(let cause):
-            return "Invalid step data: \(cause)."
+            return L10n.AppAuth.invalidStepDataError(cause: cause)
+        case .unsupportedItemType(let type):
+            return L10n.AppAuth.unsupportedItemTypeError(type: type)
         }
     }
 }
 
-class MWAppAuthStep: ORKStep {
+private let kAuthCellReuseIdentifier = "AuthCellReuseIdentifier"
+
+class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     
-    let url: String
-    let clientId: String
-    let clientSecret: String?
-    let scope: String
-    let redirectScheme: String
     let services: MobileWorkflowServices
-    let buttonTitle: String
     
-    init(identifier: String, title: String, text: String, buttonTitle: String, url: String, clientId: String, clientSecret: String?, scope: String, redirectScheme: String, services: MobileWorkflowServices) {
-        self.url = url
-        self.clientId = clientId
-        self.clientSecret = clientSecret
-        self.scope = scope
-        self.redirectScheme = redirectScheme
+    init(identifier: String, title: String, text: String?, items: [AuthItem], services: MobileWorkflowServices) {
         self.services = services
-        self.buttonTitle = buttonTitle
         super.init(identifier: identifier)
         self.title = title
         self.text = text
+        self.items = items
+    }
+    
+    override func reuseIdentifierForRow(at indexPath: IndexPath) -> String {
+        return kAuthCellReuseIdentifier
+    }
+    
+    override func registerCells(for tableView: UITableView) {
+        tableView.register(MobileWorkflowButtonTableViewCell.self, forCellReuseIdentifier: kAuthCellReuseIdentifier)
+    }
+    
+    override func configureCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
+        guard let item = self.objectForRow(at: indexPath) as? AuthItem,
+              let representation = try? item.respresentation(),
+              let buttonCell = cell as? MobileWorkflowButtonTableViewCell
+        else {
+            preconditionFailure()
+        }
+        
+        switch representation {
+        case .oauth(let buttonTitle, _):
+            buttonCell.configureButton(label: buttonTitle, style: .primary)
+        case .twitter(let buttonTitle):
+            buttonCell.configureButton(label: buttonTitle, style: .primary)
+        case .modalWorkflowId(let buttonTitle, _):
+            buttonCell.configureButton(label: buttonTitle, style: .primary)
+        }
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -79,46 +94,58 @@ extension MWAppAuthStep: MobileWorkflowStep {
         let data = step.data
         let localizationService = services.localizationService
         
-        guard let url = data.content["oAuth2Url"] as? String else {
-            throw ParseError.invalidStepData(cause: "Invalid url for \(data.identifier)")
-        }
-        
-        // TODO: suggest these properties are injected by build variables
-        // in production. They should be set remotely as a convienience only in development.
-        guard let clientId = data.content["oAuth2ClientId"] as? String else {
-            throw ParseError.invalidStepData(cause: "Invalid clientId for \(data.identifier)")
-        }
-        
-        let clientSecret = data.content["oAuth2ClientSecret"] as? String // is optional
-        
-        guard let scope = data.content["oAuth2Scope"] as? String else {
-            throw ParseError.invalidStepData(cause: "Invalid scope for \(data.identifier)")
-        }
-        
-        guard let redirectScheme = data.content["oAuth2RedirectScheme"] as? String else {
-            throw ParseError.invalidStepData(cause: "Invalid redirect scheme for \(data.identifier)")
-        }
-        
         guard let title = data.content["title"] as? String else {
-            throw ParseError.invalidStepData(cause: "Invalid title for \(data.identifier)")
+            throw ParseError.invalidStepData(cause: "No title found for \(data.identifier)")
         }
 
-        guard let text = data.content["text"] as? String else {
-            throw ParseError.invalidStepData(cause: "Invalid text for \(data.identifier)")
+        let text = data.content["text"] as? String
+        
+        let itemsContent = data.content["items"] as? [[String: Any]] ?? []
+        let items: [AuthItem] = try itemsContent.map { content in
+            let typeAsString = content["type"] as? String ?? "NO_TYPE"
+            guard let type = AuthItem.ItemType(rawValue: typeAsString) else {
+                throw ParseError.unsupportedItemType(type: typeAsString)
+            }
+            
+            var buttonTitle = localizationService.translate(content["buttonTitle"] as? String) ?? ""
+            if buttonTitle.isEmpty {
+                buttonTitle = typeAsString.capitalized
+            }
+            
+            let oAuth2Url = content["oAuth2Url"] as? String
+            let oAuth2ClientId = content["oAuth2ClientId"] as? String
+            let oAuth2ClientSecret = content["oAuth2ClientSecret"] as? String
+            let oAuth2Scope = content["oAuth2Scope"] as? String
+            let oAuth2RedirectScheme = content["oAuth2RedirectScheme"] as? String
+            
+            let modalWorkflowId: Int?
+            if let id = content["modalWorkflowId"] as? String, id.isEmpty == false {
+                modalWorkflowId = Int(id)
+            } else {
+                modalWorkflowId = content["modalWorkflowId"] as? Int
+            }
+            
+            let item = AuthItem(
+                type: type,
+                buttonTitle: buttonTitle,
+                oAuth2Url: oAuth2Url,
+                oAuth2ClientId: oAuth2ClientId,
+                oAuth2ClientSecret: oAuth2ClientSecret,
+                oAuth2Scope: oAuth2Scope,
+                oAuth2RedirectScheme: oAuth2RedirectScheme,
+                modalWorkflowId: modalWorkflowId
+            )
+            
+            _ = try item.respresentation() // confirm valid representation
+            
+            return item
         }
-
-        let buttonTitle = localizationService.translate(data.content["buttonTitle"] as? String) ?? L10n.AppAuth.loginTitle
-
+        
         return MWAppAuthStep(
             identifier: data.identifier,
             title: localizationService.translate(title) ?? title,
-            text: localizationService.translate(text) ?? text,
-            buttonTitle: buttonTitle,
-            url: url,
-            clientId: clientId,
-            clientSecret: clientSecret,
-            scope: scope,
-            redirectScheme: redirectScheme,
+            text: localizationService.translate(text),
+            items: items,
             services: services
         )
     }
