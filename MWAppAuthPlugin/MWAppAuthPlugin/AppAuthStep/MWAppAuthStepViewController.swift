@@ -15,45 +15,25 @@ enum OAuthPaths {
     static let token = "/token"
 }
 
-class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
+class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentationDelegator {
+    
+    weak var workflowPresentationDelegate: WorkflowPresentationDelegate?
     
     //MARK: - Support variables
     var appAuthStep: MWAppAuthStep! {
         return self.step as? MWAppAuthStep
     }
     
-    var oauthItem: AuthItem? {
-        return self.appAuthStep.items.first {
-            $0.type == .oauth
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.hideNavigationFooterView()
+        self.tableView?.contentInsetAdjustmentBehavior = .automatic // ResearchKit sets this to .never
     }
     
-    private var loginButton: UIButton!
-    private var buttonsRow: UIView!
-    private var titleLabel: ORKTitleLabel!
-    private var bodyLabel: ORKBodyLabel!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        guard let oauthItem = self.oauthItem else { return }
-        
-        self.configureWithTitle(
-            self.appAuthStep.title ?? "",
-            body: self.appAuthStep.text ?? "",
-            buttonTitle: oauthItem.buttonTitle) { [weak self] in
-            self?.showLoading()
-            self?.login()
-        }
-    }
-
-    @objc func login() {
-        guard let respresentation = try? self.oauthItem?.respresentation() else { return }
-        switch respresentation {
-        case .oauth(_, let config):
-            self.performOAuth(config: config)
-        case .twitter, .modalWorkflowId:
-            return
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+        if let cell = cell as? MobileWorkflowButtonTableViewCell {
+            cell.delegate = self
         }
     }
     
@@ -63,6 +43,8 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
             let tokenEndpoint = URL(string: config.oAuth2Url.appending(OAuthPaths.token)),
             let redirectURL = URL(string: config.oAuth2RedirectScheme + "://callback")
             else { return }
+        
+        self.showLoading()
         
         let configuration = OIDServiceConfiguration(
             authorizationEndpoint: authorizationEndpoint,
@@ -105,6 +87,41 @@ class MWAppAuthStepViewController: MobileWorkflowButtonViewController {
                     self?.show(error)
                 }
             }
+        }
+    }
+    
+    // MARK: Loading
+    
+    public func showLoading() {
+        self.tableView?.isUserInteractionEnabled = false
+        self.tableView?.backgroundView = LoadingStateView(frame: .zero)
+    }
+
+    public func hideLoading() {
+        self.tableView?.isUserInteractionEnabled = true
+        self.tableView?.backgroundView = nil
+    }
+}
+
+extension MWAppAuthStepViewController: MobileWorkflowButtonTableViewCellDelegate {
+    
+    func buttonCell(_ cell: MobileWorkflowButtonTableViewCell, didTapButton button: UIButton) {
+        guard let indexPath = self.tableView?.indexPath(for: cell),
+            let item = self.appAuthStep.objectForRow(at: indexPath) as? AuthItem,
+            let representation = try? item.respresentation()
+            else { return }
+        
+        switch representation {
+        case .oauth(_, let config):
+            self.performOAuth(config: config)
+        case .twitter(_):
+            break // TODO: perform twitter login
+        case .modalWorkflowId(_,  let modalWorkflowId):
+            self.workflowPresentationDelegate?.presentWorkflowWithId(modalWorkflowId, isDiscardable: true, animated: true, onDismiss: { reason in
+                if reason == .completed {
+                    self.goForward()
+                }
+            })
         }
     }
 }

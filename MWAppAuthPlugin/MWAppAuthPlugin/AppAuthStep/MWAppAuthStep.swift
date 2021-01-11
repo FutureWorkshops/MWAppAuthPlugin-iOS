@@ -39,17 +39,44 @@ public enum ParseError: LocalizedError {
     }
 }
 
-class MWAppAuthStep: ORKStep {
+private let kAuthCellReuseIdentifier = "AuthCellReuseIdentifier"
+
+class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     
-    let items: [AuthItem]
     let services: MobileWorkflowServices
     
     init(identifier: String, title: String, text: String?, items: [AuthItem], services: MobileWorkflowServices) {
-        self.items = items
         self.services = services
         super.init(identifier: identifier)
         self.title = title
         self.text = text
+        self.items = items
+    }
+    
+    override func reuseIdentifierForRow(at indexPath: IndexPath) -> String {
+        return kAuthCellReuseIdentifier
+    }
+    
+    override func registerCells(for tableView: UITableView) {
+        tableView.register(MobileWorkflowButtonTableViewCell.self, forCellReuseIdentifier: kAuthCellReuseIdentifier)
+    }
+    
+    override func configureCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
+        guard let item = self.objectForRow(at: indexPath) as? AuthItem,
+              let representation = try? item.respresentation(),
+              let buttonCell = cell as? MobileWorkflowButtonTableViewCell
+        else {
+            preconditionFailure()
+        }
+        
+        switch representation {
+        case .oauth(let buttonTitle, _):
+            buttonCell.configureButton(label: buttonTitle, style: .primary)
+        case .twitter(let buttonTitle):
+            buttonCell.configureButton(label: buttonTitle, style: .primary)
+        case .modalWorkflowId(let buttonTitle, let modalWorkflowId):
+            buttonCell.configureButton(label: buttonTitle, style: .primary)
+        }
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -80,7 +107,10 @@ extension MWAppAuthStep: MobileWorkflowStep {
                 throw ParseError.unsupportedItemType(type: typeAsString)
             }
             
-            let buttonTitle = localizationService.translate(data.content["buttonTitle"] as? String) ?? L10n.AppAuth.loginTitle
+            var buttonTitle = localizationService.translate(content["buttonTitle"] as? String) ?? ""
+            if buttonTitle.isEmpty {
+                buttonTitle = typeAsString.capitalized
+            }
             
             let oAuth2Url = content["oAuth2Url"] as? String
             let oAuth2ClientId = content["oAuth2ClientId"] as? String
@@ -88,9 +118,14 @@ extension MWAppAuthStep: MobileWorkflowStep {
             let oAuth2Scope = content["oAuth2Scope"] as? String
             let oAuth2RedirectScheme = content["oAuth2RedirectScheme"] as? String
             
-            let modalWorkflowId = content["modalWorkflowId"] as? Int
+            let modalWorkflowId: Int?
+            if let id = content["modalWorkflowId"] as? String, id.isEmpty == false {
+                modalWorkflowId = Int(id)
+            } else {
+                modalWorkflowId = content["modalWorkflowId"] as? Int
+            }
             
-            return AuthItem(
+            let item = AuthItem(
                 type: type,
                 buttonTitle: buttonTitle,
                 oAuth2Url: oAuth2Url,
@@ -100,6 +135,10 @@ extension MWAppAuthStep: MobileWorkflowStep {
                 oAuth2RedirectScheme: oAuth2RedirectScheme,
                 modalWorkflowId: modalWorkflowId
             )
+            
+            _ = try item.respresentation() // confirm valid representation
+            
+            return item
         }
         
         return MWAppAuthStep(
