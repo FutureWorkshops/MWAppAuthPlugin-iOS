@@ -9,6 +9,7 @@
 import Foundation
 import MobileWorkflowCore
 import AppAuth
+import Combine
 
 enum OAuthPaths {
     static let authorization = "/authorize"
@@ -24,6 +25,8 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
         return self.step as? MWAppAuthStep
     }
     
+    private var ongoingImageLoads: [IndexPath: AnyCancellable] = [:]
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.hideNavigationFooterView()
@@ -35,7 +38,43 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
         if let cell = cell as? MobileWorkflowButtonTableViewCell {
             cell.delegate = self
         }
+        self.loadImage(for: cell, at: indexPath)
     }
+    
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // super.tableView(tableView, didEndDisplaying: cell, forRowAt: indexPath) // not implemented in ORKTableStepViewController and respondsToSelector returns true...
+        self.cancelImageLoad(for: cell, at: indexPath)
+    }
+    
+    // MARK: Loading
+    
+    private func loadImage(for cell: UITableViewCell, at indexPath: IndexPath) {
+        guard let imageURL = self.appAuthStep.imageURL,
+              let resolvedURL = self.appAuthStep.services.session.resolve(url: imageURL)?.absoluteString else {
+            self.update(image: nil, of: cell)
+            return
+        }
+        let cancellable = self.appAuthStep.services.imageLoadingService.asyncLoad(image: resolvedURL) { [weak self] image in
+            self?.update(image: image, of: cell)
+            self?.ongoingImageLoads.removeValue(forKey: indexPath)
+        }
+        self.ongoingImageLoads[indexPath] = cancellable
+    }
+    
+    private func update(image: UIImage?, of cell: UITableViewCell) {
+        guard let cell = cell as? MobileWorkflowImageTableViewCell else { return }
+        cell.backgroundImage = image
+        cell.setNeedsLayout()
+    }
+    
+    private func cancelImageLoad(for cell: UITableViewCell, at indexPath: IndexPath) {
+        if let imageLoad = self.ongoingImageLoads[indexPath] {
+            imageLoad.cancel()
+            self.ongoingImageLoads.removeValue(forKey: indexPath)
+        }
+    }
+    
+    // OAuth2
     
     private func performOAuth(config: OAuth2Config) {
         guard

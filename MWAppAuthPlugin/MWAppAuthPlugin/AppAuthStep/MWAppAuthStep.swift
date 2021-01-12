@@ -39,13 +39,16 @@ public enum ParseError: LocalizedError {
     }
 }
 
+private let kImageCellReuseIdentifier = "ImageCellReuseIdentifier"
 private let kAuthCellReuseIdentifier = "AuthCellReuseIdentifier"
 
 class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     
+    let imageURL: String?
     let services: MobileWorkflowServices
     
-    init(identifier: String, title: String, text: String?, items: [AuthItem], services: MobileWorkflowServices) {
+    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices) {
+        self.imageURL = (imageURL?.isEmpty ?? true) ? nil : imageURL
         self.services = services
         super.init(identifier: identifier)
         self.title = title
@@ -54,14 +57,40 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     }
     
     override func reuseIdentifierForRow(at indexPath: IndexPath) -> String {
-        return kAuthCellReuseIdentifier
+        guard let _ = self.imageURL else { return kAuthCellReuseIdentifier }
+        switch indexPath.section {
+        case 0: return kImageCellReuseIdentifier
+        case 1: return kAuthCellReuseIdentifier
+        default: return kAuthCellReuseIdentifier
+        }
     }
     
     override func registerCells(for tableView: UITableView) {
+        tableView.register(MobileWorkflowImageTableViewCell.self, forCellReuseIdentifier: kImageCellReuseIdentifier)
         tableView.register(MobileWorkflowButtonTableViewCell.self, forCellReuseIdentifier: kAuthCellReuseIdentifier)
     }
     
+    override func numberOfSections() -> Int {
+        guard let _ = self.imageURL else { return 1 }
+        return 2
+    }
+    
+    override func numberOfRows(inSection section: Int) -> Int {
+        guard let _ = self.imageURL else { return self.items?.count ?? 0 }
+        switch section {
+        case 0: return 1
+        case 1: return self.items?.count ?? 0
+        default: return 0
+        }
+    }
+    
     override func configureCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
+        if let _ = imageURL, indexPath.section == 0 {
+            guard let imageCell = cell as? MobileWorkflowImageTableViewCell else { preconditionFailure() }
+            imageCell.backgroundImage = nil
+            return
+        }
+        
         guard let item = self.objectForRow(at: indexPath) as? AuthItem,
               let representation = try? item.respresentation(),
               let buttonCell = cell as? MobileWorkflowButtonTableViewCell
@@ -99,6 +128,7 @@ extension MWAppAuthStep: MobileWorkflowStep {
         }
 
         let text = data.content["text"] as? String
+        let imageURL = data.content["imageURL"] as? String
         
         let itemsContent = data.content["items"] as? [[String: Any]] ?? []
         let items: [AuthItem] = try itemsContent.map { content in
@@ -145,6 +175,7 @@ extension MWAppAuthStep: MobileWorkflowStep {
             identifier: data.identifier,
             title: localizationService.translate(title) ?? title,
             text: localizationService.translate(text),
+            imageURL: imageURL,
             items: items,
             services: services
         )
