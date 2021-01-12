@@ -1,0 +1,59 @@
+name: Deploy Podspec
+
+on:
+  push:
+    tags: '*.*.**'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout plugin
+        uses: actions/checkout@v2
+        with:
+          path: main
+      - name: Extract Tag
+        id: tag
+        run: echo ::set-output name=name::${GITHUB_REF#refs/*/}
+      - name: Get Podspec file
+        id: podspec
+        run: |
+          PODSPEC_FILE="$(ls main | grep ".*\.podspec")"
+          PODSPEC_NAME="$(echo "${PODSPEC_FILE}" | cut -f 1 -d '.')"
+          echo ::set-output name=file::${PODSPEC_FILE}
+          echo ::set-output name=name::${PODSPEC_NAME}
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.FW_MWPODSPEC_DEPLOY_PAT }}
+          repository: FutureWorkshops/MWPodspecs
+          path: repo
+      - name: Create Plugin Folder
+        env:
+          PODSPEC: ${{ steps.podspec.outputs.file }}
+          PLUGIN: ${{ steps.podspec.outputs.name }}
+          TAG_VERSION: ${{ steps.tag.outputs.name }}
+        run: |
+          if [ ! -d "./repo/${PLUGIN}" ]; then
+            mkdir "./repo/${PLUGIN}"
+          fi
+          if [ ! -d "./repo/${PLUGIN}/${TAG_VERSION}" ]; then
+            mkdir "./repo/${PLUGIN}/${TAG_VERSION}"
+            cp "./main/${PODSPEC}" "./repo/${PLUGIN}/${TAG_VERSION}/${PODSPEC}"
+          fi
+      - name: Commit new version
+        env:
+          PLUGIN: ${{ steps.podspec.outputs.name }}
+          TAG_VERSION: ${{ steps.tag.outputs.name }}
+        run: |
+          cd repo
+          git config --local user.email "c-i@futureworkshops.com"
+          git config --local user.name "Continuous Integration"
+          git add .
+          git commit -m "${PLUGIN} [${TAG_VERSION}]"
+          cd ..
+      - name: Push new version
+        run: |
+          cd repo
+          git push origin
+          cd ..
