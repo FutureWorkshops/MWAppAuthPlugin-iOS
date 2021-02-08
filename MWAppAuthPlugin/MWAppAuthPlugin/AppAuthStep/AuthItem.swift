@@ -23,6 +23,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         case oauth
         case twitter
         case modalWorkflow
+        case apple
     }
     
     let type: ItemType
@@ -115,12 +116,14 @@ enum AuthItemRepresentation {
     case oauth(buttonTitle: String, config: OAuth2Config)
     case twitter(buttonTitle: String)
     case modalWorkflowId(buttonTitle: String, modalWorkflowId: Int)
+    case apple
     
     var buttonTitle: String {
         switch self {
         case .oauth(let buttonTitle, _): return buttonTitle
         case .twitter(let buttonTitle): return buttonTitle
         case .modalWorkflowId(let buttonTitle, _): return buttonTitle
+        case .apple: return ""
         }
     }
 }
@@ -141,6 +144,8 @@ extension AuthItem {
                 throw ParseError.invalidStepData(cause: "Missing modalWorkflowId")
             }
             return .modalWorkflowId(buttonTitle: self.buttonTitle, modalWorkflowId: modalWorkflowId)
+        case .apple:
+            return .apple
         }
     }
 }

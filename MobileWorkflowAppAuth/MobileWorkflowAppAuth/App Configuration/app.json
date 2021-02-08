@@ -240,6 +240,42 @@
             "name": "Upload Image (Front)",
             "sfSymbolName": "",
             "materialIconName": ""
+        },
+        {
+            "id": 964,
+            "identifier": "Login with Apple",
+            "materialIconName": "",
+            "name": "Login with Apple",
+            "navigationRules": [
+                {
+                    "from": "login",
+                    "rules": [
+                        {
+                            "to": "ORKNullStepIdentifier"
+                        }
+                    ]
+                }
+            ],
+            "sfSymbolName": "",
+            "steps": [
+                {
+                    "identifier": "login",
+                    "imageURL": "https://source.unsplash.com/ObpCE_X3j6U/800x600",
+                    "items": [
+                        {
+                            "appleEmailScope": true,
+                            "appleFullNameScope": true,
+                            "id": 1,
+                            "type": "apple"
+                        }
+                    ],
+                    "optional": false,
+                    "text": "Feel calm and secure with Apple login. Privacy matters.",
+                    "title": "Login",
+                    "type": "networkOAuth2",
+                    "uuid": "e73e28c6-55a6-4547-85fa-d1742dd6d295"
+                }
+            ]
         }
     ],
     "servers": [
@@ -249,6 +285,6 @@
         }
     ],
     "locales": [
-
+        
     ]
 }

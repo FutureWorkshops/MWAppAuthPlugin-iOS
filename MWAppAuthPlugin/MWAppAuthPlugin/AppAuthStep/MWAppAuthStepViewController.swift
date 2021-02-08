@@ -161,6 +161,8 @@ extension MWAppAuthStepViewController: MobileWorkflowButtonTableViewCellDelegate
                     self.goForward()
                 }
             })
+        case .apple:
+            break
         }
     }
 }
