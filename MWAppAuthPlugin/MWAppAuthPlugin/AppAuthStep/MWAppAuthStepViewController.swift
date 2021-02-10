@@ -224,9 +224,9 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
     }
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        print(error)
-        
-        #warning("Complete with error even if user cancel action")
+        guard let authError = error as? ASAuthorizationError, authError.code != .canceled else {
+            return
+        }
         
         self.showConfirmationAlert(title: L10n.AppleLogin.errorTitle, message: L10n.AppleLogin.errorMessage) { _ in }
     }
