@@ -18,9 +18,7 @@ class SignInWithAppleButtonTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
     
-    public func configureCell(ctaCallback: (() -> Void)?) {
-        self.ctaCallback = ctaCallback
-        
+    public func configureCell() {
         self.setupLoginButton()
         self.setupConstraints()
     }

@@ -19,6 +19,11 @@ enum L10n {
             "Unsupported item type: \(type)"
         }
     }
+    
+    enum AppleLogin {
+        static let errorTitle = "Error"
+        static let errorMessage = "Something went wrong. We couldn't validate your Apple credentials"
+    }
 }
 
 public enum ParseError: LocalizedError {
@@ -43,14 +48,21 @@ private let kImageCellReuseIdentifier = "ImageCellReuseIdentifier"
 private let kAuthCellReuseIdentifier = "AuthCellReuseIdentifier"
 private let kAppleCellReuseIdentifier = "AppleCellReuseIdentifier"
 
+enum AuthScope: String, Codable {
+    case email
+    case fullName
+}
+
 class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     
     let imageURL: String?
     let services: MobileWorkflowServices
+    var authScopeList: [AuthScope]?
     
-    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices) {
+    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices, authScopeList: [AuthScope]?) {
         self.imageURL = (imageURL?.isEmpty ?? true) ? nil : imageURL
         self.services = services
+        self.authScopeList = authScopeList
         super.init(identifier: identifier)
         self.title = title
         self.text = text
@@ -123,11 +135,7 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
             guard let buttonCell = cell as? SignInWithAppleButtonTableViewCell else {
                 preconditionFailure()
             }
-            buttonCell.configureCell {
-                print("pressed")
-                
-                // handleAppleLogin
-            }
+            buttonCell.configureCell()
         }
     }
     
@@ -194,13 +202,22 @@ extension MWAppAuthStep: MobileWorkflowStep {
             return item
         }
         
+        var authScopeList: [AuthScope]?
+        if let appleFullNameScope = data.content["appleFullNameScope"] as? Bool, appleFullNameScope {
+            authScopeList?.append(.fullName)
+        }
+        if let appleEmailScope = data.content["appleEmailScope"] as? Bool, appleEmailScope {
+            authScopeList?.append(.email)
+        }
+        
         return MWAppAuthStep(
             identifier: data.identifier,
             title: localizationService.translate(title) ?? title,
             text: localizationService.translate(text),
             imageURL: imageURL,
             items: items,
-            services: services
+            services: services,
+            authScopeList: authScopeList
         )
     }
 }

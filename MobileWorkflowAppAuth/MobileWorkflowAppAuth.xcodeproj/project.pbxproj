@@ -244,7 +244,7 @@
 				TargetAttributes = {
 					B75028B01C5A3F94000EB3CF = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = BQHMJ2C6RL;
+						DevelopmentTeam = F94732585Z;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
@@ -519,12 +519,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "MobileWorkflowAppAuth/Supporting Files/MobileWorkflowAppAuth.entitlements";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = BQHMJ2C6RL;
+				DEVELOPMENT_TEAM = F94732585Z;
 				INFOPLIST_FILE = "MobileWorkflowAppAuth/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MobileWorkflowAppAuth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "FW-Ent-All-Development";
+				PROVISIONING_PROFILE_SPECIFIER = "MobileWorkflow Login Plugin Sample";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -537,12 +537,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "MobileWorkflowAppAuth/Supporting Files/MobileWorkflowAppAuth.entitlements";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = BQHMJ2C6RL;
+				DEVELOPMENT_TEAM = F94732585Z;
 				INFOPLIST_FILE = "MobileWorkflowAppAuth/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.MobileWorkflowAppAuth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "FW-Ent-All-Development";
+				PROVISIONING_PROFILE_SPECIFIER = "MobileWorkflow Login Plugin Sample";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

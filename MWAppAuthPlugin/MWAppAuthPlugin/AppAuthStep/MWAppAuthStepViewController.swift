@@ -10,6 +10,7 @@ import Foundation
 import MobileWorkflowCore
 import AppAuth
 import Combine
+import AuthenticationServices
 
 enum OAuthPaths {
     static let authorization = "/authorize"
@@ -37,6 +38,11 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
         super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         if let cell = cell as? MobileWorkflowButtonTableViewCell {
             cell.delegate = self
+        }
+        else if let cell = cell as? SignInWithAppleButtonTableViewCell {
+            cell.ctaCallback = { [weak self] in
+                self?.handleDidTapSignInWithApple()
+            }
         }
         self.loadImage(for: cell, at: indexPath)
     }
@@ -164,6 +170,78 @@ extension MWAppAuthStepViewController: MobileWorkflowButtonTableViewCellDelegate
         case .apple:
             break
         }
+    }
+}
+
+// MARK: - Sign in with Apple
+
+private extension MWAppAuthStepViewController {
+    
+    @objc func handleDidTapSignInWithApple() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = self.getRequestedScopes()
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        
+        authorizationController.performRequests()
+    }
+    
+    func getRequestedScopes() -> [ASAuthorization.Scope]? {
+        return self.appAuthStep.authScopeList?.compactMap {
+            switch $0 {
+            case .fullName:
+                return .fullName
+            case .email:
+                return .email
+            }
+        }
+    }
+}
+
+// MARK: - Authorization Controller Delegate
+
+extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        
+        switch authorization.credential {
+        case let appleIDCredential as ASAuthorizationAppleIDCredential:
+            
+            print(appleIDCredential.user)
+            
+            // Store credential to check if scope should change to public/private
+            
+        case let passwordCredential as ASPasswordCredential:
+            
+            print(passwordCredential)
+            
+        default:
+            break
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print(error)
+        
+        #warning("Complete with error even if user cancel action")
+        
+        self.showConfirmationAlert(title: L10n.AppleLogin.errorTitle, message: L10n.AppleLogin.errorMessage) { _ in }
+    }
+}
+
+// MARK: - Authorization Controller Presentation
+
+extension MWAppAuthStepViewController: ASAuthorizationControllerPresentationContextProviding {
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        guard let windows = self.view.window else {
+            preconditionFailure()
+        }
+        
+        return windows
     }
 }
 
