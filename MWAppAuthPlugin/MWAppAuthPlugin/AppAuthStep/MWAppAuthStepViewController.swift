@@ -199,6 +199,25 @@ private extension MWAppAuthStepViewController {
             }
         }
     }
+    
+    func performSignInWithApple(userId: String, name: String, identityToken: String) {
+        
+        let appleCredential = AppleIDCredential(userId: userId, name: name, identityToken: identityToken)
+        
+        // Perform Async request
+    }
+}
+
+struct AppleIDCredential: Codable {
+    let userId: String
+    let name: String
+    let identityToken: String
+    
+    enum CodingKeys: String, CodingKey {
+        case userId = "user_identity"
+        case name = "name"
+        case identityToken = "jwt"
+    }
 }
 
 // MARK: - Authorization Controller Delegate
@@ -210,9 +229,36 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             
-            print(appleIDCredential.user)
-            
+            let userId = appleIDCredential.user
             // Store credential to check if scope should change to public/private
+            
+//            let userIdCredential = Credential(type: CredentialType.appleIdCredentialUser.rawValue, value: userId, expirationDate: Date())
+//
+//            self.appAuthStep.services.credentialStore.updateCredential(userIdCredential) { result, error in
+//
+//            }
+            
+            var name: String = ""
+            if let fullName = appleIDCredential.fullName {
+                var nameComponents = [String]()
+                
+                if let givenName = fullName.givenName {
+                    nameComponents.append(givenName)
+                }
+                
+                if let familyName = fullName.familyName {
+                    nameComponents.append(familyName)
+                }
+                
+                name = nameComponents.joined(separator: " ")
+            }
+        
+            guard let identityToken = appleIDCredential.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
+                return
+            }
+            
+            self.performSignInWithApple(userId: userId, name: name, identityToken: identityTokenString)
+            
             
         case let passwordCredential as ASPasswordCredential:
             
