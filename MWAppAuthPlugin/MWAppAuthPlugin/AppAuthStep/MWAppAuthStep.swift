@@ -57,12 +57,10 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     
     let imageURL: String?
     let services: MobileWorkflowServices
-    var authScopeList: [AuthScope]?
     
-    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices, authScopeList: [AuthScope]?) {
+    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices) {
         self.imageURL = (imageURL?.isEmpty ?? true) ? nil : imageURL
         self.services = services
-        self.authScopeList = authScopeList
         super.init(identifier: identifier)
         self.title = title
         self.text = text
@@ -161,22 +159,11 @@ extension MWAppAuthStep: MobileWorkflowStep {
         let text = data.content["text"] as? String
         let imageURL = data.content["imageURL"] as? String
         
-        var authScopeList = [AuthScope]()
-        
         let itemsContent = data.content["items"] as? [[String: Any]] ?? []
         let items: [AuthItem] = try itemsContent.map { content in
             let typeAsString = content["type"] as? String ?? "NO_TYPE"
             guard let type = AuthItem.ItemType(rawValue: typeAsString) else {
                 throw ParseError.unsupportedItemType(type: typeAsString)
-            }
-            
-            if type == .apple {
-                if let appleFullNameScope = content["appleFullNameScope"] as? Bool, appleFullNameScope {
-                    authScopeList.append(.fullName)
-                }
-                if let appleEmailScope = content["appleEmailScope"] as? Bool, appleEmailScope {
-                    authScopeList.append(.email)
-                }
             }
             
             var buttonTitle = localizationService.translate(content["buttonTitle"] as? String) ?? ""
@@ -197,6 +184,10 @@ extension MWAppAuthStep: MobileWorkflowStep {
                 modalWorkflowId = content["modalWorkflowId"] as? Int
             }
             
+            let appleFullNameScope = content["appleFullNameScope"] as? Bool
+            let appleEmailScope = content["appleEmailScope"] as? Bool
+            let appleAccessTokenURL = content["appleAccessTokenURL"] as? String
+            
             let item = AuthItem(
                 type: type,
                 buttonTitle: buttonTitle,
@@ -205,7 +196,10 @@ extension MWAppAuthStep: MobileWorkflowStep {
                 oAuth2ClientSecret: oAuth2ClientSecret,
                 oAuth2Scope: oAuth2Scope,
                 oAuth2RedirectScheme: oAuth2RedirectScheme,
-                modalWorkflowId: modalWorkflowId
+                modalWorkflowId: modalWorkflowId,
+                appleFullNameScope: appleFullNameScope,
+                appleEmailScope: appleEmailScope,
+                appleAccessTokenURL: appleAccessTokenURL
             )
             
             _ = try item.respresentation() // confirm valid representation
@@ -219,8 +213,7 @@ extension MWAppAuthStep: MobileWorkflowStep {
             text: localizationService.translate(text),
             imageURL: imageURL,
             items: items,
-            services: services,
-            authScopeList: authScopeList
+            services: services
         )
     }
 }

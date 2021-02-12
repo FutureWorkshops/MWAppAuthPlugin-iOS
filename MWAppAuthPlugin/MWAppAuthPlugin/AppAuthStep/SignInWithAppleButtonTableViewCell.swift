@@ -8,11 +8,14 @@
 import UIKit
 import AuthenticationServices
 
-class SignInWithAppleButtonTableViewCell: UITableViewCell {
+protocol SignInWithAppleButtonTableViewCellDelegate: class {
+    func appleCell(_ cell: SignInWithAppleButtonTableViewCell, didTapButton button: UIButton)
+}
+
+final class SignInWithAppleButtonTableViewCell: UITableViewCell {
     
     private let loginButton = ASAuthorizationAppleIDButton()
-    
-    var ctaCallback: (() -> Void)?
+    weak var delegate: SignInWithAppleButtonTableViewCellDelegate?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,7 +28,7 @@ class SignInWithAppleButtonTableViewCell: UITableViewCell {
     
     private func setupLoginButton() {
         self.loginButton.cornerRadius = 14
-        self.loginButton.addTarget(self, action: #selector(self.didTapSignIn), for: .touchUpInside)
+        self.loginButton.addTarget(self, action: #selector(self.didTapSignIn(_:)), for: .touchUpInside)
         self.loginButton.translatesAutoresizingMaskIntoConstraints = false
         
         self.contentView.addSubview(self.loginButton)
@@ -41,7 +44,7 @@ class SignInWithAppleButtonTableViewCell: UITableViewCell {
         ])
     }
     
-    @objc private func didTapSignIn() {
-        self.ctaCallback?()
+    @objc private func didTapSignIn(_ button: UIButton) {
+        self.delegate?.appleCell(self, didTapButton: button)
     }
 }

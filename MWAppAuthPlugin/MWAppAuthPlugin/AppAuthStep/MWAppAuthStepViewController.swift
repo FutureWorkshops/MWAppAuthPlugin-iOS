@@ -27,6 +27,7 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     }
     
     private var ongoingImageLoads: [IndexPath: AnyCancellable] = [:]
+    private var appleAccessTokenURL: String?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -40,9 +41,7 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
             cell.delegate = self
         }
         else if let cell = cell as? SignInWithAppleButtonTableViewCell {
-            cell.ctaCallback = { [weak self] in
-                self?.handleDidTapSignInWithApple()
-            }
+            cell.delegate = self
         }
         self.loadImage(for: cell, at: indexPath)
     }
@@ -175,29 +174,40 @@ extension MWAppAuthStepViewController: MobileWorkflowButtonTableViewCellDelegate
 
 // MARK: - Sign in with Apple
 
+extension MWAppAuthStepViewController: SignInWithAppleButtonTableViewCellDelegate {
+    func appleCell(_ cell: SignInWithAppleButtonTableViewCell, didTapButton button: UIButton) {
+        guard let indexPath = self.tableView?.indexPath(for: cell), let item = self.appAuthStep.objectForRow(at: indexPath) as? AuthItem, let representation = try? item.respresentation() else { return }
+        
+        switch representation {
+        case .apple:
+            self.appleAccessTokenURL = item.appleAccessTokenURL
+            self.handleDidTapSignInWithApple(needsFullName: item.appleFullNameScope ?? false, needsEmail: item.appleEmailScope ?? false)
+        default:
+            break
+        }
+    }
+}
+
 private extension MWAppAuthStepViewController {
     
-    @objc func handleDidTapSignInWithApple() {
+    func handleDidTapSignInWithApple(needsFullName: Bool, needsEmail: Bool) {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         let request = appleIDProvider.createRequest()
-        request.requestedScopes = self.getRequestedScopes()
+        request.requestedScopes = []
+        
+        if needsFullName {
+            request.requestedScopes?.append(.fullName)
+        }
+        
+        if needsEmail {
+            request.requestedScopes?.append(.email)
+        }
         
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
         authorizationController.delegate = self
         authorizationController.presentationContextProvider = self
         
         authorizationController.performRequests()
-    }
-    
-    func getRequestedScopes() -> [ASAuthorization.Scope]? {
-        return self.appAuthStep.authScopeList?.compactMap {
-            switch $0 {
-            case .fullName:
-                return .fullName
-            case .email:
-                return .email
-            }
-        }
     }
     
     func performSignInWithApple(userId: String, name: String, identityToken: String) {
