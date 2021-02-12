@@ -263,6 +263,7 @@
                     "imageURL": "https://source.unsplash.com/ObpCE_X3j6U/800x600",
                     "items": [
                         {
+                            "appleAccessTokenURL": "https://mw-apple-auth.herokuapp.com/appleauth",
                             "appleEmailScope": true,
                             "appleFullNameScope": true,
                             "id": 1,
