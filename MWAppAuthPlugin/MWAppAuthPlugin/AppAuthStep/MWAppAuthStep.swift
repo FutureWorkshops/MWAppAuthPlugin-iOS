@@ -161,11 +161,22 @@ extension MWAppAuthStep: MobileWorkflowStep {
         let text = data.content["text"] as? String
         let imageURL = data.content["imageURL"] as? String
         
+        var authScopeList = [AuthScope]()
+        
         let itemsContent = data.content["items"] as? [[String: Any]] ?? []
         let items: [AuthItem] = try itemsContent.map { content in
             let typeAsString = content["type"] as? String ?? "NO_TYPE"
             guard let type = AuthItem.ItemType(rawValue: typeAsString) else {
                 throw ParseError.unsupportedItemType(type: typeAsString)
+            }
+            
+            if type == .apple {
+                if let appleFullNameScope = content["appleFullNameScope"] as? Bool, appleFullNameScope {
+                    authScopeList.append(.fullName)
+                }
+                if let appleEmailScope = content["appleEmailScope"] as? Bool, appleEmailScope {
+                    authScopeList.append(.email)
+                }
             }
             
             var buttonTitle = localizationService.translate(content["buttonTitle"] as? String) ?? ""
@@ -200,14 +211,6 @@ extension MWAppAuthStep: MobileWorkflowStep {
             _ = try item.respresentation() // confirm valid representation
             
             return item
-        }
-        
-        var authScopeList: [AuthScope]?
-        if let appleFullNameScope = data.content["appleFullNameScope"] as? Bool, appleFullNameScope {
-            authScopeList?.append(.fullName)
-        }
-        if let appleEmailScope = data.content["appleEmailScope"] as? Bool, appleEmailScope {
-            authScopeList?.append(.email)
         }
         
         return MWAppAuthStep(
