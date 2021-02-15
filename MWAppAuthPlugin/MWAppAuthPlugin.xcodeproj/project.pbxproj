@@ -14,6 +14,7 @@
 		36E88CA12538965600BC6A98 /* MWAppAuthPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 36E88C932538965500BC6A98 /* MWAppAuthPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36E88CDF2538AA8B00BC6A98 /* MWAppAuthStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88CDD2538AA8B00BC6A98 /* MWAppAuthStep.swift */; };
 		36E88CE02538AA8B00BC6A98 /* MWAppAuthStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E88CDE2538AA8B00BC6A98 /* MWAppAuthStepViewController.swift */; };
+		ADBC77B525D148C5000AB52F /* SignInWithAppleButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBC77B325D148C5000AB52F /* SignInWithAppleButtonTableViewCell.swift */; };
 		B574B973EE7243C1A5C00939 /* Pods_MWAppAuth_MWAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B35F890D72278C52B0ED0959 /* Pods_MWAppAuth_MWAppAuthPlugin.framework */; };
 		BA9DB7AE7B5F011B61C97259 /* Pods_MWAppAuthPluginTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB1DD30F025BC74C24DDC420 /* Pods_MWAppAuthPluginTests.framework */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,7 @@
 		5F7DF44E2882D3BFB8B3DF20 /* Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.release.xcconfig"; path = "Target Support Files/Pods-MWAppAuth-MobileWorkflowAppAuthPlugin/Pods-MWAppAuth-MobileWorkflowAppAuthPlugin.release.xcconfig"; sourceTree = "<group>"; };
 		6370B10A4E5556CBCF92CCFC /* Pods-MWAppAuthPluginTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuthPluginTests.release.xcconfig"; path = "Target Support Files/Pods-MWAppAuthPluginTests/Pods-MWAppAuthPluginTests.release.xcconfig"; sourceTree = "<group>"; };
 		98E68C62E57FB50A95773778 /* Pods-MWAppAuth-MWAppAuthPlugin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuth-MWAppAuthPlugin.debug.xcconfig"; path = "Target Support Files/Pods-MWAppAuth-MWAppAuthPlugin/Pods-MWAppAuth-MWAppAuthPlugin.debug.xcconfig"; sourceTree = "<group>"; };
+		ADBC77B325D148C5000AB52F /* SignInWithAppleButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleButtonTableViewCell.swift; sourceTree = "<group>"; };
 		B35F890D72278C52B0ED0959 /* Pods_MWAppAuth_MWAppAuthPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MWAppAuth_MWAppAuthPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2DA4DC85BC6DE8824E963C /* Pods-MWAppAuth-MWAppAuthPlugin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MWAppAuth-MWAppAuthPlugin.release.xcconfig"; path = "Target Support Files/Pods-MWAppAuth-MWAppAuthPlugin/Pods-MWAppAuth-MWAppAuthPlugin.release.xcconfig"; sourceTree = "<group>"; };
 		C86924D5A2ABD951D5AA7023 /* Pods-MobileWorkflowAppAuthPluginTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWorkflowAppAuthPluginTests.debug.xcconfig"; path = "Target Support Files/Pods-MobileWorkflowAppAuthPluginTests/Pods-MobileWorkflowAppAuthPluginTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				36E88CDD2538AA8B00BC6A98 /* MWAppAuthStep.swift */,
 				36E88CDE2538AA8B00BC6A98 /* MWAppAuthStepViewController.swift */,
 				36542B3225A887E6001CECE6 /* AuthItem.swift */,
+				ADBC77B325D148C5000AB52F /* SignInWithAppleButtonTableViewCell.swift */,
 			);
 			path = AppAuthStep;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 			files = (
 				36E88CE02538AA8B00BC6A98 /* MWAppAuthStepViewController.swift in Sources */,
 				36C18355256E9D5D0044A74B /* MWAppAuthPlugin.swift in Sources */,
+				ADBC77B525D148C5000AB52F /* SignInWithAppleButtonTableViewCell.swift in Sources */,
 				36542B3325A887E6001CECE6 /* AuthItem.swift in Sources */,
 				36E88CDF2538AA8B00BC6A98 /* MWAppAuthStep.swift in Sources */,
 			);

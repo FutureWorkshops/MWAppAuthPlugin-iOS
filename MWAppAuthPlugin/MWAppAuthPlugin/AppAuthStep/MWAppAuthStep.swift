@@ -19,6 +19,11 @@ enum L10n {
             "Unsupported item type: \(type)"
         }
     }
+    
+    enum AppleLogin {
+        static let errorTitle = "Error"
+        static let errorMessage = "Something went wrong. We couldn't validate your Apple credentials"
+    }
 }
 
 public enum ParseError: LocalizedError {
@@ -41,15 +46,23 @@ public enum ParseError: LocalizedError {
 
 private let kImageCellReuseIdentifier = "ImageCellReuseIdentifier"
 private let kAuthCellReuseIdentifier = "AuthCellReuseIdentifier"
+private let kAppleCellReuseIdentifier = "AppleCellReuseIdentifier"
+
+enum AuthScope: String, Codable {
+    case email
+    case fullName
+}
 
 class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     
     let imageURL: String?
     let services: MobileWorkflowServices
+    let session: Session
     
-    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices) {
+    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices, session: Session) {
         self.imageURL = (imageURL?.isEmpty ?? true) ? nil : imageURL
         self.services = services
+        self.session = session
         super.init(identifier: identifier)
         self.title = title
         self.text = text
@@ -60,7 +73,11 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
         guard let _ = self.imageURL else { return kAuthCellReuseIdentifier }
         switch indexPath.section {
         case 0: return kImageCellReuseIdentifier
-        case 1: return kAuthCellReuseIdentifier
+        case 1:
+            guard let item = self.objectForRow(at: indexPath) as? AuthItem else {
+                fallthrough
+            }
+            return item.type == .apple ? kAppleCellReuseIdentifier : kAuthCellReuseIdentifier
         default: return kAuthCellReuseIdentifier
         }
     }
@@ -68,6 +85,7 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     override func registerCells(for tableView: UITableView) {
         tableView.register(MobileWorkflowImageTableViewCell.self, forCellReuseIdentifier: kImageCellReuseIdentifier)
         tableView.register(MobileWorkflowButtonTableViewCell.self, forCellReuseIdentifier: kAuthCellReuseIdentifier)
+        tableView.register(SignInWithAppleButtonTableViewCell.self, forCellReuseIdentifier: kAppleCellReuseIdentifier)
     }
     
     override func numberOfSections() -> Int {
@@ -92,19 +110,32 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
         }
         
         guard let item = self.objectForRow(at: indexPath) as? AuthItem,
-              let representation = try? item.respresentation(),
-              let buttonCell = cell as? MobileWorkflowButtonTableViewCell
+              let representation = try? item.respresentation()
         else {
             preconditionFailure()
         }
         
         switch representation {
         case .oauth(let buttonTitle, _):
+            guard let buttonCell = cell as? MobileWorkflowButtonTableViewCell else {
+                preconditionFailure()
+            }
             buttonCell.configureButton(label: buttonTitle, style: .primary)
         case .twitter(let buttonTitle):
+            guard let buttonCell = cell as? MobileWorkflowButtonTableViewCell else {
+                preconditionFailure()
+            }
             buttonCell.configureButton(label: buttonTitle, style: .primary)
         case .modalWorkflowId(let buttonTitle, _):
+            guard let buttonCell = cell as? MobileWorkflowButtonTableViewCell else {
+                preconditionFailure()
+            }
             buttonCell.configureButton(label: buttonTitle, style: .outline)
+        case .apple:
+            guard let buttonCell = cell as? SignInWithAppleButtonTableViewCell else {
+                preconditionFailure()
+            }
+            buttonCell.configureCell()
         }
     }
     
@@ -155,6 +186,10 @@ extension MWAppAuthStep: MobileWorkflowStep {
                 modalWorkflowId = content["modalWorkflowId"] as? Int
             }
             
+            let appleFullNameScope = content["appleFullNameScope"] as? Bool
+            let appleEmailScope = content["appleEmailScope"] as? Bool
+            let appleAccessTokenURL = content["appleAccessTokenURL"] as? String
+            
             let item = AuthItem(
                 type: type,
                 buttonTitle: buttonTitle,
@@ -163,7 +198,10 @@ extension MWAppAuthStep: MobileWorkflowStep {
                 oAuth2ClientSecret: oAuth2ClientSecret,
                 oAuth2Scope: oAuth2Scope,
                 oAuth2RedirectScheme: oAuth2RedirectScheme,
-                modalWorkflowId: modalWorkflowId
+                modalWorkflowId: modalWorkflowId,
+                appleFullNameScope: appleFullNameScope,
+                appleEmailScope: appleEmailScope,
+                appleAccessTokenURL: appleAccessTokenURL
             )
             
             _ = try item.respresentation() // confirm valid representation
@@ -177,7 +215,8 @@ extension MWAppAuthStep: MobileWorkflowStep {
             text: localizationService.translate(text),
             imageURL: imageURL,
             items: items,
-            services: services
+            services: services,
+            session: step.session
         )
     }
 }

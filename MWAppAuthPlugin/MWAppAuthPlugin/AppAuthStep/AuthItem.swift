@@ -15,6 +15,9 @@ private let kOAuth2ClientSecret = "oAuth2ClientSecret"
 private let kOAuth2Scope = "oAuth2Scope"
 private let kOAuth2RedirectScheme = "oAuth2RedirectScheme"
 private let kModalWorkflowId = "modalWorkflowId"
+private let kAppleFullNameScope = "appleFullNameScope"
+private let kAppleEmailScope = "appleEmailScope"
+private let kAppleAccessTokenURL = "appleAccessTokenURL"
 
 class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
     static var supportsSecureCoding: Bool { true }
@@ -23,6 +26,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         case oauth
         case twitter
         case modalWorkflow
+        case apple
     }
     
     let type: ItemType
@@ -33,6 +37,9 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
     let oAuth2Scope: String?
     let oAuth2RedirectScheme: String?
     let modalWorkflowId: Int?
+    let appleFullNameScope: Bool?
+    let appleEmailScope: Bool?
+    let appleAccessTokenURL: String?
     
     public required convenience init?(coder: NSCoder) {
         
@@ -51,6 +58,9 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         let oAuth2Scope = coder.decodeObject(of: NSString.self, forKey: kOAuth2Scope)
         let oAuth2RedirectScheme = coder.decodeObject(of: NSString.self, forKey: kOAuth2RedirectScheme)
         let modalWorkflowId = coder.decodeObject(of: NSNumber.self, forKey: kModalWorkflowId)
+        let appleFullNameScope = coder.decodeObject(forKey: kAppleFullNameScope) as? Bool
+        let appleEmailScope = coder.decodeObject(forKey: kAppleEmailScope) as? Bool
+        let appleAccessTokenURL = coder.decodeObject(of: NSString.self, forKey: kAppleAccessTokenURL)
         
         self.init(
             type: type,
@@ -60,11 +70,14 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
             oAuth2ClientSecret: oAuth2ClientSecret as String?,
             oAuth2Scope: oAuth2Scope as String?,
             oAuth2RedirectScheme: oAuth2RedirectScheme as String?,
-            modalWorkflowId: modalWorkflowId?.intValue
+            modalWorkflowId: modalWorkflowId?.intValue,
+            appleFullNameScope: appleFullNameScope,
+            appleEmailScope: appleEmailScope,
+            appleAccessTokenURL: appleAccessTokenURL as String?
         )
     }
     
-    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, modalWorkflowId: Int?) {
+    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, modalWorkflowId: Int?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?) {
 
         self.type = type
         self.buttonTitle = buttonTitle
@@ -74,6 +87,9 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         self.oAuth2Scope = oAuth2Scope
         self.oAuth2RedirectScheme = oAuth2RedirectScheme
         self.modalWorkflowId = modalWorkflowId
+        self.appleFullNameScope = appleFullNameScope
+        self.appleEmailScope = appleEmailScope
+        self.appleAccessTokenURL = appleAccessTokenURL
         
         super.init()
     }
@@ -87,6 +103,9 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         coder.encode(self.oAuth2Scope as NSString?, forKey: kOAuth2Scope)
         coder.encode(self.oAuth2RedirectScheme as NSString?, forKey: kOAuth2RedirectScheme)
         coder.encode(self.modalWorkflowId, forKey: kModalWorkflowId)
+        coder.encode(self.appleFullNameScope, forKey: kAppleFullNameScope)
+        coder.encode(self.appleEmailScope, forKey: kAppleEmailScope)
+        coder.encode(self.appleAccessTokenURL, forKey: kAppleAccessTokenURL)
     }
     
     public func copy(with zone: NSZone? = nil) -> Any {
@@ -98,7 +117,10 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
             oAuth2ClientSecret: self.oAuth2ClientSecret,
             oAuth2Scope: self.oAuth2Scope,
             oAuth2RedirectScheme: self.oAuth2RedirectScheme,
-            modalWorkflowId: self.modalWorkflowId
+            modalWorkflowId: self.modalWorkflowId,
+            appleFullNameScope: self.appleEmailScope,
+            appleEmailScope: self.appleEmailScope,
+            appleAccessTokenURL: self.appleAccessTokenURL
         )
     }
 }
@@ -115,12 +137,14 @@ enum AuthItemRepresentation {
     case oauth(buttonTitle: String, config: OAuth2Config)
     case twitter(buttonTitle: String)
     case modalWorkflowId(buttonTitle: String, modalWorkflowId: Int)
+    case apple
     
     var buttonTitle: String {
         switch self {
         case .oauth(let buttonTitle, _): return buttonTitle
         case .twitter(let buttonTitle): return buttonTitle
         case .modalWorkflowId(let buttonTitle, _): return buttonTitle
+        case .apple: return ""
         }
     }
 }
@@ -141,6 +165,8 @@ extension AuthItem {
                 throw ParseError.invalidStepData(cause: "Missing modalWorkflowId")
             }
             return .modalWorkflowId(buttonTitle: self.buttonTitle, modalWorkflowId: modalWorkflowId)
+        case .apple:
+            return .apple
         }
     }
 }
