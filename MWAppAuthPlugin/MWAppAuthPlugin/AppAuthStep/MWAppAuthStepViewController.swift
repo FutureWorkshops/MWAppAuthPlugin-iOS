@@ -238,6 +238,22 @@ private extension MWAppAuthStepViewController {
             }
         }
     }
+    
+    func makeName(fullName: PersonNameComponents?) -> String? {
+        guard let fullName = fullName else {
+            return nil
+        }
+        
+        var nameComponents = [String]()
+        if let givenName = fullName.givenName {
+            nameComponents.append(givenName)
+        }
+        if let familyName = fullName.familyName {
+            nameComponents.append(familyName)
+        }
+        
+        return nameComponents.joined(separator: " ")
+    }
 }
 
 struct AppleIDCredential: Codable {
@@ -261,41 +277,28 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             
-            let userId = appleIDCredential.user
-            
-            #warning("Store userId once MW is updated")
-            
-//            let userIdCredential = Credential(type: CredentialType.appleIdCredentialUser.rawValue, value: userId, expirationDate: Date())
-//
-//            self.appAuthStep.services.credentialStore.updateCredential(userIdCredential) { result, error in
-//
-//            }
-            
-            var name: String = ""
-            if let fullName = appleIDCredential.fullName {
-                var nameComponents = [String]()
-                
-                if let givenName = fullName.givenName {
-                    nameComponents.append(givenName)
+            // Expiration date is not currently used, hence credential was set to `.distantFuture`. This should be reviewed in the future.
+            let userIdCredential = Credential(
+                type: CredentialType.appleIdCredentialUser.rawValue,
+                value: appleIDCredential.user,
+                expirationDate: .distantFuture
+            )
+
+            self.appAuthStep.services.credentialStore.updateCredential(userIdCredential) { [weak self] result in
+                switch result {
+                case .success:
+                    guard let identityToken = appleIDCredential.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
+                        return
+                    }
+                    
+                    let name = self?.makeName(fullName: appleIDCredential.fullName) ?? ""
+                    
+                    self?.performSignInWithApple(userId: appleIDCredential.user, name: name, identityToken: identityTokenString)
+                    
+                case .failure(let error):
+                    self?.show(error)
                 }
-                
-                if let familyName = fullName.familyName {
-                    nameComponents.append(familyName)
-                }
-                
-                name = nameComponents.joined(separator: " ")
             }
-        
-            guard let identityToken = appleIDCredential.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
-                return
-            }
-            
-            self.performSignInWithApple(userId: userId, name: name, identityToken: identityTokenString)
-            
-            
-        case let passwordCredential as ASPasswordCredential:
-            
-            print(passwordCredential)
             
         default:
             break
