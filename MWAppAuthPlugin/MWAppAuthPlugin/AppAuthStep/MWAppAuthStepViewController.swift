@@ -28,6 +28,7 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     
     private var ongoingImageLoads: [IndexPath: AnyCancellable] = [:]
     private var appleAccessTokenURL: String?
+    private var appleUsername: String?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -239,9 +240,9 @@ private extension MWAppAuthStepViewController {
         }
     }
     
-    func makeName(fullName: PersonNameComponents?) -> String? {
+    func makeName(fullName: PersonNameComponents?) -> String {
         guard let fullName = fullName else {
-            return nil
+            return ""
         }
         
         var nameComponents = [String]()
@@ -252,7 +253,14 @@ private extension MWAppAuthStepViewController {
             nameComponents.append(familyName)
         }
         
-        return nameComponents.joined(separator: " ")
+        if nameComponents.isEmpty {
+            return self.appleUsername ?? ""
+        } else {
+            let name = nameComponents.joined(separator: " ")
+            self.appleUsername = name
+            
+            return name
+        }
     }
 }
 
@@ -277,6 +285,9 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             
+            // Name is only provided in the first response of an Auth request. Save it in case multiple attempts are required
+            let name = self.makeName(fullName: appleIDCredential.fullName)
+            
             guard let identityToken = appleIDCredential.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
                 self.showConfirmationAlert(title: L10n.AppleLogin.errorTitle, message: L10n.AppleLogin.errorMessage) { _ in }
                 return
@@ -292,8 +303,6 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
             self.appAuthStep.services.credentialStore.updateCredential(userIdCredential) { [weak self] result in
                 switch result {
                 case .success:
-                    let name = self?.makeName(fullName: appleIDCredential.fullName) ?? ""
-                    
                     self?.performSignInWithApple(userId: appleIDCredential.user, name: name, identityToken: identityTokenString)
                     
                 case .failure(let error):
