@@ -214,7 +214,29 @@ private extension MWAppAuthStepViewController {
         
         let appleCredential = AppleIDCredential(userId: userId, name: name, identityToken: identityToken)
         
-        // Perform Async request
+        guard let urlString = self.appleAccessTokenURL, let url = URL(string: urlString) else {
+            return
+        }
+        
+        let data = try? JSONEncoder().encode(appleCredential)
+        
+        let parser: (Data) throws -> Credential = { data in
+            return try JSONDecoder().decode(Credential.self, from: data)
+        }
+        
+        let authTask = URLAsyncTask<Credential>.build(url: url, method: .POST, body: data, session: self.appAuthStep.services.session, parser: parser)
+        
+        self.appAuthStep?.services.perform(task: authTask) { [weak self] (response) in
+            DispatchQueue.main.async {
+                self?.hideLoading()
+                switch response {
+                case .success:
+                    self?.goForward()
+                case .failure(let error):
+                    self?.show(error)
+                }
+            }
+        }
     }
 }
 
@@ -240,7 +262,8 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             
             let userId = appleIDCredential.user
-            // Store credential to check if scope should change to public/private
+            
+            #warning("Store userId once MW is updated")
             
 //            let userIdCredential = Credential(type: CredentialType.appleIdCredentialUser.rawValue, value: userId, expirationDate: Date())
 //
