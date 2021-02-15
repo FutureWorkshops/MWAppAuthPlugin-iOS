@@ -277,6 +277,11 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             
+            guard let identityToken = appleIDCredential.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
+                self.showConfirmationAlert(title: L10n.AppleLogin.errorTitle, message: L10n.AppleLogin.errorMessage) { _ in }
+                return
+            }
+            
             // Expiration date is not currently used, hence credential was set to `.distantFuture`. This should be reviewed in the future.
             let userIdCredential = Credential(
                 type: CredentialType.appleIdCredentialUser.rawValue,
@@ -287,10 +292,6 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
             self.appAuthStep.services.credentialStore.updateCredential(userIdCredential) { [weak self] result in
                 switch result {
                 case .success:
-                    guard let identityToken = appleIDCredential.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
-                        return
-                    }
-                    
                     let name = self?.makeName(fullName: appleIDCredential.fullName) ?? ""
                     
                     self?.performSignInWithApple(userId: appleIDCredential.user, name: name, identityToken: identityTokenString)
