@@ -57,10 +57,12 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     
     let imageURL: String?
     let services: MobileWorkflowServices
+    let session: Session
     
-    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices) {
+    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices, session: Session) {
         self.imageURL = (imageURL?.isEmpty ?? true) ? nil : imageURL
         self.services = services
+        self.session = session
         super.init(identifier: identifier)
         self.title = title
         self.text = text
@@ -213,7 +215,8 @@ extension MWAppAuthStep: MobileWorkflowStep {
             text: localizationService.translate(text),
             imageURL: imageURL,
             items: items,
-            services: services
+            services: services,
+            session: step.session
         )
     }
 }

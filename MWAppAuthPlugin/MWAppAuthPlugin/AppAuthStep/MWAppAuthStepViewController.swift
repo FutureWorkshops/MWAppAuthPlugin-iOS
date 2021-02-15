@@ -55,7 +55,7 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     
     private func loadImage(for cell: UITableViewCell, at indexPath: IndexPath) {
         guard let imageURL = self.appAuthStep.imageURL,
-              let resolvedURL = self.appAuthStep.services.session.resolve(url: imageURL)?.absoluteString else {
+              let resolvedURL = self.appAuthStep.session.resolve(url: imageURL)?.absoluteString else {
             self.update(image: nil, of: cell)
             return
         }
@@ -121,7 +121,7 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
             return AppAuthFlowResumer(session: session)
         }
         let authenticationTask = AuthenticationTask(input: authProvider)
-        self.appAuthStep?.services.perform(task: authenticationTask) { [weak self] (response) in
+        self.appAuthStep?.services.perform(task: authenticationTask, session: self.appAuthStep.session) { [weak self] (response) in
             DispatchQueue.main.async {
                 self?.hideLoading()
                 switch response {
@@ -138,7 +138,7 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     
     public func showLoading() {
         self.tableView?.isUserInteractionEnabled = false
-        self.tableView?.backgroundView = LoadingStateView(frame: .zero)
+        self.tableView?.backgroundView = StateView(frame: .zero)
     }
 
     public func hideLoading() {
@@ -224,9 +224,9 @@ private extension MWAppAuthStepViewController {
             return try JSONDecoder().decode(Credential.self, from: data)
         }
         
-        let authTask = URLAsyncTask<Credential>.build(url: url, method: .POST, body: data, session: self.appAuthStep.services.session, parser: parser)
+        let authTask = URLAsyncTask<Credential>.build(url: url, method: .POST, body: data, session: self.appAuthStep.session, parser: parser)
         
-        self.appAuthStep?.services.perform(task: authTask) { [weak self] (response) in
+        self.appAuthStep?.services.perform(task: authTask, session: self.appAuthStep.session) { [weak self] (response) in
             DispatchQueue.main.async {
                 self?.hideLoading()
                 switch response {
