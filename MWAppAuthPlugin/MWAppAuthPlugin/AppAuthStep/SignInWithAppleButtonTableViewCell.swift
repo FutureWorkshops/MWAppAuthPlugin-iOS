@@ -31,6 +31,9 @@ final class SignInWithAppleButtonTableViewCell: UITableViewCell {
         self.loginButton.addTarget(self, action: #selector(self.didTapSignIn(_:)), for: .touchUpInside)
         self.loginButton.translatesAutoresizingMaskIntoConstraints = false
         
+        self.backgroundColor = .secondarySystemBackground
+        self.contentView.backgroundColor = .secondarySystemBackground
+        
         self.contentView.addSubview(self.loginButton)
     }
     
