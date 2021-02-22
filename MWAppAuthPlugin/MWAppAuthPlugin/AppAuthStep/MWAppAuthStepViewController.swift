@@ -84,8 +84,9 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     
     private func performOAuth(config: OAuth2Config) {
         guard
-            let authorizationEndpoint = URL(string: config.oAuth2Url.appending(OAuthPaths.authorization)),
-            let tokenEndpoint = URL(string: config.oAuth2Url.appending(OAuthPaths.token)),
+            let oAuth2Url = self.appAuthStep.session.resolve(url: config.oAuth2Url)?.absoluteString,
+            let authorizationEndpoint = URL(string: oAuth2Url.appending(OAuthPaths.authorization)),
+            let tokenEndpoint = URL(string: oAuth2Url.appending(OAuthPaths.token)),
             let redirectURL = URL(string: config.oAuth2RedirectScheme + "://callback")
             else { return }
         
