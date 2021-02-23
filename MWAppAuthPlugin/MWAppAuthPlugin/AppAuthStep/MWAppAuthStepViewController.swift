@@ -216,7 +216,9 @@ private extension MWAppAuthStepViewController {
         
         let appleCredential = AppleIDCredential(userId: userId, name: name, identityToken: identityToken)
         
-        guard let urlString = self.appleAccessTokenURL, let url = URL(string: urlString) else {
+        guard let urlString = self.appleAccessTokenURL,
+              let url = self.appAuthStep.session.resolve(url: urlString)
+        else {
             return
         }
         
