@@ -231,8 +231,17 @@ private extension MWAppAuthStepViewController {
             DispatchQueue.main.async {
                 self?.hideLoading()
                 switch response {
-                case .success:
-                    self?.goForward()
+                case .success(let credential):
+                    print(response)
+                    self?.appAuthStep.services.credentialStore.updateCredential(credential, completion: { result in
+                        print(result)
+                        switch result {
+                        case .success:
+                            self?.goForward()
+                        case .failure(let error):
+                            self?.show(error)
+                        }
+                    })
                 case .failure(let error):
                     self?.show(error)
                 }
