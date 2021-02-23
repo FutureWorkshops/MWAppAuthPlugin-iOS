@@ -232,9 +232,7 @@ private extension MWAppAuthStepViewController {
                 self?.hideLoading()
                 switch response {
                 case .success(let credential):
-                    print(response)
                     self?.appAuthStep.services.credentialStore.updateCredential(credential, completion: { result in
-                        print(result)
                         switch result {
                         case .success:
                             self?.goForward()
