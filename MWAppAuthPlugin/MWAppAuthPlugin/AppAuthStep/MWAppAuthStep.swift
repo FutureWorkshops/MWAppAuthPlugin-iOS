@@ -132,10 +132,7 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
             }
             buttonCell.configureButton(label: buttonTitle, style: .outline)
         case .apple:
-            guard let buttonCell = cell as? SignInWithAppleButtonTableViewCell else {
-                preconditionFailure()
-            }
-            buttonCell.configureCell()
+            break // no configuration required
         }
     }
     
