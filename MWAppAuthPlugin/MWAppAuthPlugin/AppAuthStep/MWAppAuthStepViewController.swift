@@ -130,7 +130,11 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
                 case .success:
                     self?.goForward()
                 case .failure(let error):
-                    self?.show(error)
+                    if let authError = (error as NSError).userInfo[NSUnderlyingErrorKey] as? ASWebAuthenticationSessionError, authError.code == .canceledLogin {
+                        // if cancel, do nothing
+                    } else {
+                        self?.show(error)
+                    }
                 }
             }
         }
