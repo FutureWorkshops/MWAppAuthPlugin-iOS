@@ -14,6 +14,7 @@ private let kOAuth2ClientId = "oAuth2ClientId"
 private let kOAuth2ClientSecret = "oAuth2ClientSecret"
 private let kOAuth2Scope = "oAuth2Scope"
 private let kOAuth2RedirectScheme = "oAuth2RedirectScheme"
+private let kOAuth2TokenUrl = "oAuth2TokenUrl"
 private let kModalWorkflowId = "modalWorkflowId"
 private let kAppleFullNameScope = "appleFullNameScope"
 private let kAppleEmailScope = "appleEmailScope"
@@ -24,6 +25,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
     
     enum ItemType: String, Codable {
         case oauth
+        case oauthRopc
         case twitter
         case modalWorkflow
         case apple
@@ -36,6 +38,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
     let oAuth2ClientSecret: String?
     let oAuth2Scope: String?
     let oAuth2RedirectScheme: String?
+    let oAuth2TokenUrl: String?
     let modalWorkflowId: Int?
     let appleFullNameScope: Bool?
     let appleEmailScope: Bool?
@@ -57,6 +60,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         let oAuth2ClientSecret = coder.decodeObject(of: NSString.self, forKey: kOAuth2ClientSecret)
         let oAuth2Scope = coder.decodeObject(of: NSString.self, forKey: kOAuth2Scope)
         let oAuth2RedirectScheme = coder.decodeObject(of: NSString.self, forKey: kOAuth2RedirectScheme)
+        let oAuth2TokenUrl = coder.decodeObject(of: NSString.self, forKey: kOAuth2TokenUrl)
         let modalWorkflowId = coder.decodeObject(of: NSNumber.self, forKey: kModalWorkflowId)
         let appleFullNameScope = coder.decodeObject(forKey: kAppleFullNameScope) as? Bool
         let appleEmailScope = coder.decodeObject(forKey: kAppleEmailScope) as? Bool
@@ -70,6 +74,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
             oAuth2ClientSecret: oAuth2ClientSecret as String?,
             oAuth2Scope: oAuth2Scope as String?,
             oAuth2RedirectScheme: oAuth2RedirectScheme as String?,
+            oAuth2TokenUrl: oAuth2TokenUrl as String?,
             modalWorkflowId: modalWorkflowId?.intValue,
             appleFullNameScope: appleFullNameScope,
             appleEmailScope: appleEmailScope,
@@ -77,7 +82,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         )
     }
     
-    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, modalWorkflowId: Int?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?) {
+    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, oAuth2TokenUrl: String?, modalWorkflowId: Int?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?) {
 
         self.type = type
         self.buttonTitle = buttonTitle
@@ -86,6 +91,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         self.oAuth2ClientSecret = oAuth2ClientSecret
         self.oAuth2Scope = oAuth2Scope
         self.oAuth2RedirectScheme = oAuth2RedirectScheme
+        self.oAuth2TokenUrl = oAuth2TokenUrl
         self.modalWorkflowId = modalWorkflowId
         self.appleFullNameScope = appleFullNameScope
         self.appleEmailScope = appleEmailScope
@@ -102,6 +108,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         coder.encode(self.oAuth2ClientSecret as NSString?, forKey: kOAuth2ClientSecret)
         coder.encode(self.oAuth2Scope as NSString?, forKey: kOAuth2Scope)
         coder.encode(self.oAuth2RedirectScheme as NSString?, forKey: kOAuth2RedirectScheme)
+        coder.encode(self.oAuth2TokenUrl as? NSString?, forKey: kOAuth2TokenUrl)
         coder.encode(self.modalWorkflowId, forKey: kModalWorkflowId)
         coder.encode(self.appleFullNameScope, forKey: kAppleFullNameScope)
         coder.encode(self.appleEmailScope, forKey: kAppleEmailScope)
@@ -117,6 +124,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
             oAuth2ClientSecret: self.oAuth2ClientSecret,
             oAuth2Scope: self.oAuth2Scope,
             oAuth2RedirectScheme: self.oAuth2RedirectScheme,
+            oAuth2TokenUrl: self.oAuth2TokenUrl,
             modalWorkflowId: self.modalWorkflowId,
             appleFullNameScope: self.appleEmailScope,
             appleEmailScope: self.appleEmailScope,
@@ -133,8 +141,16 @@ struct OAuth2Config {
     let oAuth2RedirectScheme: String
 }
 
+struct OAuthROPCConfig {
+    let oAuth2Url: String
+    let oAuth2ClientId: String
+    let oAuth2ClientSecret: String?
+    let oAuth2TokenUrl: String?
+}
+
 enum AuthItemRepresentation {
     case oauth(buttonTitle: String, config: OAuth2Config)
+    case oauthRopc(buttonTitle: String, config: OAuthROPCConfig)
     case twitter(buttonTitle: String)
     case modalWorkflowId(buttonTitle: String, modalWorkflowId: Int)
     case apple
@@ -142,6 +158,7 @@ enum AuthItemRepresentation {
     var buttonTitle: String {
         switch self {
         case .oauth(let buttonTitle, _): return buttonTitle
+        case .oauthRopc(let buttonTitle, _): return buttonTitle
         case .twitter(let buttonTitle): return buttonTitle
         case .modalWorkflowId(let buttonTitle, _): return buttonTitle
         case .apple: return ""
@@ -158,6 +175,11 @@ extension AuthItem {
                 throw ParseError.invalidStepData(cause: "Missing required OAuth2 parameters")
             }
             return .oauth(buttonTitle: self.buttonTitle, config: OAuth2Config(oAuth2Url: oAuth2Url, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, oAuth2RedirectScheme: oAuth2RedirectScheme))
+        case .oauthRopc:
+            guard let oAuth2Url = self.oAuth2Url, let oAuth2ClientId = self.oAuth2ClientId else {
+                throw ParseError.invalidStepData(cause: "Missing required OAuth2 parameters")
+            }
+            return .oauthRopc(buttonTitle: self.buttonTitle, config: OAuthROPCConfig(oAuth2Url: oAuth2Url, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2TokenUrl: self.oAuth2TokenUrl))
         case .twitter:
             return .twitter(buttonTitle: self.buttonTitle)
         case .modalWorkflow:

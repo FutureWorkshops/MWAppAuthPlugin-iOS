@@ -121,6 +121,11 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
                 preconditionFailure()
             }
             buttonCell.configureButton(label: buttonTitle, style: .primary)
+        case .oauthRopc(let buttonTitle, _):
+            guard let buttonCell = cell as? MobileWorkflowButtonTableViewCell else {
+                preconditionFailure()
+            }
+            buttonCell.configureButton(label: buttonTitle, style: .primary)
         case .twitter(let buttonTitle):
             guard let buttonCell = cell as? MobileWorkflowButtonTableViewCell else {
                 preconditionFailure()
@@ -175,6 +180,7 @@ extension MWAppAuthStep: MobileWorkflowStep {
             let oAuth2ClientSecret = content["oAuth2ClientSecret"] as? String
             let oAuth2Scope = content["oAuth2Scope"] as? String
             let oAuth2RedirectScheme = content["oAuth2RedirectScheme"] as? String
+            let oAuth2TokenUrl = content["oAuth2TokenUrl"] as? String
             
             let modalWorkflowId: Int?
             if let id = content["modalWorkflowId"] as? String, id.isEmpty == false {
@@ -195,6 +201,7 @@ extension MWAppAuthStep: MobileWorkflowStep {
                 oAuth2ClientSecret: oAuth2ClientSecret,
                 oAuth2Scope: oAuth2Scope,
                 oAuth2RedirectScheme: oAuth2RedirectScheme,
+                oAuth2TokenUrl: oAuth2TokenUrl,
                 modalWorkflowId: modalWorkflowId,
                 appleFullNameScope: appleFullNameScope,
                 appleEmailScope: appleEmailScope,
