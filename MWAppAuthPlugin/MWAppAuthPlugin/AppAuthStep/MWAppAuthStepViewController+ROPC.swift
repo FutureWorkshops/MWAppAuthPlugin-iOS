@@ -8,9 +8,58 @@
 import UIKit
 import MobileWorkflowCore
 
+fileprivate let kUsernameItemIdentifier = "ROPC_USERNAME_FORM_ITEM"
+fileprivate let kPasswordItemIdentifier = "ROPC_PASSWORD_FORM_ITEM"
+fileprivate let kFormStepIdentifier = "ROPC_FORM_STEP"
+fileprivate let kFormTaskIdentifier = "ROPC_FORM_TASK"
+
+fileprivate class ROPCFormTaskViewController: ORKTaskViewController {
+    let config: OAuthROPCConfig
+    
+    init(task: ORKTask, config: OAuthROPCConfig) {
+        self.config = config
+        super.init(task: task, taskRun: nil)
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 extension MWAppAuthStepViewController {
     
     func performOAuthROPC(config: OAuthROPCConfig) {
+        
+        let headerTitleItem = ORKFormItem(sectionTitle: L10n.AppAuth.loginDetailsTitle)
+        
+        let usernameAnswerFormat = ORKTextAnswerFormat()
+        usernameAnswerFormat.multipleLines = false
+        usernameAnswerFormat.autocapitalizationType = .none
+        usernameAnswerFormat.autocorrectionType = .no
+        usernameAnswerFormat.textContentType = .username
+        let usernameFormItem = ORKFormItem(identifier: kUsernameItemIdentifier, text: L10n.AppAuth.usernameFieldTitle, answerFormat: usernameAnswerFormat)
+        usernameFormItem.isOptional = false
+        
+        let passwordAnswerFormat = ORKTextAnswerFormat()
+        passwordAnswerFormat.isSecureTextEntry = true
+        passwordAnswerFormat.textContentType = .password
+        passwordAnswerFormat.multipleLines = false
+        let passwordFormItem = ORKFormItem(identifier: kPasswordItemIdentifier, text: L10n.AppAuth.passwordFieldTitle, answerFormat: passwordAnswerFormat)
+        passwordFormItem.isOptional = false
+        
+        let step = ORKFormStep(identifier: kFormStepIdentifier, title: L10n.AppAuth.loginTitle, text: nil)
+        step.formItems = [headerTitleItem, usernameFormItem, passwordFormItem]
+        step.isOptional = false
+        
+        let task = ORKNavigableOrderedTask(identifier: kFormTaskIdentifier, steps: [step])
+        let vc = ROPCFormTaskViewController(task: task, config: config)
+        vc.discardable = true
+        vc.delegate = self
+        
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    private func performOAuthROPCRequest(config: OAuthROPCConfig, username: String, password: String) {
         guard
             let tokenUrlString = config.oAuth2TokenUrl,
             let tokenURL = self.appAuthStep.session.resolve(url: tokenUrlString)
@@ -19,8 +68,8 @@ extension MWAppAuthStepViewController {
         var params: [String: String] = [
             "grant_type": "password",
             "client_id": config.oAuth2ClientId,
-            "username": "***",
-            "password": "***"
+            "username": username,
+            "password": password
         ]
         if let secret = config.oAuth2ClientSecret {
             params["client_secret"] = config.oAuth2ClientSecret
@@ -37,7 +86,9 @@ extension MWAppAuthStepViewController {
             parser: { try ROPCResponse.parse(data: $0) }
         )
         
-        self.ropcNetworkService.perform(task: task, session: self.appAuthStep.session, respondOn: DispatchQueue.main) { [weak self] result in
+        self.showLoading()
+        self.ropcNetworkService.perform(task: task, session: self.appAuthStep.session, respondOn: .main) { [weak self] result in
+            self?.hideLoading()
             switch result {
             case .success(let response):
                 let credential = Credential(
@@ -75,4 +126,21 @@ struct ROPCResponse: Decodable {
     let scope: String
     let tokenType: String
     let expiresIn: Int
+}
+
+extension MWAppAuthStepViewController: ORKTaskViewControllerDelegate {
+    
+    func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        taskViewController.presentingViewController?.dismiss(animated: true) { [weak self] in
+            guard reason == .completed,
+                  let config = (taskViewController as? ROPCFormTaskViewController)?.config,
+                  let stepResult = taskViewController.result.stepResult(forStepIdentifier: kFormStepIdentifier),
+                  let usernameResult = stepResult.result(forIdentifier: kUsernameItemIdentifier) as? ORKTextQuestionResult,
+                  let username = usernameResult.answer as? String,
+                  let passwordResult = stepResult.result(forIdentifier: kPasswordItemIdentifier) as? ORKTextQuestionResult,
+                  let password = passwordResult.answer as? String
+            else { return }
+            self?.performOAuthROPCRequest(config: config, username: username, password: password)
+        }
+    }
 }

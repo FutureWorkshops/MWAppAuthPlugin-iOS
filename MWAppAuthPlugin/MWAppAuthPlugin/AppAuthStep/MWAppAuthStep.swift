@@ -18,6 +18,9 @@ enum L10n {
         static func unsupportedItemTypeError(type: String) -> String {
             "Unsupported item type: \(type)"
         }
+        static let loginDetailsTitle = "Please enter your login details:"
+        static let usernameFieldTitle = "Username"
+        static let passwordFieldTitle = "Password"
     }
     
     enum AppleLogin {
