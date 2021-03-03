@@ -88,12 +88,10 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     
     public func showLoading() {
         self.tableView?.isUserInteractionEnabled = false
-        self.tableView?.backgroundView = StateView(frame: .zero)
     }
 
     public func hideLoading() {
         self.tableView?.isUserInteractionEnabled = true
-        self.tableView?.backgroundView = nil
     }
 }
 
