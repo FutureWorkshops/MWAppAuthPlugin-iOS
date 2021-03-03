@@ -28,7 +28,7 @@ fileprivate class ROPCFormTaskViewController: ORKTaskViewController {
 
 extension MWAppAuthStepViewController {
     
-    func performOAuthROPC(config: OAuthROPCConfig) {
+    func performOAuthROPC(title: String, config: OAuthROPCConfig) {
         
         let headerTitleItem = ORKFormItem(sectionTitle: L10n.AppAuth.loginDetailsTitle)
         
@@ -47,7 +47,7 @@ extension MWAppAuthStepViewController {
         let passwordFormItem = ORKFormItem(identifier: kPasswordItemIdentifier, text: L10n.AppAuth.passwordFieldTitle, answerFormat: passwordAnswerFormat)
         passwordFormItem.isOptional = false
         
-        let step = ORKFormStep(identifier: kFormStepIdentifier, title: L10n.AppAuth.loginTitle, text: nil)
+        let step = ORKFormStep(identifier: kFormStepIdentifier, title: title.capitalized, text: nil)
         step.formItems = [headerTitleItem, usernameFormItem, passwordFormItem]
         step.isOptional = false
         
@@ -129,6 +129,10 @@ struct ROPCResponse: Decodable {
 }
 
 extension MWAppAuthStepViewController: ORKTaskViewControllerDelegate {
+    
+    func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+        stepViewController.continueButtonTitle = L10n.AppAuth.loginTitle
+    }
     
     func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         taskViewController.presentingViewController?.dismiss(animated: true) { [weak self] in

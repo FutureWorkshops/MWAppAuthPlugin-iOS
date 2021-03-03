@@ -108,8 +108,8 @@ extension MWAppAuthStepViewController: MobileWorkflowButtonTableViewCellDelegate
         switch representation {
         case .oauth(_, let config):
             self.performOAuth(config: config)
-        case .oauthRopc(_, let config):
-            self.performOAuthROPC(config: config)
+        case .oauthRopc(let buttonTitle, let config):
+            self.performOAuthROPC(title: buttonTitle, config: config)
         case .twitter(_):
             break // TODO: perform twitter login
         case .modalWorkflowId(_,  let modalWorkflowId):
