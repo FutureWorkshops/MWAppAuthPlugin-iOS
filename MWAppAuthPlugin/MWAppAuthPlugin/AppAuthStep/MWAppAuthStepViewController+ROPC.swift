@@ -60,10 +60,7 @@ extension MWAppAuthStepViewController {
     }
     
     private func performOAuthROPCRequest(config: OAuthROPCConfig, username: String, password: String) {
-        guard
-            let tokenUrlString = config.oAuth2TokenUrl,
-            let tokenURL = self.appAuthStep.session.resolve(url: tokenUrlString)
-        else { return }
+        guard let tokenURL = self.appAuthStep.session.resolve(url: config.oAuth2TokenUrl) else { return }
         
         var params: [String: String] = [
             "grant_type": "password",

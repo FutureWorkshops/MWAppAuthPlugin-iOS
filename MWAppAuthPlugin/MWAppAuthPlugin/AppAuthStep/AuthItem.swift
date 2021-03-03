@@ -142,10 +142,9 @@ struct OAuth2Config {
 }
 
 struct OAuthROPCConfig {
-    let oAuth2Url: String
+    let oAuth2TokenUrl: String
     let oAuth2ClientId: String
     let oAuth2ClientSecret: String?
-    let oAuth2TokenUrl: String?
 }
 
 enum AuthItemRepresentation {
@@ -176,10 +175,10 @@ extension AuthItem {
             }
             return .oauth(buttonTitle: self.buttonTitle, config: OAuth2Config(oAuth2Url: oAuth2Url, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, oAuth2RedirectScheme: oAuth2RedirectScheme))
         case .oauthRopc:
-            guard let oAuth2Url = self.oAuth2Url, let oAuth2ClientId = self.oAuth2ClientId else {
+            guard let oAuth2TokenUrl = self.oAuth2TokenUrl, let oAuth2ClientId = self.oAuth2ClientId else {
                 throw ParseError.invalidStepData(cause: "Missing required OAuth2 parameters")
             }
-            return .oauthRopc(buttonTitle: self.buttonTitle, config: OAuthROPCConfig(oAuth2Url: oAuth2Url, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2TokenUrl: self.oAuth2TokenUrl))
+            return .oauthRopc(buttonTitle: self.buttonTitle, config: OAuthROPCConfig(oAuth2TokenUrl: oAuth2TokenUrl, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret))
         case .twitter:
             return .twitter(buttonTitle: self.buttonTitle)
         case .modalWorkflow:
