@@ -59,12 +59,11 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     // MARK: Loading
     
     private func loadImage(for cell: UITableViewCell, at indexPath: IndexPath) {
-        guard let imageURL = self.appAuthStep.imageURL,
-              let resolvedURL = self.appAuthStep.session.resolve(url: imageURL)?.absoluteString else {
+        guard let imageURL = self.appAuthStep.imageURL else {
             self.update(image: nil, of: cell)
             return
         }
-        let cancellable = self.appAuthStep.services.imageLoadingService.asyncLoad(image: resolvedURL) { [weak self] image in
+        let cancellable = self.appAuthStep.services.imageLoadingService.asyncLoad(image: imageURL, session: self.appAuthStep.session) { [weak self] image in
             self?.update(image: image, of: cell)
             self?.ongoingImageLoads.removeValue(forKey: indexPath)
         }
