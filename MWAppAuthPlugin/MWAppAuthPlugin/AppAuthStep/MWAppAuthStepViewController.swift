@@ -48,7 +48,9 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
         else if let cell = cell as? SignInWithAppleButtonTableViewCell {
             cell.delegate = self
         }
-        self.loadImage(for: cell, at: indexPath)
+        if let cell = cell as? MobileWorkflowImageTableViewCell {
+            self.loadImage(for: cell, at: indexPath)
+        }
     }
     
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
