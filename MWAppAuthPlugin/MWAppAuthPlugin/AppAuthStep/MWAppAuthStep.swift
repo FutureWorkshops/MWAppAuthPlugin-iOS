@@ -185,12 +185,7 @@ extension MWAppAuthStep: MobileWorkflowStep {
             let oAuth2RedirectScheme = content["oAuth2RedirectScheme"] as? String
             let oAuth2TokenUrl = content["oAuth2TokenUrl"] as? String
             
-            let modalWorkflowId: Int?
-            if let id = content["modalWorkflowId"] as? String, id.isEmpty == false {
-                modalWorkflowId = Int(id)
-            } else {
-                modalWorkflowId = content["modalWorkflowId"] as? Int
-            }
+            let modalWorkflowId = content.getString(key: "modalWorkflowId")
             
             let appleFullNameScope = content["appleFullNameScope"] as? Bool
             let appleEmailScope = content["appleEmailScope"] as? Bool
