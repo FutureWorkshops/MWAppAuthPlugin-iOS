@@ -155,8 +155,8 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
 
 extension MWAppAuthStep: MobileWorkflowStep {
 
-    static func build(step: StepInfo, services: MobileWorkflowServices) throws -> ORKStep {
-        let data = step.data
+    static func build(stepInfo: StepInfo, services: MobileWorkflowServices) throws -> Step {
+        let data = stepInfo.data
         let localizationService = services.localizationService
         
         guard let title = data.content["title"] as? String else {
@@ -218,7 +218,7 @@ extension MWAppAuthStep: MobileWorkflowStep {
             imageURL: imageURL,
             items: items,
             services: services,
-            session: step.session
+            session: stepInfo.session
         )
     }
 }
