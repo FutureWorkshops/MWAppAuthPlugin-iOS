@@ -69,7 +69,7 @@ extension MWAppAuthStepViewController {
             "password": password
         ]
         if let secret = config.oAuth2ClientSecret {
-            params["client_secret"] = config.oAuth2ClientSecret
+            params["client_secret"] = secret
         }
         
         let paramsString = params.map({ "\($0.key)=\($0.value)" }).joined(separator: "&") // url encoding
