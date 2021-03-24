@@ -108,7 +108,7 @@ class AuthItem: NSObject, Codable, NSCopying, NSCoding, NSSecureCoding {
         coder.encode(self.oAuth2ClientSecret as NSString?, forKey: kOAuth2ClientSecret)
         coder.encode(self.oAuth2Scope as NSString?, forKey: kOAuth2Scope)
         coder.encode(self.oAuth2RedirectScheme as NSString?, forKey: kOAuth2RedirectScheme)
-        coder.encode(self.oAuth2TokenUrl as? NSString?, forKey: kOAuth2TokenUrl)
+        coder.encode(self.oAuth2TokenUrl as NSString?, forKey: kOAuth2TokenUrl)
         coder.encode(self.modalWorkflowId, forKey: kModalWorkflowId)
         coder.encode(self.appleFullNameScope, forKey: kAppleFullNameScope)
         coder.encode(self.appleEmailScope, forKey: kAppleEmailScope)
