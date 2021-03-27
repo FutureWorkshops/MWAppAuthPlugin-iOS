@@ -114,7 +114,7 @@ extension MWAppAuthStepViewController: MobileWorkflowButtonTableViewCellDelegate
         case .modalWorkflowId(_,  let modalWorkflowId):
             self.workflowPresentationDelegate?.presentWorkflowWithId(modalWorkflowId, isDiscardable: true, animated: true, onDismiss: { reason in
                 if reason == .completed {
-                    self.goForward()
+                    // self.goForward()
                 }
             })
         case .apple:
