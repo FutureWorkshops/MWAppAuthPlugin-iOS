@@ -13,12 +13,12 @@ fileprivate let kPasswordItemIdentifier = "ROPC_PASSWORD_FORM_ITEM"
 fileprivate let kFormStepIdentifier = "ROPC_FORM_STEP"
 fileprivate let kFormTaskIdentifier = "ROPC_FORM_TASK"
 
-fileprivate class ROPCFormTaskViewController: ORKTaskViewController {
+fileprivate class ROPCFormTaskViewController: MWWorkflowViewController {
     let config: OAuthROPCConfig
     
-    init(task: ORKTask, config: OAuthROPCConfig) {
+    init(workflow: Workflow, config: OAuthROPCConfig) {
         self.config = config
-        super.init(task: task, taskRun: nil)
+        super.init(workflow: workflow)
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -51,10 +51,10 @@ extension MWAppAuthStepViewController {
         step.formItems = [headerTitleItem, usernameFormItem, passwordFormItem]
         step.isOptional = false
         
-        let task = ORKNavigableOrderedTask(identifier: kFormTaskIdentifier, steps: [step])
-        let vc = ROPCFormTaskViewController(task: task, config: config)
-        vc.discardable = true
-        vc.delegate = self
+        let workflow = MWWorkflow(identifier: kFormTaskIdentifier, steps: [step], id: kFormTaskIdentifier, name: nil, title: nil, systemImageName: nil, session: self.appAuthStep.session.copyForChild())
+        let vc = ROPCFormTaskViewController(workflow: workflow, config: config)
+        vc.isDiscardable = true
+        vc.workflowDelegate = self
         
         self.present(vc, animated: true, completion: nil)
     }
@@ -125,23 +125,37 @@ struct ROPCResponse: Decodable {
     let expiresIn: Int
 }
 
-extension MWAppAuthStepViewController: ORKTaskViewControllerDelegate {
+extension MWAppAuthStepViewController: WorkflowViewControllerDelegate {
     
-    func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
-        stepViewController.continueButtonTitle = L10n.AppAuth.loginTitle
+    func workflowViewControllerShouldConfirmCancel(_ workflowViewController: WorkflowViewController) -> Bool {
+        return false
     }
     
-    func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        taskViewController.presentingViewController?.dismiss(animated: true) { [weak self] in
+    func workflowViewController(_ workflowViewController: WorkflowViewController, didFinishWith reason: WorkflowFinishReason) {
+        workflowViewController.presentingViewController?.dismiss(animated: true) { [weak self] in
+            #warning("This data extraction from session needs to be tested")
             guard reason == .completed,
-                  let config = (taskViewController as? ROPCFormTaskViewController)?.config,
-                  let stepResult = taskViewController.result.stepResult(forStepIdentifier: kFormStepIdentifier),
-                  let usernameResult = stepResult.result(forIdentifier: kUsernameItemIdentifier) as? ORKTextQuestionResult,
-                  let username = usernameResult.answer as? String,
-                  let passwordResult = stepResult.result(forIdentifier: kPasswordItemIdentifier) as? ORKTextQuestionResult,
-                  let password = passwordResult.answer as? String
+                  let config = (workflowViewController as? ROPCFormTaskViewController)?.config,
+                  let username = workflowViewController.workflow.session.fetchValue(resource: "\(kUsernameItemIdentifier).answer") as? String,
+                  let password = workflowViewController.workflow.session.fetchValue(resource: "\(kPasswordItemIdentifier).answer") as? String
             else { return }
             self?.performOAuthROPCRequest(config: config, username: username, password: password)
+        }
+    }
+    
+    func workflowViewController(_ workflowViewController: WorkflowViewController, stepViewControllerWillAppear stepViewController: StepViewController) {
+        stepViewController.continueButtonItem?.title = L10n.AppAuth.loginTitle
+    }
+    
+    func workflowViewController(_ workflowViewController: WorkflowViewController, stepViewControllerWillDisappear stepViewController: StepViewController) {
+        guard let result = stepViewController.mwResult else { return }
+        let session = workflowViewController.workflow.session
+        
+        result.mwResults.forEach {
+            if $0.identifier.isEmpty {
+                $0.identifier = result.identifier
+            }
+            session.append(provider: $0)
         }
     }
 }
