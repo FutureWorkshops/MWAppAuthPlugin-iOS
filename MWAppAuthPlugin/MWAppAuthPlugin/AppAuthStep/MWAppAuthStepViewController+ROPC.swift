@@ -144,6 +144,7 @@ extension MWAppAuthStepViewController: WorkflowViewControllerDelegate {
     }
     
     func workflowViewController(_ workflowViewController: WorkflowViewController, stepViewControllerWillAppear stepViewController: StepViewController) {
+        guard let stepViewController = stepViewController as? ORKStepViewController else { preconditionFailure() }
         stepViewController.continueButtonItem?.title = L10n.AppAuth.loginTitle
     }
     
