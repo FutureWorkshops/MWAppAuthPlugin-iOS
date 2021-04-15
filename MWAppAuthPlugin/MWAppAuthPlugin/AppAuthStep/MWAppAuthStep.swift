@@ -86,8 +86,8 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     }
     
     override func registerCells(for tableView: UITableView) {
-        tableView.register(MobileWorkflowImageTableViewCell.self, forCellReuseIdentifier: kImageCellReuseIdentifier)
-        tableView.register(MobileWorkflowButtonTableViewCell.self, forCellReuseIdentifier: kAuthCellReuseIdentifier)
+        tableView.register(MWImageTableViewCell.self, forCellReuseIdentifier: kImageCellReuseIdentifier)
+        tableView.register(MWButtonTableViewCell.self, forCellReuseIdentifier: kAuthCellReuseIdentifier)
         tableView.register(SignInWithAppleButtonTableViewCell.self, forCellReuseIdentifier: kAppleCellReuseIdentifier)
     }
     
@@ -107,7 +107,7 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     
     override func configureCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
         if let _ = imageURL, indexPath.section == 0 {
-            guard let imageCell = cell as? MobileWorkflowImageTableViewCell else { preconditionFailure() }
+            guard let imageCell = cell as? MWImageTableViewCell else { preconditionFailure() }
             imageCell.backgroundImage = nil
             return
         }
@@ -120,22 +120,22 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
         
         switch representation {
         case .oauth(let buttonTitle, _):
-            guard let buttonCell = cell as? MobileWorkflowButtonTableViewCell else {
+            guard let buttonCell = cell as? MWButtonTableViewCell else {
                 preconditionFailure()
             }
             buttonCell.configureButton(label: buttonTitle, style: .primary)
         case .oauthRopc(let buttonTitle, _):
-            guard let buttonCell = cell as? MobileWorkflowButtonTableViewCell else {
+            guard let buttonCell = cell as? MWButtonTableViewCell else {
                 preconditionFailure()
             }
             buttonCell.configureButton(label: buttonTitle, style: .primary)
         case .twitter(let buttonTitle):
-            guard let buttonCell = cell as? MobileWorkflowButtonTableViewCell else {
+            guard let buttonCell = cell as? MWButtonTableViewCell else {
                 preconditionFailure()
             }
             buttonCell.configureButton(label: buttonTitle, style: .primary)
         case .modalWorkflowId(let buttonTitle, _):
-            guard let buttonCell = cell as? MobileWorkflowButtonTableViewCell else {
+            guard let buttonCell = cell as? MWButtonTableViewCell else {
                 preconditionFailure()
             }
             buttonCell.configureButton(label: buttonTitle, style: .outline)
