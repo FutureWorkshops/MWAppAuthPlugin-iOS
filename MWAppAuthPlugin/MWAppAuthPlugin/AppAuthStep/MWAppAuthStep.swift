@@ -59,10 +59,10 @@ enum AuthScope: String, Codable {
 class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     
     let imageURL: String?
-    let services: MobileWorkflowServices
+    let services: StepServices
     let session: Session
     
-    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: MobileWorkflowServices, session: Session) {
+    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: StepServices, session: Session) {
         self.imageURL = (imageURL?.isEmpty ?? true) ? nil : imageURL
         self.services = services
         self.session = session
@@ -155,7 +155,7 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
 
 extension MWAppAuthStep: MobileWorkflowStep {
 
-    static func build(stepInfo: StepInfo, services: MobileWorkflowServices) throws -> Step {
+    static func build(stepInfo: StepInfo, services: StepServices) throws -> Step {
         let data = stepInfo.data
         let localizationService = services.localizationService
         
