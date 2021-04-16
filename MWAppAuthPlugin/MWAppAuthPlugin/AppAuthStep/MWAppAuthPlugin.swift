@@ -22,7 +22,7 @@ enum MWAppAuthStepType: String, StepType, CaseIterable {
         return self.rawValue
     }
     
-    var stepClass: MobileWorkflowStep.Type {
+    var stepClass: BuildableStep.Type {
         switch self {
         case .networkOAuth2: return MWAppAuthStep.self
         }

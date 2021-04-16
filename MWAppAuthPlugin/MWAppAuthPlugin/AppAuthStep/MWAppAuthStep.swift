@@ -153,7 +153,7 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
     }
 }
 
-extension MWAppAuthStep: MobileWorkflowStep {
+extension MWAppAuthStep: BuildableStep {
 
     static func build(stepInfo: StepInfo, services: StepServices) throws -> Step {
         let data = stepInfo.data
