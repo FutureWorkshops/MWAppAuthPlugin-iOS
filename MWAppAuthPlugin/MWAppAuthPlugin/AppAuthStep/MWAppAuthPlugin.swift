@@ -8,21 +8,21 @@
 import Foundation
 import MobileWorkflowCore
 
-public struct MWAppAuthPlugin: MobileWorkflowPlugin {
+public struct MWAppAuthPlugin: Plugin {
     
-    public static var allStepsTypes: [MobileWorkflowStepType] {
+    public static var allStepsTypes: [StepType] {
         return MWAppAuthStepType.allCases
     }
 }
 
-enum MWAppAuthStepType: String, MobileWorkflowStepType, CaseIterable {
+enum MWAppAuthStepType: String, StepType, CaseIterable {
     case networkOAuth2
     
     var typeName: String {
         return self.rawValue
     }
     
-    var stepClass: MobileWorkflowStep.Type {
+    var stepClass: BuildableStep.Type {
         switch self {
         case .networkOAuth2: return MWAppAuthStep.self
         }

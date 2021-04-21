@@ -127,8 +127,8 @@ struct ROPCResponse: Decodable {
 
 extension MWAppAuthStepViewController: WorkflowViewControllerDelegate {
     
-    func workflowViewControllerShouldConfirmCancel(_ workflowViewController: WorkflowViewController) -> Bool {
-        return false
+    func workflowViewControllerCanBeDismissed(_ workflowViewController: WorkflowViewController) -> Bool {
+        return true
     }
     
     func workflowViewController(_ workflowViewController: WorkflowViewController, didFinishWith reason: WorkflowFinishReason) {
@@ -144,18 +144,11 @@ extension MWAppAuthStepViewController: WorkflowViewControllerDelegate {
     }
     
     func workflowViewController(_ workflowViewController: WorkflowViewController, stepViewControllerWillAppear stepViewController: StepViewController) {
+        guard let stepViewController = stepViewController as? ORKStepViewController else { preconditionFailure() }
         stepViewController.continueButtonItem?.title = L10n.AppAuth.loginTitle
     }
     
     func workflowViewController(_ workflowViewController: WorkflowViewController, stepViewControllerWillDisappear stepViewController: StepViewController) {
-        guard let result = stepViewController.mwResult else { return }
-        let session = workflowViewController.workflow.session
-        
-        result.mwResults.forEach {
-            if $0.identifier.isEmpty {
-                $0.identifier = result.identifier
-            }
-            session.append(provider: $0)
-        }
+        // nothing
     }
 }

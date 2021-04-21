@@ -42,13 +42,13 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
-        if let cell = cell as? MobileWorkflowButtonTableViewCell {
+        if let cell = cell as? MWButtonTableViewCell {
             cell.delegate = self
         }
         else if let cell = cell as? SignInWithAppleButtonTableViewCell {
             cell.delegate = self
         }
-        if let cell = cell as? MobileWorkflowImageTableViewCell {
+        if let cell = cell as? MWImageTableViewCell {
             self.loadImage(for: cell, at: indexPath)
         }
     }
@@ -73,7 +73,7 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     }
     
     private func update(image: UIImage?, of cell: UITableViewCell) {
-        guard let cell = cell as? MobileWorkflowImageTableViewCell else { return }
+        guard let cell = cell as? MWImageTableViewCell else { return }
         cell.backgroundImage = image
         cell.setNeedsLayout()
     }
@@ -96,9 +96,9 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     }
 }
 
-extension MWAppAuthStepViewController: MobileWorkflowButtonTableViewCellDelegate {
+extension MWAppAuthStepViewController: MWButtonTableViewCellDelegate {
     
-    func buttonCell(_ cell: MobileWorkflowButtonTableViewCell, didTapButton button: UIButton) {
+    func buttonCell(_ cell: MWButtonTableViewCell, didTapButton button: UIButton) {
         guard let indexPath = self.tableView?.indexPath(for: cell),
             let item = self.appAuthStep.objectForRow(at: indexPath) as? AuthItem,
             let representation = try? item.respresentation()
