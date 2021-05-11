@@ -8,7 +8,6 @@
 import Foundation
 
 class AuthStepItem: Codable {
-    static var supportsSecureCoding: Bool { true }
     
     enum ItemType: String, Codable {
         case oauth
