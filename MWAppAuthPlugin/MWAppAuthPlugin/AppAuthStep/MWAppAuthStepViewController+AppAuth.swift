@@ -53,7 +53,7 @@ extension MWAppAuthStepViewController {
             return AppAuthFlowResumer(session: session)
         }
         let authenticationTask = AuthenticationTask(input: authProvider)
-        self.appAuthStep?.services.perform(task: authenticationTask, session: self.appAuthStep.session) { [weak self] (response) in
+        self.appAuthStep.services.perform(task: authenticationTask, session: self.appAuthStep.session) { [weak self] (response) in
             DispatchQueue.main.async {
                 self?.hideLoading()
                 switch response {

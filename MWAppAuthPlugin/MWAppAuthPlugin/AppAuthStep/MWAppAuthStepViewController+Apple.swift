@@ -13,7 +13,7 @@ import AuthenticationServices
 
 extension MWAppAuthStepViewController: SignInWithAppleButtonTableViewCellDelegate {
     func appleCell(_ cell: SignInWithAppleButtonTableViewCell, didTapButton button: UIButton) {
-        guard let indexPath = self.tableView?.indexPath(for: cell), let item = self.appAuthStep.objectForRow(at: indexPath) as? AuthItem, let representation = try? item.respresentation() else { return }
+        guard let indexPath = self.tableView.indexPath(for: cell), let item = self.appAuthStep.items[safe: indexPath.row] as? AuthStepItem, let representation = try? item.respresentation() else { return }
         
         switch representation {
         case .apple:
@@ -65,7 +65,7 @@ extension MWAppAuthStepViewController {
         
         let authTask = URLAsyncTask<Credential>.build(url: url, method: .POST, body: data, session: self.appAuthStep.session, parser: parser)
         
-        self.appAuthStep?.services.perform(task: authTask, session: self.appAuthStep.session) { [weak self] (response) in
+        self.appAuthStep.services.perform(task: authTask, session: self.appAuthStep.session) { [weak self] (response) in
             DispatchQueue.main.async {
                 self?.hideLoading()
                 switch response {

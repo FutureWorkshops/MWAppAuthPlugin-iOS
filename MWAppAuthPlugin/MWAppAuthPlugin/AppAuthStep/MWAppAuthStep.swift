@@ -47,72 +47,77 @@ public enum ParseError: LocalizedError {
     }
 }
 
-private let kImageCellReuseIdentifier = "ImageCellReuseIdentifier"
-private let kAuthCellReuseIdentifier = "AuthCellReuseIdentifier"
-private let kAppleCellReuseIdentifier = "AppleCellReuseIdentifier"
-
 enum AuthScope: String, Codable {
     case email
     case fullName
 }
 
-class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
+class MWAppAuthStep: MWStep, TableStep {
     
+    var items: [AuthStepItem]
     let imageURL: String?
     let services: StepServices
     let session: Session
     
-    init(identifier: String, title: String, text: String?, imageURL: String?, items: [AuthItem], services: StepServices, session: Session) {
+    init(identifier: String, text: String?, imageURL: String?, items: [AuthStepItem], services: StepServices, session: Session) {
+        self.items = items
         self.imageURL = (imageURL?.isEmpty ?? true) ? nil : imageURL
         self.services = services
         self.session = session
         super.init(identifier: identifier)
-        self.title = title
         self.text = text
-        self.items = items
+        
     }
     
-    override func reuseIdentifierForRow(at indexPath: IndexPath) -> String {
-        guard let _ = self.imageURL else { return kAuthCellReuseIdentifier }
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func instantiateViewController() -> StepViewController {
+        MWAppAuthStepViewController(tableStep: self)
+    }
+    
+    // MARK: TableStep
+    
+    var style: UITableView.Style {
+        return .plain
+    }
+    
+    var hasNavigationFooterInTableFooter: Bool {
+        return false
+    }
+    
+    func reuseIdentifierForTableRow(at indexPath: IndexPath) -> String {
+        guard let _ = self.imageURL else { return MWButtonTableViewCell.defaultReuseIdentifier }
         switch indexPath.section {
-        case 0: return kImageCellReuseIdentifier
+        case 0: return MWImageTableViewCell.defaultReuseIdentifier
         case 1:
-            guard let item = self.objectForRow(at: indexPath) as? AuthItem else {
-                fallthrough
+            guard let item = self.items[safe: indexPath.row] as? AuthStepItem else { fallthrough }
+            switch item.type {
+            case .apple: return SignInWithAppleButtonTableViewCell.defaultReuseIdentifier
+            case .modalWorkflow,
+                 .oauth,
+                 .oauthRopc,
+                 .twitter: return MWButtonTableViewCell.defaultReuseIdentifier
             }
-            return item.type == .apple ? kAppleCellReuseIdentifier : kAuthCellReuseIdentifier
-        default: return kAuthCellReuseIdentifier
+        default: return MWButtonTableViewCell.defaultReuseIdentifier
         }
     }
     
-    override func registerCells(for tableView: UITableView) {
-        tableView.register(MWImageTableViewCell.self, forCellReuseIdentifier: kImageCellReuseIdentifier)
-        tableView.register(MWButtonTableViewCell.self, forCellReuseIdentifier: kAuthCellReuseIdentifier)
-        tableView.register(SignInWithAppleButtonTableViewCell.self, forCellReuseIdentifier: kAppleCellReuseIdentifier)
+    func registerTableCells(for tableView: UITableView) {
+        tableView.register(MWImageTableViewCell.self)
+        tableView.register(MWButtonTableViewCell.self)
+        tableView.register(SignInWithAppleButtonTableViewCell.self)
     }
     
-    override func numberOfSections() -> Int {
-        guard let _ = self.imageURL else { return 1 }
-        return 2
-    }
-    
-    override func numberOfRows(inSection section: Int) -> Int {
-        guard let _ = self.imageURL else { return self.items?.count ?? 0 }
-        switch section {
-        case 0: return 1
-        case 1: return self.items?.count ?? 0
-        default: return 0
-        }
-    }
-    
-    override func configureCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
+    func configureTableCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
         if let _ = imageURL, indexPath.section == 0 {
             guard let imageCell = cell as? MWImageTableViewCell else { preconditionFailure() }
             imageCell.backgroundImage = nil
             return
         }
         
-        guard let item = self.objectForRow(at: indexPath) as? AuthItem,
+        guard let item = self.items[safe: indexPath.row] as? AuthStepItem,
               let representation = try? item.respresentation()
         else {
             preconditionFailure()
@@ -143,14 +148,6 @@ class MWAppAuthStep: ORKTableStep, UITableViewDelegate {
             break // no configuration required
         }
     }
-    
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func stepViewControllerClass() -> AnyClass {
-        return MWAppAuthStepViewController.self
-    }
 }
 
 extension MWAppAuthStep: BuildableStep {
@@ -158,18 +155,14 @@ extension MWAppAuthStep: BuildableStep {
     static func build(stepInfo: StepInfo, services: StepServices) throws -> Step {
         let data = stepInfo.data
         let localizationService = services.localizationService
-        
-        guard let title = data.content["title"] as? String else {
-            throw ParseError.invalidStepData(cause: "No title found for \(data.identifier)")
-        }
 
         let text = data.content["text"] as? String
         let imageURL = data.content["imageURL"] as? String
         
         let itemsContent = data.content["items"] as? [[String: Any]] ?? []
-        let items: [AuthItem] = try itemsContent.map { content in
+        let items: [AuthStepItem] = try itemsContent.map { content in
             let typeAsString = content["type"] as? String ?? "NO_TYPE"
-            guard let type = AuthItem.ItemType(rawValue: typeAsString) else {
+            guard let type = AuthStepItem.ItemType(rawValue: typeAsString) else {
                 throw ParseError.unsupportedItemType(type: typeAsString)
             }
             
@@ -191,7 +184,7 @@ extension MWAppAuthStep: BuildableStep {
             let appleEmailScope = content["appleEmailScope"] as? Bool
             let appleAccessTokenURL = content["appleAccessTokenURL"] as? String
             
-            let item = AuthItem(
+            let item = AuthStepItem(
                 type: type,
                 buttonTitle: buttonTitle,
                 oAuth2Url: oAuth2Url,
@@ -213,7 +206,6 @@ extension MWAppAuthStep: BuildableStep {
         
         return MWAppAuthStep(
             identifier: data.identifier,
-            title: localizationService.translate(title) ?? title,
             text: localizationService.translate(text),
             imageURL: imageURL,
             items: items,
