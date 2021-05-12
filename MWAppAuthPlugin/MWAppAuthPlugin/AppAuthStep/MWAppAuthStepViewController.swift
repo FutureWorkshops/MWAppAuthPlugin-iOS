@@ -17,16 +17,17 @@ enum OAuthPaths {
     static let token = "/token"
 }
 
-class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentationDelegator {
+class MWAppAuthStepViewController: MWTableStepViewController<MWAppAuthStep>, WorkflowPresentationDelegator {
     
     weak var workflowPresentationDelegate: WorkflowPresentationDelegate?
     
     //MARK: - Support variables
-    var appAuthStep: MWAppAuthStep! {
-        return self.step as? MWAppAuthStep
+    var appAuthStep: MWAppAuthStep {
+        return self.mwStep as! MWAppAuthStep
     }
     
     private var ongoingImageLoads: [IndexPath: AnyCancellable] = [:]
+    
     var appleAccessTokenURL: String?
     var appleUsername: String?
     
@@ -34,10 +35,25 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
         NetworkAsyncTaskService(urlSession: .shared)
     }()
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.hideNavigationFooterView()
-        self.tableView?.contentInsetAdjustmentBehavior = .automatic // ResearchKit sets this to .never
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.tableView.allowsSelection = false
+    }
+    
+    // MARK: UITableView
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        guard let _ = self.appAuthStep.imageURL else { return 1 }
+        return 2
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let _ = self.appAuthStep.imageURL else { return self.appAuthStep.items.count }
+        switch section {
+        case 0: return 1
+        case 1: return self.appAuthStep.items.count
+        default: return 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -88,21 +104,21 @@ class MWAppAuthStepViewController: ORKTableStepViewController, WorkflowPresentat
     // MARK: Loading
     
     public func showLoading() {
-        self.tableView?.isUserInteractionEnabled = false
+        self.tableView.isUserInteractionEnabled = false
     }
 
     public func hideLoading() {
-        self.tableView?.isUserInteractionEnabled = true
+        self.tableView.isUserInteractionEnabled = true
     }
 }
 
 extension MWAppAuthStepViewController: MWButtonTableViewCellDelegate {
     
     func buttonCell(_ cell: MWButtonTableViewCell, didTapButton button: UIButton) {
-        guard let indexPath = self.tableView?.indexPath(for: cell),
-            let item = self.appAuthStep.objectForRow(at: indexPath) as? AuthItem,
-            let representation = try? item.respresentation()
-            else { return }
+        guard let indexPath = self.tableView.indexPath(for: cell),
+              let item = self.appAuthStep.items[indexPath.row] as? AuthStepItem,
+              let representation = try? item.respresentation()
+        else { return }
         
         switch representation {
         case .oauth(_, let config):
