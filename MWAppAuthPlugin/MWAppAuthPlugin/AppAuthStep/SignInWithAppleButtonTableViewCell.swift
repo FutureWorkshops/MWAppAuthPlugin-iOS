@@ -28,8 +28,8 @@ final class SignInWithAppleButtonTableViewCell: UITableViewCell {
     
     private func configureCell() {
         
-        self.backgroundColor = .secondarySystemBackground
-        self.contentView.backgroundColor = .secondarySystemBackground
+        self.backgroundColor = .systemBackground
+        self.contentView.backgroundColor = .systemBackground
         
         self.setupLoginButton()
         self.setupConstraints()
