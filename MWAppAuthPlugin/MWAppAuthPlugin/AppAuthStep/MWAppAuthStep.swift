@@ -88,10 +88,10 @@ class MWAppAuthStep: MWStep, TableStep {
     }
     
     func reuseIdentifierForTableRow(at indexPath: IndexPath) -> String {
-        guard let _ = self.imageURL else { return MWButtonTableViewCell.defaultReuseIdentifier }
         switch indexPath.section {
         case 0: return MWImageTableViewCell.defaultReuseIdentifier
-        case 1:
+        case 1: return MWSubtitleTableViewCell.defaultReuseIdentifier
+        case 2:
             guard let item = self.items[safe: indexPath.row] as? AuthStepItem else { fallthrough }
             switch item.type {
             case .apple: return SignInWithAppleButtonTableViewCell.defaultReuseIdentifier
@@ -106,14 +106,22 @@ class MWAppAuthStep: MWStep, TableStep {
     
     func registerTableCells(for tableView: UITableView) {
         tableView.register(MWImageTableViewCell.self)
+        tableView.register(MWSubtitleTableViewCell.self)
         tableView.register(MWButtonTableViewCell.self)
         tableView.register(SignInWithAppleButtonTableViewCell.self)
     }
     
     func configureTableCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
-        if let _ = imageURL, indexPath.section == 0 {
+        if indexPath.section == 0 {
             guard let imageCell = cell as? MWImageTableViewCell else { preconditionFailure() }
             imageCell.backgroundImage = nil
+            return
+        }
+        
+        if indexPath.section == 1 {
+            guard let subtitleCell = cell as? MWSubtitleTableViewCell else { preconditionFailure() }
+            let resolvedText = self.session.resolve(value: self.text ?? "")
+            subtitleCell.viewData = .init(title: resolvedText, subtitle: nil, image: nil, willLoadImage: false, isDisclosureIndictorHidden: true)
             return
         }
         
