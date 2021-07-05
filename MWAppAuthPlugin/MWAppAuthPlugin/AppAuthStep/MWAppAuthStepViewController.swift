@@ -43,15 +43,14 @@ class MWAppAuthStepViewController: MWTableStepViewController<MWAppAuthStep>, Wor
     // MARK: UITableView
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        guard let _ = self.appAuthStep.imageURL else { return 1 }
-        return 2
+        return 3
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let _ = self.appAuthStep.imageURL else { return self.appAuthStep.items.count }
         switch section {
-        case 0: return 1
-        case 1: return self.appAuthStep.items.count
+        case 0: return self.appAuthStep.imageURL == nil ? 0 : 1
+        case 1: return (self.appAuthStep.text?.isEmpty ?? true) ? 0 : 1
+        case 2: return self.appAuthStep.items.count
         default: return 0
         }
     }
