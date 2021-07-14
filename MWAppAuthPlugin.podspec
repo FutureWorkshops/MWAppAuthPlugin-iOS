@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 	s.default_subspecs      = 'Core'
 	
     s.subspec 'Core' do |cs|
-	    cs.dependency            'MobileWorkflow'
+        cs.dependency            'MobileWorkflow', '~> 1.0.0'
 	    cs.dependency            'AppAuth', '~> 1.4.0'
         cs.source_files          = 'MWAppAuthPlugin/MWAppAuthPlugin/**/*.swift'
     end
