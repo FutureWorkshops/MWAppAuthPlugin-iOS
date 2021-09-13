@@ -53,7 +53,7 @@ extension MWAppAuthStepViewController {
                             expirationDate: .distantFuture
                         )
                     }
-                    completion(.success((token: token, refresh: refresh)))
+                    completion(.success([token, refresh].compactMap({ $0 })))
                 } else {
                     completion(.failure(error ?? CredentialError.unexpected))
                 }
