@@ -98,17 +98,10 @@ extension MWAppAuthStepViewController {
                     value: response.refreshToken,
                     expirationDate: .distantFuture
                 )
-                self?.appAuthStep.services.credentialStore.updateCredential(token, completion: { result in
+                self?.appAuthStep.services.credentialStore.updateCredentials([token, refresh], completion: { [weak self] result in
                     switch result {
                     case .success:
-                        self?.appAuthStep.services.credentialStore.updateCredential(refresh, completion: { result in
-                            switch result {
-                            case .success:
-                                self?.goForward()
-                            case .failure(let error):
-                                self?.show(error)
-                            }
-                        })
+                        self?.goForward()
                     case .failure(let error):
                         self?.show(error)
                     }
