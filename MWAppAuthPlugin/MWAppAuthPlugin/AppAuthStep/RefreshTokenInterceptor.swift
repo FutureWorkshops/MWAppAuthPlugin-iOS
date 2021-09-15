@@ -99,19 +99,24 @@ class RefreshTokenInterceptor: AsyncTaskInterceptor {
                         let updated = task.adding(headers: ["Authorization": "Bearer \(token.value)"])
                         completion(updated)
                     case .failure(let error):
-                        self?.tokenRefreshDidFail()
+                        self?.handleError(error)
                         completion(task) // failed to update token, so complete with unmodified task
                     }
                 })
             case .failure(let error):
-                self?.tokenRefreshDidFail()
+                self?.handleError(error)
                 completion(task) // failed to update token, so complete with unmodified task
             }
         }
     }
     
-    private func tokenRefreshDidFail() {
-        self.credentialStore.removeCredential(.token)
-        self.credentialStore.removeCredential(.refreshToken)
+    private func handleError(_ error: Error) {
+        switch error.extractCode() {
+        case URLError.Code.userAuthenticationRequired.rawValue,
+             401:
+            self.credentialStore.removeCredential(.token)
+            self.credentialStore.removeCredential(.refreshToken)
+        default: break
+        }
     }
 }
