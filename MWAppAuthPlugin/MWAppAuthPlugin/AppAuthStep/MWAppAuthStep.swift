@@ -208,17 +208,7 @@ extension MWAppAuthStep: BuildableStep {
             )
             
             _ = try item.respresentation() // confirm valid representation
-            
-            if [AuthStepItem.ItemType.oauth, .oauthRopc].contains(type),
-               let tokenUrl = item.oAuth2Url,
-               let clientId = item.oAuth2ClientId {
-                let config = OAuthRefreshTokenConfig(
-                    tokenUrl: tokenUrl,
-                    clientId: clientId,
-                    clientSecret: item.oAuth2ClientSecret
-                )
-            }
-            
+
             return item
         }
         
