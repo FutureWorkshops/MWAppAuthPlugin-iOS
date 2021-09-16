@@ -50,12 +50,18 @@ class RefreshTokenInterceptor: AsyncTaskInterceptor {
     
     func intercept<T>(task: URLAsyncTask<T>, session: ContentProvider, networkService: AsyncTaskService, completion: @escaping (URLAsyncTask<T>) -> Void) {
         
-        guard let config = self.config,
+        // if we have an unexpired auth token, do not continue with interception
+        if let credential = try? self.credentialStore.retrieveCredential(.token, isRequired: false).get(),
+           Date() < credential.expirationDate {
+            completion(task)
+            return
+        }
+        
+        // if we have a refresh token, an OAuth config, and this task isn't an equivalent refresh task, continue with interception
+        guard let refreshToken = try? self.credentialStore.retrieveCredential(.refreshToken, isRequired: false).get(),
+              let config = self.config,
               let tokenURL = session.resolve(url: config.tokenUrl + "/token"),
-              task.input.url != tokenURL, // don't intercept already running refresh task
-              let credential = try? self.credentialStore.retrieveCredential(.token, isRequired: false).get(),
-              Date() >= credential.expirationDate,
-              let refreshToken = try? self.credentialStore.retrieveCredential(.refreshToken, isRequired: false).get()
+              task.input.url != tokenURL // don't intercept already running refresh task
         else {
             completion(task)
             return
