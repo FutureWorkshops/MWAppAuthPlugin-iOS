@@ -44,10 +44,6 @@ class RefreshTokenInterceptor: AsyncTaskInterceptor {
         self.credentialStore = credentialStore
     }
     
-    func intercept<T>(task: URLAsyncTask<T>, session: ContentProvider) -> URLAsyncTask<T> {
-        return task
-    }
-    
     func intercept<T>(task: URLAsyncTask<T>, session: ContentProvider, networkService: AsyncTaskService, completion: @escaping (URLAsyncTask<T>) -> Void) {
         
         // if we have an unexpired auth token, do not continue with interception
@@ -105,24 +101,48 @@ class RefreshTokenInterceptor: AsyncTaskInterceptor {
                         let updated = task.adding(headers: ["Authorization": "Bearer \(token.value)"])
                         completion(updated)
                     case .failure(let error):
-                        self?.handleError(error)
+                        self?.handleRefreshError(error)
                         completion(task) // failed to update token, so complete with unmodified task
                     }
                 })
             case .failure(let error):
-                self?.handleError(error)
+                self?.handleRefreshError(error)
                 completion(task) // failed to update token, so complete with unmodified task
             }
         }
     }
     
-    private func handleError(_ error: Error) {
+    private func handleRefreshError(_ error: Error) {
         switch error.extractCode() {
         case URLError.Code.userAuthenticationRequired.rawValue,
              401:
             self.credentialStore.removeCredential(.token)
             self.credentialStore.removeCredential(.refreshToken)
         default: break
+        }
+    }
+    
+    func interceptErrorWithRetryTask<T>(task: URLAsyncTask<T>, for error: Error, session: ContentProvider) -> URLAsyncTask<T>? {
+        // check for authentication error
+        switch error.extractCode() {
+        case URLError.Code.userAuthenticationRequired.rawValue,
+             401:
+            break
+        default: return nil
+        }
+        // check for failing auth token
+        guard let _ = try? credentialStore.retrieveCredential(.token, isRequired: false).get() else {
+            // if no failing auth token, ensure we have also removed any refresh token
+            _ = credentialStore.removeCredential(.refreshToken)
+            return nil
+        }
+        // remove failing auth token
+        _ = credentialStore.removeCredential(.token)
+        // if a refresh token exists, retry - we'll only do this if there was a failing auth token, so only one refresh attempt is made
+        if let _ = try? credentialStore.retrieveCredential(.refreshToken, isRequired: false).get() {
+            return task // the task should subsequently be intercepted to perform refresh token flow
+        } else {
+            return nil
         }
     }
 }
