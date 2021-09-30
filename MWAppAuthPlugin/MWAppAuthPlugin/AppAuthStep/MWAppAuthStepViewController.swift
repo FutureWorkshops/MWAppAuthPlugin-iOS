@@ -128,8 +128,9 @@ extension MWAppAuthStepViewController: MWButtonTableViewCellDelegate {
             break // TODO: perform twitter login
         case .modalWorkflowId(_,  let modalWorkflowId):
             self.workflowPresentationDelegate?.presentWorkflowWithId(modalWorkflowId, isDiscardable: true, animated: true, onDismiss: { reason in
-                if reason == .completed {
-                    // do nothing, user will likely now need to login
+                if reason == .completed,
+                   let _ = try? self.appAuthStep.services.credentialStore.retrieveCredential(.token, isRequired: false).get() {
+                    self.goForward() // i.e. dismiss login options
                 }
             })
         case .apple:
