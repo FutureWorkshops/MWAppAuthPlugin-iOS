@@ -16,7 +16,8 @@ public struct MWAppAuthPlugin: Plugin {
     
     public static func buildInterceptors(credentialStore: CredentialStoreProtocol) -> [AsyncTaskInterceptor] {
         return [
-            RefreshTokenInterceptor(credentialStore: credentialStore)
+            RefreshTokenInterceptor(credentialStore: credentialStore),
+            OAuthSessionResponseInterceptor(credentialStore: credentialStore)
         ]
     }
 }
