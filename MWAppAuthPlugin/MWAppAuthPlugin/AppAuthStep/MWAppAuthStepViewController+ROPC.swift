@@ -88,12 +88,17 @@ extension MWAppAuthStepViewController {
             self?.hideLoading()
             switch result {
             case .success(let response):
-                let credential = Credential(
+                let token = Credential(
                     type: CredentialType.token.rawValue,
                     value: response.accessToken,
                     expirationDate: Date().addingTimeInterval(TimeInterval(response.expiresIn))
                 )
-                self?.appAuthStep.services.credentialStore.updateCredential(credential, completion: { result in
+                let refresh = Credential(
+                    type: CredentialType.refreshToken.rawValue,
+                    value: response.refreshToken,
+                    expirationDate: .distantFuture
+                )
+                self?.appAuthStep.services.credentialStore.updateCredentials([token, refresh], completion: { [weak self] result in
                     switch result {
                     case .success:
                         self?.goForward()

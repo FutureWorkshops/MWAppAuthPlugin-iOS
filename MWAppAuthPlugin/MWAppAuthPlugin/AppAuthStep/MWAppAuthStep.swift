@@ -208,7 +208,7 @@ extension MWAppAuthStep: BuildableStep {
             )
             
             _ = try item.respresentation() // confirm valid representation
-            
+
             return item
         }
         
@@ -220,5 +220,27 @@ extension MWAppAuthStep: BuildableStep {
             services: services,
             session: stepInfo.session
         )
+    }
+}
+
+extension MWAppAuthStep: InterceptorConfigurator {
+    
+    func configureInterceptors(interceptors: [AsyncTaskInterceptor]) {
+        let refreshTokenInterceptors = interceptors.compactMap({ $0 as? RefreshTokenInterceptor })
+        guard !refreshTokenInterceptors.isEmpty else { return }
+        
+        if let item = self.items.first(where: { [AuthStepItem.ItemType.oauth, .oauthRopc].contains($0.type) }),
+           let tokenUrl = item.oAuth2Url,
+           let clientId = item.oAuth2ClientId
+        {
+            let config = OAuthRefreshTokenConfig(
+                tokenUrl: tokenUrl,
+                clientId: clientId,
+                clientSecret: item.oAuth2ClientSecret
+            )
+            refreshTokenInterceptors.forEach {
+                $0.config = config
+            }
+        }
     }
 }

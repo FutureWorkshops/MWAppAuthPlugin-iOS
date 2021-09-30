@@ -39,13 +39,21 @@ extension MWAppAuthStepViewController {
         
         let authProvider = AuthProviderImplementation() { completion in
             let session = OIDAuthState.authState(byPresenting: request, presenting: self) { authState, error in
-                if let authState = authState, let accessToken = authState.lastTokenResponse?.accessToken, let  expirationDate = authState.lastTokenResponse?.accessTokenExpirationDate {
+                if let authState = authState, let accessToken = authState.lastTokenResponse?.accessToken, let expirationDate = authState.lastTokenResponse?.accessTokenExpirationDate {
                     let token = Credential(
                         type: CredentialType.token.rawValue,
                         value: accessToken,
                         expirationDate: expirationDate
                     )
-                    completion(.success(token))
+                    var refresh: Credential?
+                    if let refreshToken = authState.lastTokenResponse?.refreshToken {
+                        refresh = Credential(
+                            type: CredentialType.refreshToken.rawValue,
+                            value: refreshToken,
+                            expirationDate: .distantFuture
+                        )
+                    }
+                    completion(.success([token, refresh].compactMap({ $0 })))
                 } else {
                     completion(.failure(error ?? CredentialError.unexpected))
                 }

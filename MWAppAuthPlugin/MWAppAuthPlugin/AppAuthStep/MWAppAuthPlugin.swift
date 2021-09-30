@@ -13,6 +13,12 @@ public struct MWAppAuthPlugin: Plugin {
     public static var allStepsTypes: [StepType] {
         return MWAppAuthStepType.allCases
     }
+    
+    public static func buildInterceptors(credentialStore: CredentialStoreProtocol) -> [AsyncTaskInterceptor] {
+        return [
+            RefreshTokenInterceptor(credentialStore: credentialStore)
+        ]
+    }
 }
 
 enum MWAppAuthStepType: String, StepType, CaseIterable {
