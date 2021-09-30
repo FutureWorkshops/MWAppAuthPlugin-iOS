@@ -10,6 +10,7 @@
 		36277DB625EEA839008AA190 /* MWAppAuthStepViewController+Apple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36277DB525EEA839008AA190 /* MWAppAuthStepViewController+Apple.swift */; };
 		36277DCE25EEA908008AA190 /* MWAppAuthStepViewController+AppAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36277DCD25EEA908008AA190 /* MWAppAuthStepViewController+AppAuth.swift */; };
 		36277DD425EEAABF008AA190 /* MWAppAuthStepViewController+ROPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36277DD325EEAABF008AA190 /* MWAppAuthStepViewController+ROPC.swift */; };
+		36BA2F902705DEC5003491E9 /* OAuthSessionResponseInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BA2F8F2705DEC5003491E9 /* OAuthSessionResponseInterceptor.swift */; };
 		36C18355256E9D5D0044A74B /* MWAppAuthPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C18354256E9D5D0044A74B /* MWAppAuthPlugin.swift */; };
 		36CF77F126F25D54003E4732 /* RefreshTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CF77F026F25D54003E4732 /* RefreshTokenInterceptor.swift */; };
 		36E88C9A2538965600BC6A98 /* MWAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E88C902538965500BC6A98 /* MWAppAuthPlugin.framework */; };
@@ -38,6 +39,7 @@
 		36277DB525EEA839008AA190 /* MWAppAuthStepViewController+Apple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MWAppAuthStepViewController+Apple.swift"; sourceTree = "<group>"; };
 		36277DCD25EEA908008AA190 /* MWAppAuthStepViewController+AppAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MWAppAuthStepViewController+AppAuth.swift"; sourceTree = "<group>"; };
 		36277DD325EEAABF008AA190 /* MWAppAuthStepViewController+ROPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MWAppAuthStepViewController+ROPC.swift"; sourceTree = "<group>"; };
+		36BA2F8F2705DEC5003491E9 /* OAuthSessionResponseInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthSessionResponseInterceptor.swift; sourceTree = "<group>"; };
 		36C18354256E9D5D0044A74B /* MWAppAuthPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWAppAuthPlugin.swift; sourceTree = "<group>"; };
 		36CF77F026F25D54003E4732 /* RefreshTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenInterceptor.swift; sourceTree = "<group>"; };
 		36E88C902538965500BC6A98 /* MWAppAuthPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MWAppAuthPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +132,7 @@
 				36277DD325EEAABF008AA190 /* MWAppAuthStepViewController+ROPC.swift */,
 				ADBC77B325D148C5000AB52F /* SignInWithAppleButtonTableViewCell.swift */,
 				36CF77F026F25D54003E4732 /* RefreshTokenInterceptor.swift */,
+				36BA2F8F2705DEC5003491E9 /* OAuthSessionResponseInterceptor.swift */,
 			);
 			path = AppAuthStep;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36BA2F902705DEC5003491E9 /* OAuthSessionResponseInterceptor.swift in Sources */,
 				36E88CE02538AA8B00BC6A98 /* MWAppAuthStepViewController.swift in Sources */,
 				36C18355256E9D5D0044A74B /* MWAppAuthPlugin.swift in Sources */,
 				36277DD425EEAABF008AA190 /* MWAppAuthStepViewController+ROPC.swift in Sources */,
