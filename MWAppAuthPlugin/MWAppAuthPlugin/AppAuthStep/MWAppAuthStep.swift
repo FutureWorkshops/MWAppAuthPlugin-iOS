@@ -185,6 +185,13 @@ extension MWAppAuthStep: BuildableStep {
             let oAuth2Scope = content["oAuth2Scope"] as? String
             let oAuth2RedirectScheme = content["oAuth2RedirectScheme"] as? String
             let oAuth2TokenUrl = content["oAuth2TokenUrl"] as? String
+            let oAuth2PreferEphemeralSession: Bool?
+            if let enableSSO = content["enableSSO"] as? Bool {
+                oAuth2PreferEphemeralSession = !enableSSO
+            } else {
+                // by omission, prefer ephemeral session to avoid iOS security altert being presented to the user
+                oAuth2PreferEphemeralSession = true
+            }
             
             let modalWorkflowId = content.getString(key: "modalWorkflowId")
             
@@ -201,6 +208,7 @@ extension MWAppAuthStep: BuildableStep {
                 oAuth2Scope: oAuth2Scope,
                 oAuth2RedirectScheme: oAuth2RedirectScheme,
                 oAuth2TokenUrl: oAuth2TokenUrl,
+                oAuth2PreferEphemeralSession: oAuth2PreferEphemeralSession,
                 modalWorkflowId: modalWorkflowId,
                 appleFullNameScope: appleFullNameScope,
                 appleEmailScope: appleEmailScope,

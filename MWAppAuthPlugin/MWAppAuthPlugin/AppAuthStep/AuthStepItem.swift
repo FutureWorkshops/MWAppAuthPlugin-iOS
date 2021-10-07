@@ -25,13 +25,13 @@ class AuthStepItem: Codable {
     let oAuth2Scope: String?
     let oAuth2RedirectScheme: String?
     let oAuth2TokenUrl: String?
+    let oAuth2PreferEphemeralSession: Bool?
     let modalWorkflowId: String?
     let appleFullNameScope: Bool?
     let appleEmailScope: Bool?
     let appleAccessTokenURL: String?
     
-    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, oAuth2TokenUrl: String?, modalWorkflowId: String?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?) {
-
+    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, oAuth2TokenUrl: String?, oAuth2PreferEphemeralSession: Bool?, modalWorkflowId: String?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?) {
         self.type = type
         self.buttonTitle = buttonTitle
         self.oAuth2Url = oAuth2Url
@@ -40,6 +40,7 @@ class AuthStepItem: Codable {
         self.oAuth2Scope = oAuth2Scope
         self.oAuth2RedirectScheme = oAuth2RedirectScheme
         self.oAuth2TokenUrl = oAuth2TokenUrl
+        self.oAuth2PreferEphemeralSession = oAuth2PreferEphemeralSession
         self.modalWorkflowId = modalWorkflowId
         self.appleFullNameScope = appleFullNameScope
         self.appleEmailScope = appleEmailScope
@@ -53,6 +54,7 @@ struct OAuth2Config {
     let oAuth2ClientSecret: String?
     let oAuth2Scope: String
     let oAuth2RedirectScheme: String
+    let oAuth2PreferEphemeralSession: Bool?
 }
 
 struct OAuthROPCConfig {
@@ -87,7 +89,7 @@ extension AuthStepItem {
             guard let oAuth2Url = self.oAuth2Url, let oAuth2ClientId = self.oAuth2ClientId, let oAuth2Scope = self.oAuth2Scope, let oAuth2RedirectScheme = self.oAuth2RedirectScheme else {
                 throw ParseError.invalidStepData(cause: "Missing required OAuth2 parameters")
             }
-            return .oauth(buttonTitle: self.buttonTitle, config: OAuth2Config(oAuth2Url: oAuth2Url, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, oAuth2RedirectScheme: oAuth2RedirectScheme))
+            return .oauth(buttonTitle: self.buttonTitle, config: OAuth2Config(oAuth2Url: oAuth2Url, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, oAuth2RedirectScheme: oAuth2RedirectScheme, oAuth2PreferEphemeralSession: self.oAuth2PreferEphemeralSession))
         case .oauthRopc:
             guard let oAuth2TokenUrl = self.oAuth2TokenUrl, let oAuth2ClientId = self.oAuth2ClientId else {
                 throw ParseError.invalidStepData(cause: "Missing required OAuth2 parameters")

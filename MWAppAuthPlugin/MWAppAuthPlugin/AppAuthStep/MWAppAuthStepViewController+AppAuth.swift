@@ -38,7 +38,7 @@ extension MWAppAuthStepViewController {
         )
         
         let authProvider = AuthProviderImplementation() { completion in
-            let session = OIDAuthState.authState(byPresenting: request, presenting: self) { authState, error in
+            let authCallback: (OIDAuthState?, Error?) -> () = { authState, error in
                 if let authState = authState, let accessToken = authState.lastTokenResponse?.accessToken, let expirationDate = authState.lastTokenResponse?.accessTokenExpirationDate {
                     let token = Credential(
                         type: CredentialType.token.rawValue,
@@ -57,6 +57,12 @@ extension MWAppAuthStepViewController {
                 } else {
                     completion(.failure(error ?? CredentialError.unexpected))
                 }
+            }
+            let session: OIDExternalUserAgentSession
+            if let preferEphemeralSession = config.oAuth2PreferEphemeralSession {
+                session = OIDAuthState.authState(byPresenting: request, presenting: self, prefersEphemeralSession: true, callback: authCallback)
+            } else {
+                session = OIDAuthState.authState(byPresenting: request, presenting: self, callback: authCallback)
             }
             return AppAuthFlowResumer(session: session)
         }
