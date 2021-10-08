@@ -8,7 +8,6 @@
 
 import UIKit
 import MobileWorkflowCore
-import AppAuth
 import Combine
 import AuthenticationServices
 
