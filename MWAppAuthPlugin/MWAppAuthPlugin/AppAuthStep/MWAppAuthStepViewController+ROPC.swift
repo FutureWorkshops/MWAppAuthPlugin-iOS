@@ -80,17 +80,25 @@ extension MWAppAuthStepViewController {
             loginViewController.hideLoading()
             switch result {
             case .success(let response):
+                
                 let token = Credential(
                     type: CredentialType.token.rawValue,
                     value: response.accessToken,
                     expirationDate: Date().addingTimeInterval(TimeInterval(response.expiresIn))
                 )
-                let refresh = Credential(
-                    type: CredentialType.refreshToken.rawValue,
-                    value: response.refreshToken,
-                    expirationDate: .distantFuture
-                )
-                self?.appAuthStep.services.credentialStore.updateCredentials([token, refresh], completion: { [weak self] result in
+                
+                var tokens : [Credential] = [token]
+                
+                if let refreshToken = response.refreshToken, refreshToken.isEmpty == false {
+                    let refresh = Credential(
+                        type: CredentialType.refreshToken.rawValue,
+                        value: refreshToken,
+                        expirationDate: .distantFuture
+                    )
+                    tokens.append(refresh)
+                }
+                
+                self?.appAuthStep.services.credentialStore.updateCredentials(tokens, completion: { [weak self] result in
                     switch result {
                     case .success:
                         loginViewController.goForward()
@@ -117,7 +125,7 @@ struct ROPCResponse: Decodable {
     }
     
     let accessToken: String
-    let refreshToken: String
+    let refreshToken: String?
     let scope: String
     let tokenType: String
     let expiresIn: Int
