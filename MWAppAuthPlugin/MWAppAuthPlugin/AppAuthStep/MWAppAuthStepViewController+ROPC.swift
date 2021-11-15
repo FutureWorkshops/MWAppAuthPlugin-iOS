@@ -13,12 +13,29 @@ fileprivate let kPasswordItemIdentifier = "ROPC_PASSWORD_FORM_ITEM"
 fileprivate let kFormStepIdentifier = "ROPC_FORM_STEP"
 fileprivate let kFormTaskIdentifier = "ROPC_FORM_TASK"
 
-fileprivate class ROPCFormTaskViewController: MWWorkflowViewController {
+fileprivate class ROPCFormTaskViewController: StepNavigationViewController {
     let config: OAuthROPCConfig
     
-    init(workflow: Workflow, config: OAuthROPCConfig) {
+    init(
+        config: OAuthROPCConfig,
+        stepBuilders: [StepBuilder],
+        initialStep: Step,
+        session: Session,
+        theme: Theme = .current,
+        analytics: Analytics? = nil,
+        outputDirectory: URL?,
+        presentation: Presentation?
+    ) {
         self.config = config
-        super.init(workflow: workflow)
+        super.init(
+            stepBuilders: stepBuilders,
+            initialStep: initialStep,
+            session: session,
+            theme: theme,
+            analytics: analytics,
+            outputDirectory: outputDirectory,
+            presentation: presentation
+        )
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -42,12 +59,42 @@ extension MWAppAuthStepViewController {
                                           password: credentials.password,
                                           loginViewController: loginViewController)
         })
+        
+        let childSession = self.appAuthStep.session.copyForChild()
+        
+        let vc = ROPCFormTaskViewController(
+            config: config,
+            stepBuilders: [],
+            initialStep: step,
+            session: childSession,
+            theme: Theme.current,
+            analytics: nil,
+            outputDirectory: self.outputDirectory,
+            presentation: .init(
+                context: .init(
+                    dismissRule: .noRestriction,
+                    willDismiss: nil,
+                    didDismiss: { [weak self] reason in
+                        guard reason == .completed,
+                              let username = childSession.fetchValue(resource: "\(kUsernameItemIdentifier).answer") as? String,
+                              let password = childSession.fetchValue(resource: "\(kPasswordItemIdentifier).answer") as? String
+                        else { return }
+                        self?.performOAuthROPCRequest(config: config, username: username, password: password)
+                    }
+                ),
+                dismiss: { [weak self] reason, context in
+                    context.willDismiss?(reason)
+                    self?.dismiss(animated: true) {
+                        context.didDismiss?(reason)
+                    }
+                }
+            )
+        )
 
-        let workflow = MWWorkflow(identifier: kFormTaskIdentifier, steps: [step], id: kFormTaskIdentifier, name: nil, title: nil, systemImageName: nil, session: self.appAuthStep.session.copyForChild())
-        let vc = ROPCFormTaskViewController(workflow: workflow, config: config)
-        vc.isDiscardable = true
-        vc.workflowDelegate = self
-
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+        vc.modalPresentationStyle = isPad ? .formSheet : .fullScreen
+        vc.modalTransitionStyle = .coverVertical
+        vc.isModalInPresentation = true
         self.present(vc, animated: true, completion: nil)
     }
     
