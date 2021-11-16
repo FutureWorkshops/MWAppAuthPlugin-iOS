@@ -8,10 +8,7 @@
 import UIKit
 import MobileWorkflowCore
 
-fileprivate let kUsernameItemIdentifier = "ROPC_USERNAME_FORM_ITEM"
-fileprivate let kPasswordItemIdentifier = "ROPC_PASSWORD_FORM_ITEM"
 fileprivate let kFormStepIdentifier = "ROPC_FORM_STEP"
-fileprivate let kFormTaskIdentifier = "ROPC_FORM_TASK"
 
 fileprivate class ROPCFormTaskViewController: StepNavigationViewController {
     let config: OAuthROPCConfig
@@ -47,12 +44,14 @@ extension MWAppAuthStepViewController {
     
     func performOAuthROPC(title: String, config: OAuthROPCConfig) {
         
+        let childSession = self.appAuthStep.session.copyForChild()
+        
         let step = ROPCStep(identifier: kFormStepIdentifier,
                             title: title,
                             text: config.text,
                             imageURL: config.imageURL,
                             services: self.appAuthStep.services,
-                            session: self.appAuthStep.session.copyForChild(),
+                            session: childSession,
                             submitBlock: { [weak self] (loginViewController, credentials) in
             self?.performOAuthROPCRequest(config: config,
                                           username: credentials.username,
@@ -60,14 +59,12 @@ extension MWAppAuthStepViewController {
                                           loginViewController: loginViewController)
         })
         
-        let childSession = self.appAuthStep.session.copyForChild()
-        
         let vc = ROPCFormTaskViewController(
             config: config,
             stepBuilders: [],
             initialStep: step,
             session: childSession,
-            theme: Theme.current,
+            theme: self.mwStep.theme,
             analytics: nil,
             outputDirectory: self.outputDirectory,
             presentation: .init(
@@ -75,11 +72,9 @@ extension MWAppAuthStepViewController {
                     dismissRule: .noRestriction,
                     willDismiss: nil,
                     didDismiss: { [weak self] reason in
-                        guard reason == .completed,
-                              let username = childSession.fetchValue(resource: "\(kUsernameItemIdentifier).answer") as? String,
-                              let password = childSession.fetchValue(resource: "\(kPasswordItemIdentifier).answer") as? String
-                        else { return }
-                        self?.performOAuthROPCRequest(config: config, username: username, password: password)
+                        if reason == .completed {
+                            self?.goForward()
+                        }
                     }
                 ),
                 dismiss: { [weak self] reason, context in
@@ -184,30 +179,4 @@ struct ROPCResponse: Decodable {
     let scope: String
     let tokenType: String
     let expiresIn: Int
-}
-
-extension MWAppAuthStepViewController: WorkflowViewControllerDelegate {
-    
-    func workflowViewControllerCanBeDismissed(_ workflowViewController: WorkflowViewController) -> Bool {
-        return true
-    }
-    
-    func workflowViewController(_ workflowViewController: WorkflowViewController, didFinishWith reason: WorkflowFinishReason) {
-        workflowViewController.presentingViewController?.dismiss(animated: true) { [weak self] in
-            #warning("This data extraction from session needs to be tested")
-            
-            if reason == .completed {
-                self?.goForward()
-            }
-
-        }
-    }
-    
-    func workflowViewController(_ workflowViewController: WorkflowViewController, stepViewControllerWillAppear stepViewController: StepViewController) {
-        
-    }
-    
-    func workflowViewController(_ workflowViewController: WorkflowViewController, stepViewControllerWillDisappear stepViewController: StepViewController) {
-        
-    }
 }
