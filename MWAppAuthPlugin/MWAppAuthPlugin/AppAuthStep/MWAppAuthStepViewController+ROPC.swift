@@ -30,36 +30,28 @@ extension MWAppAuthStepViewController {
     
     func performOAuthROPC(title: String, config: OAuthROPCConfig) {
         
-        let headerTitleItem = ORKFormItem(sectionTitle: L10n.AppAuth.loginDetailsTitle)
-        
-        let usernameAnswerFormat = ORKTextAnswerFormat()
-        usernameAnswerFormat.multipleLines = false
-        usernameAnswerFormat.autocapitalizationType = .none
-        usernameAnswerFormat.autocorrectionType = .no
-        usernameAnswerFormat.textContentType = .username
-        let usernameFormItem = ORKFormItem(identifier: kUsernameItemIdentifier, text: L10n.AppAuth.usernameFieldTitle, answerFormat: usernameAnswerFormat)
-        usernameFormItem.isOptional = false
-        
-        let passwordAnswerFormat = ORKTextAnswerFormat()
-        passwordAnswerFormat.isSecureTextEntry = true
-        passwordAnswerFormat.textContentType = .password
-        passwordAnswerFormat.multipleLines = false
-        let passwordFormItem = ORKFormItem(identifier: kPasswordItemIdentifier, text: L10n.AppAuth.passwordFieldTitle, answerFormat: passwordAnswerFormat)
-        passwordFormItem.isOptional = false
-        
-        let step = ORKFormStep(identifier: kFormStepIdentifier, title: title.capitalized, text: nil)
-        step.formItems = [headerTitleItem, usernameFormItem, passwordFormItem]
-        step.isOptional = false
-        
+        let step = ROPCStep(identifier: kFormStepIdentifier,
+                            title: title,
+                            text: self.appAuthStep.text,
+                            imageURL: self.appAuthStep.imageURL,
+                            services: self.appAuthStep.services,
+                            session: self.appAuthStep.session.copyForChild(),
+                            submitBlock: { [weak self] (loginViewController, credentials) in
+            self?.performOAuthROPCRequest(config: config,
+                                          username: credentials.username,
+                                          password: credentials.password,
+                                          loginViewController: loginViewController)
+        })
+
         let workflow = MWWorkflow(identifier: kFormTaskIdentifier, steps: [step], id: kFormTaskIdentifier, name: nil, title: nil, systemImageName: nil, session: self.appAuthStep.session.copyForChild())
         let vc = ROPCFormTaskViewController(workflow: workflow, config: config)
         vc.isDiscardable = true
         vc.workflowDelegate = self
-        
+
         self.present(vc, animated: true, completion: nil)
     }
     
-    private func performOAuthROPCRequest(config: OAuthROPCConfig, username: String, password: String) {
+    private func performOAuthROPCRequest(config: OAuthROPCConfig, username: String, password: String, loginViewController: MWROPCLoginViewController) {
         guard let tokenURL = self.appAuthStep.session.resolve(url: config.oAuth2TokenUrl) else { return }
         
         var params: [String: String] = [
@@ -83,34 +75,43 @@ extension MWAppAuthStepViewController {
             parser: { try ROPCResponse.parse(data: $0) }
         )
         
-        self.showLoading()
+        loginViewController.showLoading()
         self.ropcNetworkService.perform(task: task, session: self.appAuthStep.session, respondOn: .main) { [weak self] result in
-            self?.hideLoading()
+            loginViewController.hideLoading()
             switch result {
             case .success(let response):
+                
                 let token = Credential(
                     type: CredentialType.token.rawValue,
                     value: response.accessToken,
                     expirationDate: Date().addingTimeInterval(TimeInterval(response.expiresIn))
                 )
-                let refresh = Credential(
-                    type: CredentialType.refreshToken.rawValue,
-                    value: response.refreshToken,
-                    expirationDate: .distantFuture
-                )
-                self?.appAuthStep.services.credentialStore.updateCredentials([token, refresh], completion: { [weak self] result in
+                
+                var tokens : [Credential] = [token]
+                
+                if let refreshToken = response.refreshToken, refreshToken.isEmpty == false {
+                    let refresh = Credential(
+                        type: CredentialType.refreshToken.rawValue,
+                        value: refreshToken,
+                        expirationDate: .distantFuture
+                    )
+                    tokens.append(refresh)
+                }
+                
+                self?.appAuthStep.services.credentialStore.updateCredentials(tokens, completion: { [weak self] result in
                     switch result {
                     case .success:
-                        self?.goForward()
+                        loginViewController.goForward()
                     case .failure(let error):
-                        self?.show(error)
+                        loginViewController.show(error)
                     }
                 })
             case .failure(let error):
-                self?.show(error)
+                loginViewController.show(error)
             }
         }
     }
+    
 }
 
 struct ROPCResponse: Decodable {
@@ -124,7 +125,7 @@ struct ROPCResponse: Decodable {
     }
     
     let accessToken: String
-    let refreshToken: String
+    let refreshToken: String?
     let scope: String
     let tokenType: String
     let expiresIn: Int
@@ -139,21 +140,19 @@ extension MWAppAuthStepViewController: WorkflowViewControllerDelegate {
     func workflowViewController(_ workflowViewController: WorkflowViewController, didFinishWith reason: WorkflowFinishReason) {
         workflowViewController.presentingViewController?.dismiss(animated: true) { [weak self] in
             #warning("This data extraction from session needs to be tested")
-            guard reason == .completed,
-                  let config = (workflowViewController as? ROPCFormTaskViewController)?.config,
-                  let username = workflowViewController.workflow.session.fetchValue(resource: "\(kUsernameItemIdentifier).answer") as? String,
-                  let password = workflowViewController.workflow.session.fetchValue(resource: "\(kPasswordItemIdentifier).answer") as? String
-            else { return }
-            self?.performOAuthROPCRequest(config: config, username: username, password: password)
+            
+            if reason == .completed {
+                self?.goForward()
+            }
+
         }
     }
     
     func workflowViewController(_ workflowViewController: WorkflowViewController, stepViewControllerWillAppear stepViewController: StepViewController) {
-        guard let stepViewController = stepViewController as? ORKStepViewController else { preconditionFailure() }
-        stepViewController.continueButtonItem?.title = L10n.AppAuth.loginTitle
+        
     }
     
     func workflowViewController(_ workflowViewController: WorkflowViewController, stepViewControllerWillDisappear stepViewController: StepViewController) {
-        // nothing
+        
     }
 }

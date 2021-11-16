@@ -11,7 +11,7 @@ import MobileWorkflowCore
 
 enum L10n {
     enum AppAuth {
-        static let loginTitle = "Log In"
+        static let loginTitle = "Continue"
         static func invalidStepDataError(cause: String) -> String {
             "Invalid step data: \(cause)"
         }
@@ -21,6 +21,7 @@ enum L10n {
         static let loginDetailsTitle = "Please enter your login details:"
         static let usernameFieldTitle = "Username"
         static let passwordFieldTitle = "Password"
+        static let required = "Required"
     }
     
     enum AppleLogin {
