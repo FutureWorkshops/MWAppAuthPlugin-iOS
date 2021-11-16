@@ -29,8 +29,10 @@ class AuthStepItem: Codable {
     let appleFullNameScope: Bool?
     let appleEmailScope: Bool?
     let appleAccessTokenURL: String?
+    let imageURL: String?
+    let text: String?
     
-    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, oAuth2TokenUrl: String?, modalWorkflowId: String?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?) {
+    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, oAuth2TokenUrl: String?, modalWorkflowId: String?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?, imageURL: String?, text: String?) {
 
         self.type = type
         self.buttonTitle = buttonTitle
@@ -44,6 +46,8 @@ class AuthStepItem: Codable {
         self.appleFullNameScope = appleFullNameScope
         self.appleEmailScope = appleEmailScope
         self.appleAccessTokenURL = appleAccessTokenURL
+        self.imageURL = imageURL
+        self.text = text
     }
 }
 
@@ -59,6 +63,8 @@ struct OAuthROPCConfig {
     let oAuth2TokenUrl: String
     let oAuth2ClientId: String
     let oAuth2ClientSecret: String?
+    let imageURL: String?
+    let text: String?
 }
 
 enum AuthStepItemRepresentation {
@@ -92,7 +98,7 @@ extension AuthStepItem {
             guard let oAuth2TokenUrl = self.oAuth2TokenUrl, let oAuth2ClientId = self.oAuth2ClientId else {
                 throw ParseError.invalidStepData(cause: "Missing required OAuth2 parameters")
             }
-            return .oauthRopc(buttonTitle: self.buttonTitle, config: OAuthROPCConfig(oAuth2TokenUrl: oAuth2TokenUrl, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret))
+            return .oauthRopc(buttonTitle: self.buttonTitle, config: OAuthROPCConfig(oAuth2TokenUrl: oAuth2TokenUrl, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, imageURL: self.imageURL, text: self.text))
         case .twitter:
             return .twitter(buttonTitle: self.buttonTitle)
         case .modalWorkflow:

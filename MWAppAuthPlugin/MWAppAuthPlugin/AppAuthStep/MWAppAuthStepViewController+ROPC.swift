@@ -32,8 +32,8 @@ extension MWAppAuthStepViewController {
         
         let step = ROPCStep(identifier: kFormStepIdentifier,
                             title: title,
-                            text: self.appAuthStep.text,
-                            imageURL: self.appAuthStep.imageURL,
+                            text: config.text,
+                            imageURL: config.imageURL,
                             services: self.appAuthStep.services,
                             session: self.appAuthStep.session.copyForChild(),
                             submitBlock: { [weak self] (loginViewController, credentials) in

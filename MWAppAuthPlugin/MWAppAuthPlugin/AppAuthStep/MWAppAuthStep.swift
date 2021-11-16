@@ -193,6 +193,9 @@ extension MWAppAuthStep: BuildableStep {
             let appleEmailScope = content["appleEmailScope"] as? Bool
             let appleAccessTokenURL = content["appleAccessTokenURL"] as? String
             
+            let itemImageURL = content["imageURL"] as? String
+            let itemText = content["text"] as? String
+            
             let item = AuthStepItem(
                 type: type,
                 buttonTitle: buttonTitle,
@@ -205,7 +208,9 @@ extension MWAppAuthStep: BuildableStep {
                 modalWorkflowId: modalWorkflowId,
                 appleFullNameScope: appleFullNameScope,
                 appleEmailScope: appleEmailScope,
-                appleAccessTokenURL: appleAccessTokenURL
+                appleAccessTokenURL: appleAccessTokenURL,
+                imageURL: itemImageURL,
+                text: itemText
             )
             
             _ = try item.respresentation() // confirm valid representation
