@@ -50,7 +50,7 @@ final class MWROPCLoginViewController: MWContentStepViewController {
     private var scrollView: UIScrollView!
     private var contentStackView: UIStackView!
     private var imageView: UIImageView!
-    private var loadingView: StateView!
+    private lazy var progressIndicator = ProgressIndicator()
     
     private lazy var bodyLabel: StepBodyLabel = {
         let bodyLabel = StepBodyLabel()
@@ -84,7 +84,7 @@ final class MWROPCLoginViewController: MWContentStepViewController {
     
     private lazy var separatorLine: UIView = {
         let separatorLine = UIView()
-        separatorLine.backgroundColor = self.ropcStep.theme.groupedBackgroundColor
+        separatorLine.backgroundColor = .separator
         separatorLine.translatesAutoresizingMaskIntoConstraints = false
         return separatorLine
     }()
@@ -135,7 +135,6 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         let body = self.ropcStep.session.resolve(value: self.ropcStep.text ?? "")
         self.bodyLabel.text = body.isEmpty ? L10n.AppAuth.loginDetailsTitle : body
         self.configureStackView()
-        self.setupLoadingView()
         self.configureConstraints()
         self.configureStyle()
     }
@@ -193,7 +192,7 @@ final class MWROPCLoginViewController: MWContentStepViewController {
                 self.passwordField
             ]
         )
-        fieldsStackView.backgroundColor = .white
+        fieldsStackView.backgroundColor = self.ropcStep.theme.groupedCellBackgroundColor
         fieldsStackView.layer.cornerRadius = 8.0
         fieldsStackView.clipsToBounds = true
         fieldsStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -237,15 +236,6 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         self.contentView.addSubview(scrollView)
     }
     
-    private func setupLoadingView() {
-        self.loadingView = self.loadingView ?? StateView(frame: .zero)
-        self.loadingView.configure(isLoading: true, theme: self.mwStep.theme)
-        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
-        self.loadingView.backgroundColor = .clear
-        self.contentView.addSubview(self.loadingView)
-        self.hideLoading()
-    }
-    
     private func configureConstraints() {
 
         var constraints = [NSLayoutConstraint]()
@@ -279,14 +269,6 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         ]
         constraints.append(contentsOf: contentStackViewConstraints)
         
-        let loadingViewConstraints = [
-            self.loadingView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.loadingView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.loadingView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.loadingView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
-        ]
-        constraints.append(contentsOf: loadingViewConstraints)
-        
         self.constraints = constraints
     }
     
@@ -310,13 +292,13 @@ final class MWROPCLoginViewController: MWContentStepViewController {
     // MARK: Loading
     
     public func showLoading() {
+        self.progressIndicator.showActivityIndicatory(on: self.navigationController?.view ?? self.view)
         self.loginButton.isEnabled = false
-        self.loadingView.isHidden = false
     }
 
     public func hideLoading() {
+        self.progressIndicator.hideActivityIndicator()
         self.loginButton.isEnabled = self.isValid
-        self.loadingView.isHidden = true
     }
     
     private var credentials : Credentials? {
