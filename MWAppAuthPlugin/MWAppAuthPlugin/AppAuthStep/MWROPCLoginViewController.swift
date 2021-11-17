@@ -84,7 +84,7 @@ final class MWROPCLoginViewController: MWContentStepViewController {
     
     private lazy var separatorLine: UIView = {
         let separatorLine = UIView()
-        separatorLine.backgroundColor = self.ropcStep.theme.groupedBackgroundColor
+        separatorLine.backgroundColor = .separator
         separatorLine.translatesAutoresizingMaskIntoConstraints = false
         return separatorLine
     }()
@@ -192,7 +192,7 @@ final class MWROPCLoginViewController: MWContentStepViewController {
                 self.passwordField
             ]
         )
-        fieldsStackView.backgroundColor = .white
+        fieldsStackView.backgroundColor = self.ropcStep.theme.groupedCellBackgroundColor
         fieldsStackView.layer.cornerRadius = 8.0
         fieldsStackView.clipsToBounds = true
         fieldsStackView.translatesAutoresizingMaskIntoConstraints = false
