@@ -27,11 +27,14 @@ extension MWAppAuthStepViewController {
             tokenEndpoint: tokenEndpoint
         )
         
+        //TODO: IMHO, the oAuth2Scope should change from String? to Array<String> on the model.
+        let correctScopes = config.oAuth2Scope.split(separator: " ").map{ String($0) }
+        
         let request = OIDAuthorizationRequest(
             configuration: configuration,
             clientId: config.oAuth2ClientId,
             clientSecret: (config.oAuth2ClientSecret?.isEmpty ?? true) ? nil : config.oAuth2ClientSecret,
-            scopes: [config.oAuth2Scope],
+            scopes: correctScopes,
             redirectURL: redirectURL,
             responseType: OIDResponseTypeCode,
             additionalParameters: nil
