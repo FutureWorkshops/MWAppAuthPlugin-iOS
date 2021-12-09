@@ -50,7 +50,6 @@ final class MWROPCLoginViewController: MWContentStepViewController {
     private var scrollView: UIScrollView!
     private var contentStackView: UIStackView!
     private var imageView: UIImageView!
-    private lazy var progressIndicator = ProgressIndicator()
     
     private lazy var bodyLabel: StepBodyLabel = {
         let bodyLabel = StepBodyLabel()
@@ -292,12 +291,15 @@ final class MWROPCLoginViewController: MWContentStepViewController {
     // MARK: Loading
     
     public func showLoading() {
-        self.progressIndicator.showActivityIndicatory(on: self.navigationController?.view ?? self.view)
-        self.loginButton.isEnabled = false
+        self.usernameField.isEnabled = false
+        self.passwordField.isEnabled = false
+        self.loginButton.startLoading()
     }
 
     public func hideLoading() {
-        self.progressIndicator.hideActivityIndicator()
+        self.loginButton.stopLoading()
+        self.usernameField.isEnabled = true
+        self.passwordField.isEnabled = true
         self.loginButton.isEnabled = self.isValid
     }
     

@@ -40,6 +40,15 @@ public class MWROPCTextField: UIView {
         return self.textField.text
     }
     
+    public var isEnabled : Bool {
+        get {
+            return self.textField.isEnabled
+        }
+        set {
+            self.textField.isEnabled = newValue
+        }
+    }
+    
     private lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
