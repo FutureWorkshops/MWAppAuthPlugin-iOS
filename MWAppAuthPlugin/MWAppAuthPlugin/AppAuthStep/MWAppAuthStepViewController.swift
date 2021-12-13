@@ -17,9 +17,9 @@ enum OAuthPaths {
     static let token = "/token"
 }
 
-class MWAppAuthStepViewController: MWTableStepViewController<MWAppAuthStep>, WorkflowPresentationDelegator {
+class MWAppAuthStepViewController: MWTableStepViewController<MWAppAuthStep>, PresentationDelegator {
     
-    weak var workflowPresentationDelegate: WorkflowPresentationDelegate?
+    weak var presentationDelegate: PresentationDelegate?
     
     //MARK: - Support variables
     var appAuthStep: MWAppAuthStep {
@@ -126,8 +126,8 @@ extension MWAppAuthStepViewController: MWButtonTableViewCellDelegate {
             self.performOAuthROPC(title: buttonTitle, config: config)
         case .twitter(_):
             break // TODO: perform twitter login
-        case .modalWorkflowId(_,  let modalWorkflowId):
-            self.workflowPresentationDelegate?.presentWorkflowWithId(modalWorkflowId, isDiscardable: true, animated: true, willDismiss: { [weak self] reason in
+        case .modalLink(_,  let linkId):
+            self.presentationDelegate?.presentStepForLinkId(linkId, isDiscardable: true, animated: true, willDismiss: { [weak self] reason in
                 // need to do this before dismissal to avoid seeing the login options briefly
                 if reason == .completed,
                    let _ = try? self?.appAuthStep.services.credentialStore.retrieveCredential(.token, isRequired: false).get() {
