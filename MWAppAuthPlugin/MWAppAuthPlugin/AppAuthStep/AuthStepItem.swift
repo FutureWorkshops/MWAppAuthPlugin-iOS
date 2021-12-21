@@ -15,6 +15,7 @@ class AuthStepItem: Codable {
         case twitter
         case modalLink
         case apple
+        case button //previously modalLink
     }
     
     let type: ItemType
@@ -26,13 +27,14 @@ class AuthStepItem: Codable {
     let oAuth2RedirectScheme: String?
     let oAuth2TokenUrl: String?
     let modalLinkId: String?
+    let linkId: String?
     let appleFullNameScope: Bool?
     let appleEmailScope: Bool?
     let appleAccessTokenURL: String?
     let imageURL: String?
     let text: String?
     
-    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, oAuth2TokenUrl: String?, modalLinkId: String?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?, imageURL: String?, text: String?) {
+    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, oAuth2TokenUrl: String?, modalLinkId: String?, linkId: String?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?, imageURL: String?, text: String?) {
 
         self.type = type
         self.buttonTitle = buttonTitle
@@ -43,6 +45,7 @@ class AuthStepItem: Codable {
         self.oAuth2RedirectScheme = oAuth2RedirectScheme
         self.oAuth2TokenUrl = oAuth2TokenUrl
         self.modalLinkId = modalLinkId
+        self.linkId = linkId
         self.appleFullNameScope = appleFullNameScope
         self.appleEmailScope = appleEmailScope
         self.appleAccessTokenURL = appleAccessTokenURL
@@ -104,6 +107,11 @@ extension AuthStepItem {
         case .modalLink:
             guard let linkId = self.modalLinkId else {
                 throw ParseError.invalidStepData(cause: "Missing modalLinkId")
+            }
+            return .modalLink(buttonTitle: self.buttonTitle, linkId: linkId)
+        case .button:
+            guard let linkId = self.linkId else {
+                throw ParseError.invalidStepData(cause: "Missing linkId")
             }
             return .modalLink(buttonTitle: self.buttonTitle, linkId: linkId)
         case .apple:

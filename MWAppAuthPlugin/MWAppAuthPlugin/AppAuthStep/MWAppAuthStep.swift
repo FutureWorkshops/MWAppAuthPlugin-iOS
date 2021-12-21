@@ -100,6 +100,7 @@ class MWAppAuthStep: MWStep, TableStep {
             switch item.type {
             case .apple: return SignInWithAppleButtonTableViewCell.defaultReuseIdentifier
             case .modalLink,
+                 .button,
                  .oauth,
                  .oauthRopc,
                  .twitter: return MWButtonTableViewCell.defaultReuseIdentifier
@@ -191,6 +192,7 @@ extension MWAppAuthStep: BuildableStep {
             let oAuth2TokenUrl = content["oAuth2TokenUrl"] as? String
             
             let modalLinkId = content.getString(key: "modalLinkId")
+            let linkId = content.getString(key: "linkId")
             
             let appleFullNameScope = content["appleFullNameScope"] as? Bool
             let appleEmailScope = content["appleEmailScope"] as? Bool
@@ -209,6 +211,7 @@ extension MWAppAuthStep: BuildableStep {
                 oAuth2RedirectScheme: oAuth2RedirectScheme,
                 oAuth2TokenUrl: oAuth2TokenUrl,
                 modalLinkId: modalLinkId,
+                linkId: linkId,
                 appleFullNameScope: appleFullNameScope,
                 appleEmailScope: appleEmailScope,
                 appleAccessTokenURL: appleAccessTokenURL,
