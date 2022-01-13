@@ -22,6 +22,9 @@ enum L10n {
         static let usernameFieldTitle = "Username"
         static let passwordFieldTitle = "Password"
         static let required = "Required"
+        static let unauthorisedAlertTitle = "Unauthorised"
+        static let unauthorisedAlertMessage = "Incorrect email or password. Please try again."
+        static let unauthorisedAlertButton = "OK"
     }
     
     enum AppleLogin {
