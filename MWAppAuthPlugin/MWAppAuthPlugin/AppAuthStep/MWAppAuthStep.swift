@@ -179,7 +179,9 @@ extension MWAppAuthStep: BuildableStep {
                 throw ParseError.unsupportedItemType(type: typeAsString)
             }
             
-            var buttonTitle = localizationService.translate(content["buttonTitle"] as? String) ?? ""
+            /// Currently secondary modalLink/button items use property 'label', whereas main item uses 'buttonTitle'.
+            /// This should be made constistent, but for now we'll check for both.
+            var buttonTitle = localizationService.translate(content[first: ["buttonTitle", "label"]] as? String) ?? ""
             if buttonTitle.isEmpty {
                 buttonTitle = typeAsString.capitalized
             }
