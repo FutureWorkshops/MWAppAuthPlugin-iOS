@@ -3,7 +3,9 @@ set -e
 
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-PLUGIN_NAME="MWAppAuth"
+PODSPEC_FILE="$(ls "${SCRIPTPATH}/.." | grep ".*\.podspec")"
+PODSPEC_NAME="$(echo "${PODSPEC_FILE}" | cut -f 1 -d '.')"
+PLUGIN_NAME="$(echo "${PODSPEC_NAME}" | sed -e "s/Plugin$//")"
 
 echo "Install ruby dependencies"
 bundle
