@@ -32,8 +32,8 @@ jobs:
           PLUGIN_NAME: ${{ steps.podspec.outputs.name }}
         run: |
           (cd main ; ./scripts/build.sh)
-          ARTEFACT_NAME="${PLUGIN_NAME}Plugin.zip"
-          FRAMEWORK_NAME="${PLUGIN_NAME}Plugin.xcframework"
+          ARTEFACT_NAME="${PLUGIN_NAME}.zip"
+          FRAMEWORK_NAME="${PLUGIN_NAME}.xcframework"
           FRAMEWORK_PATH="./main/Build/${FRAMEWORK_NAME}"
 
           if [ -d "./main/${FRAMEWORK_NAME}" ]; then
