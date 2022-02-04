@@ -67,8 +67,7 @@ def align_files(project, target, group)
     end
 end
 
-plugin_name = 'MWAppAuth'
-target_name = plugin_name + 'Plugin'
+target_name = ARGV[0].to_s
 project_path = './' + target_name + '/' + target_name + '.xcodeproj'
 project = Xcodeproj::Project.open(project_path)
 group = project[target_name]
