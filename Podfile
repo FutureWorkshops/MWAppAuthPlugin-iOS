@@ -11,8 +11,8 @@ project 'MobileWorkflowAppAuth/MobileWorkflowAppAuth.xcodeproj'
 project 'MWAppAuthPlugin/MWAuthPlugin.xcodeproj'
 
 abstract_target 'MWAppAuth' do
-  pod 'MobileWorkflow'
-  pod 'AppAuth'
+  pod 'MobileWorkflow', '~> 2.0.0'
+  pod 'AppAuth', '~> 1.4.0'
 
   target 'MobileWorkflowAppAuth' do
     project 'MobileWorkflowAppAuth/MobileWorkflowAppAuth.xcodeproj'
