@@ -4,13 +4,13 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
-  - MobileWorkflow (1.0.16):
-    - MobileWorkflow/Core (= 1.0.16)
-  - MobileWorkflow/Core (1.0.16)
+  - MobileWorkflow (2.0.0):
+    - MobileWorkflow/Core (= 2.0.0)
+  - MobileWorkflow/Core (2.0.0)
 
 DEPENDENCIES:
-  - AppAuth
-  - MobileWorkflow
+  - AppAuth (~> 1.4.0)
+  - MobileWorkflow (~> 2.0.0)
 
 SPEC REPOS:
   https://github.com/FutureWorkshops/MWPodspecs.git:
@@ -20,8 +20,8 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
-  MobileWorkflow: cdf65c42f75dee27a1ee43fe01f515a18a0fbf40
+  MobileWorkflow: a4848ca75ddbdb4eb2d4b1bb4e473f637de09feb
 
-PODFILE CHECKSUM: 9fd624c0682bc7385505d19d5b938a4e88a5e129
+PODFILE CHECKSUM: 3765cd3baed03302654b844689036d2c40a70254
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.11.2
