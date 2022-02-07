@@ -47,7 +47,7 @@ def align_files(project, target, group)
 
                 elsif filePath.to_s.end_with?(".h") then
                     # target.headers_build_phase.add_file_reference(fileReference)
-                elsif filePath.to_s.end_with?(".framework") || filePath.to_s.end_with?(".a") then
+                elsif filePath.to_s.end_with?(".framework") || filePath.to_s.end_with?(".xcframework") || filePath.to_s.end_with?(".a") then
                     puts "Adding framework " + filePath
                     target.frameworks_build_phases.add_file_reference(fileReference)
                 elsif
