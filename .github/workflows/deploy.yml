@@ -83,7 +83,19 @@ jobs:
       - name: Push distribution
         run: |
           cd distribution
-          git push origin
+          git checkout main
+          while true
+          do
+            git fetch --all --prune
+            git rebase origin/main
+            set +e
+            git push origin
+            if [ $? -eq 0 ]; then
+              break;
+            fi
+            set -e
+          done
+          set -e
           cd ..
       - name: Update source
         id: source
@@ -176,5 +188,17 @@ jobs:
       - name: Push new version
         run: |
           cd repo
-          git push origin
+          git checkout main
+          while true
+          do
+            git fetch --all --prune
+            git rebase origin/main
+            set +e
+            git push origin
+            if [ $? -eq 0 ]; then
+              break;
+            fi
+            set -e
+          done
+          set -e
           cd ..
