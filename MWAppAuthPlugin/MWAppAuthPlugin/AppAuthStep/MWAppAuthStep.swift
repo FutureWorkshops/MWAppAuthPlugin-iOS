@@ -8,6 +8,7 @@
 
 import Foundation
 import MobileWorkflowCore
+import UIKit
 
 enum L10n {
     enum AppAuth {
