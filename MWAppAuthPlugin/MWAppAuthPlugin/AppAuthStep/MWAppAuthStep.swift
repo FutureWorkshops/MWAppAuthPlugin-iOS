@@ -8,6 +8,7 @@
 
 import Foundation
 import MobileWorkflowCore
+import UIKit
 
 enum L10n {
     enum AppAuth {
@@ -99,7 +100,8 @@ class MWAppAuthStep: MWStep, TableStep {
             guard let item = self.items[safe: indexPath.row] as? AuthStepItem else { fallthrough }
             switch item.type {
             case .apple: return SignInWithAppleButtonTableViewCell.defaultReuseIdentifier
-            case .modalWorkflow,
+            case .modalLink,
+                 .button,
                  .oauth,
                  .oauthRopc,
                  .twitter: return MWButtonTableViewCell.defaultReuseIdentifier
@@ -151,7 +153,7 @@ class MWAppAuthStep: MWStep, TableStep {
                 preconditionFailure()
             }
             buttonCell.configureButton(label: buttonTitle, style: .primary)
-        case .modalWorkflowId(let buttonTitle, _):
+        case .modalLink(let buttonTitle, _):
             guard let buttonCell = cell as? MWButtonTableViewCell else {
                 preconditionFailure()
             }
@@ -178,7 +180,9 @@ extension MWAppAuthStep: BuildableStep {
                 throw ParseError.unsupportedItemType(type: typeAsString)
             }
             
-            var buttonTitle = localizationService.translate(content["buttonTitle"] as? String) ?? ""
+            /// Currently secondary modalLink/button items use property 'label', whereas main item uses 'buttonTitle'.
+            /// This should be made constistent, but for now we'll check for both.
+            var buttonTitle = localizationService.translate(content[first: ["buttonTitle", "label"]] as? String) ?? ""
             if buttonTitle.isEmpty {
                 buttonTitle = typeAsString.capitalized
             }
@@ -190,7 +194,8 @@ extension MWAppAuthStep: BuildableStep {
             let oAuth2RedirectScheme = content["oAuth2RedirectScheme"] as? String
             let oAuth2TokenUrl = content["oAuth2TokenUrl"] as? String
             
-            let modalWorkflowId = content.getString(key: "modalWorkflowId")
+            let modalLinkId = content.getString(key: "modalLinkId")
+            let linkId = content.getString(key: "linkId")
             
             let appleFullNameScope = content["appleFullNameScope"] as? Bool
             let appleEmailScope = content["appleEmailScope"] as? Bool
@@ -208,7 +213,8 @@ extension MWAppAuthStep: BuildableStep {
                 oAuth2Scope: oAuth2Scope,
                 oAuth2RedirectScheme: oAuth2RedirectScheme,
                 oAuth2TokenUrl: oAuth2TokenUrl,
-                modalWorkflowId: modalWorkflowId,
+                modalLinkId: modalLinkId,
+                linkId: linkId,
                 appleFullNameScope: appleFullNameScope,
                 appleEmailScope: appleEmailScope,
                 appleAccessTokenURL: appleAccessTokenURL,

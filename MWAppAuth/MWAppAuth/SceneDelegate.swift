@@ -14,7 +14,7 @@ class SceneDelegate: MobileWorkflowSceneDelegate {
     
     override func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-        self.dependencies.plugins = [MWAppAuthPlugin.self]
+        self.dependencies.plugins = [MWAppAuthPluginStruct.self]
         
         super.scene(scene, willConnectTo: session, options: connectionOptions)
     }

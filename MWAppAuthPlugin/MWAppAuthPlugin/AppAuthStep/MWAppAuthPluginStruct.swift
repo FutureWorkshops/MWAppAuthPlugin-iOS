@@ -8,7 +8,7 @@
 import Foundation
 import MobileWorkflowCore
 
-public struct MWAppAuthPlugin: Plugin {
+public struct MWAppAuthPluginStruct: Plugin {
     
     public static var allStepsTypes: [StepType] {
         return MWAppAuthStepType.allCases

@@ -13,8 +13,9 @@ class AuthStepItem: Codable {
         case oauth
         case oauthRopc
         case twitter
-        case modalWorkflow
+        case modalLink
         case apple
+        case button //previously modalLink
     }
     
     let type: ItemType
@@ -25,14 +26,15 @@ class AuthStepItem: Codable {
     let oAuth2Scope: String?
     let oAuth2RedirectScheme: String?
     let oAuth2TokenUrl: String?
-    let modalWorkflowId: String?
+    let modalLinkId: String?
+    let linkId: String?
     let appleFullNameScope: Bool?
     let appleEmailScope: Bool?
     let appleAccessTokenURL: String?
     let imageURL: String?
     let text: String?
     
-    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, oAuth2TokenUrl: String?, modalWorkflowId: String?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?, imageURL: String?, text: String?) {
+    init(type: ItemType, buttonTitle: String, oAuth2Url: String?, oAuth2ClientId: String?, oAuth2ClientSecret: String?, oAuth2Scope: String?, oAuth2RedirectScheme: String?, oAuth2TokenUrl: String?, modalLinkId: String?, linkId: String?, appleFullNameScope: Bool?, appleEmailScope: Bool?, appleAccessTokenURL: String?, imageURL: String?, text: String?) {
 
         self.type = type
         self.buttonTitle = buttonTitle
@@ -42,7 +44,8 @@ class AuthStepItem: Codable {
         self.oAuth2Scope = oAuth2Scope
         self.oAuth2RedirectScheme = oAuth2RedirectScheme
         self.oAuth2TokenUrl = oAuth2TokenUrl
-        self.modalWorkflowId = modalWorkflowId
+        self.modalLinkId = modalLinkId
+        self.linkId = linkId
         self.appleFullNameScope = appleFullNameScope
         self.appleEmailScope = appleEmailScope
         self.appleAccessTokenURL = appleAccessTokenURL
@@ -71,7 +74,7 @@ enum AuthStepItemRepresentation {
     case oauth(buttonTitle: String, config: OAuth2Config)
     case oauthRopc(buttonTitle: String, config: OAuthROPCConfig)
     case twitter(buttonTitle: String)
-    case modalWorkflowId(buttonTitle: String, modalWorkflowId: String)
+    case modalLink(buttonTitle: String, linkId: String)
     case apple
     
     var buttonTitle: String {
@@ -79,7 +82,7 @@ enum AuthStepItemRepresentation {
         case .oauth(let buttonTitle, _): return buttonTitle
         case .oauthRopc(let buttonTitle, _): return buttonTitle
         case .twitter(let buttonTitle): return buttonTitle
-        case .modalWorkflowId(let buttonTitle, _): return buttonTitle
+        case .modalLink(let buttonTitle, _): return buttonTitle
         case .apple: return ""
         }
     }
@@ -101,11 +104,16 @@ extension AuthStepItem {
             return .oauthRopc(buttonTitle: self.buttonTitle, config: OAuthROPCConfig(oAuth2TokenUrl: oAuth2TokenUrl, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, imageURL: self.imageURL, text: self.text))
         case .twitter:
             return .twitter(buttonTitle: self.buttonTitle)
-        case .modalWorkflow:
-            guard let modalWorkflowId = self.modalWorkflowId else {
-                throw ParseError.invalidStepData(cause: "Missing modalWorkflowId")
+        case .modalLink:
+            guard let linkId = self.modalLinkId else {
+                throw ParseError.invalidStepData(cause: "Missing modalLinkId")
             }
-            return .modalWorkflowId(buttonTitle: self.buttonTitle, modalWorkflowId: modalWorkflowId)
+            return .modalLink(buttonTitle: self.buttonTitle, linkId: linkId)
+        case .button:
+            guard let linkId = self.linkId else {
+                throw ParseError.invalidStepData(cause: "Missing linkId")
+            }
+            return .modalLink(buttonTitle: self.buttonTitle, linkId: linkId)
         case .apple:
             return .apple
         }
