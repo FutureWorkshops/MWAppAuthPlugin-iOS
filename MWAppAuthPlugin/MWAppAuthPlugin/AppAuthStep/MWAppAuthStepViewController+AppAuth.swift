@@ -70,6 +70,9 @@ extension MWAppAuthStepViewController {
                 case .failure(let error):
                     if let authError = (error as NSError).userInfo[NSUnderlyingErrorKey] as? ASWebAuthenticationSessionError, authError.code == .canceledLogin {
                         // if cancel, do nothing
+                    } else if error.isAuthenticationError {
+                        // We are handling all possible authentication errors (401, 400 invalid_grant, etc) as authentication required
+                        self?.show(URLError(URLError.Code.userAuthenticationRequired))
                     } else {
                         self?.show(error)
                     }
