@@ -85,6 +85,8 @@ extension MWAppAuthStepViewController {
                 }
             )
         )
+        // grab the delegate from our stepNavigationController so we can forward shake events
+        vc.stepNavigationViewControllerDelegate = (self.navigationController as? StepNavigationViewController)?.stepNavigationViewControllerDelegate
 
         let isPad = UIDevice.current.userInterfaceIdiom == .pad
         vc.modalPresentationStyle = isPad ? .formSheet : .fullScreen
