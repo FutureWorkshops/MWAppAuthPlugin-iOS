@@ -108,7 +108,7 @@ extension MWAppAuthStepViewController {
                 })
             case .failure(let error):
                 
-                if let urlError = error as? URLError, urlError.code.rawValue == 401 {
+                if error.isAuthenticationError {
                     let alert = UIAlertController(title: L10n.AppAuth.unauthorisedAlertTitle, message: L10n.AppAuth.unauthorisedAlertMessage, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: L10n.AppAuth.unauthorisedAlertButton, style: .default, handler: nil))
                     loginViewController.present(alert, animated: true, completion: nil)
