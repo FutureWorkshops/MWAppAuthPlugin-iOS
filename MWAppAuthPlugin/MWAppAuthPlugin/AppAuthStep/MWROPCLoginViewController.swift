@@ -243,10 +243,6 @@ final class MWROPCLoginViewController: MWContentStepViewController {
             constraints.append(imageViewHeightConstraint)
         }
         
-        let buttonHeightConstraint = self.loginButton.heightAnchor.constraint(equalToConstant: 50)
-        buttonHeightConstraint.priority = .init(rawValue: 999)
-        buttonHeightConstraint.isActive = true
-        
         let lineHeightConstraint = self.separatorLine.heightAnchor.constraint(equalToConstant: 1)
         lineHeightConstraint.priority = .init(rawValue: 999)
         lineHeightConstraint.isActive = true
