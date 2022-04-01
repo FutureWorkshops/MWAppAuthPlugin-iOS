@@ -167,7 +167,7 @@ class MWAppAuthStep: MWStep, TableStep {
 extension MWAppAuthStep: BuildableStep {
 
     static var mandatoryCodingPaths: [CodingKey] {
-        /// N.B. each type has a different set of mandatory properties, but we could potentially throw proprety-specific errors in the representation() method of AuthStepItem
+        /// Each type has a different set of mandatory properties, and these are covered by proprety-specific errors thrown by `representation()` method in `AuthStepItem`.
         ["type"]
     }
     

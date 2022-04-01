@@ -93,26 +93,22 @@ extension AuthStepItem {
     func respresentation() throws -> AuthStepItemRepresentation {
         switch self.type {
         case .oauth:
-            guard let oAuth2Url = self.oAuth2Url, let oAuth2ClientId = self.oAuth2ClientId, let oAuth2Scope = self.oAuth2Scope, let oAuth2RedirectScheme = self.oAuth2RedirectScheme else {
-                throw ParseError.invalidStepData(cause: "Missing required OAuth2 parameters")
-            }
+            guard let oAuth2Url = self.oAuth2Url else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2Url' parameter") }
+            guard let oAuth2ClientId = self.oAuth2ClientId else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2ClientId' parameter") }
+            guard let oAuth2Scope = self.oAuth2Scope else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2Scope' parameter") }
+            guard let oAuth2RedirectScheme = self.oAuth2RedirectScheme else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2RedirectScheme' parameter") }
             return .oauth(buttonTitle: self.buttonTitle, config: OAuth2Config(oAuth2Url: oAuth2Url, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, oAuth2RedirectScheme: oAuth2RedirectScheme))
         case .oauthRopc:
-            guard let oAuth2TokenUrl = self.oAuth2TokenUrl, let oAuth2ClientId = self.oAuth2ClientId else {
-                throw ParseError.invalidStepData(cause: "Missing required OAuth2 parameters")
-            }
+            guard let oAuth2TokenUrl = self.oAuth2TokenUrl else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2TokenUrl' parameter") }
+            guard let oAuth2ClientId = self.oAuth2ClientId else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2ClientId' parameter") }
             return .oauthRopc(buttonTitle: self.buttonTitle, config: OAuthROPCConfig(oAuth2TokenUrl: oAuth2TokenUrl, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, imageURL: self.imageURL, text: self.text))
         case .twitter:
             return .twitter(buttonTitle: self.buttonTitle)
         case .modalLink:
-            guard let linkId = self.modalLinkId else {
-                throw ParseError.invalidStepData(cause: "Missing modalLinkId")
-            }
+            guard let linkId = self.modalLinkId else { throw ParseError.invalidStepData(cause: "Missing required 'modalLinkId' parameter") }
             return .modalLink(buttonTitle: self.buttonTitle, linkId: linkId)
         case .button:
-            guard let linkId = self.linkId else {
-                throw ParseError.invalidStepData(cause: "Missing linkId")
-            }
+            guard let linkId = self.linkId else { throw ParseError.invalidStepData(cause: "Missing required 'linkId' parameter") }
             return .modalLink(buttonTitle: self.buttonTitle, linkId: linkId)
         case .apple:
             return .apple
