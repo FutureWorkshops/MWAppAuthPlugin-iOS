@@ -19,15 +19,30 @@ class OAuthSessionResponseInterceptor: AsyncTaskInterceptor {
     }
     
     func interceptResponse<T>(_ response: T, session: ContentProvider) -> T {
-        guard let data = response as? Data else { return response }
+        var data: Data?
+        if let response = response as? Data {
+            data = response
+        } else if let response = response as? UploadResponse {
+            data = response.data
+        }
+        guard let data = data else { return response }
         do {
             // attempt to find an oauth session in the root of the JSON response
             var json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] ?? [:]
             let sessionJson = json[kOAuthSession] as? [String: Any] ?? [:]
             guard let oauthSession = OAuthSession(json: sessionJson) else { return response }
+            
             // create modified response with the oauth session extracted
             json[kOAuthSession] = nil
-            guard let data = try JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed) as? T else { return response }
+            let modifiedData = try JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed)
+            var modifiedResponse: T?
+            if response is Data {
+                modifiedResponse = modifiedData as? T
+            } else if let response = response as? UploadResponse {
+                let modifiedUploadResponse: UploadResponse = (statusCode: response.statusCode, data: modifiedData)
+                modifiedResponse = modifiedUploadResponse as? T
+            }
+            
             // create and save the tokens
             var credentials = [Credential]()
             credentials.append(Credential(
@@ -43,7 +58,7 @@ class OAuthSessionResponseInterceptor: AsyncTaskInterceptor {
                 ))
             }
             _ = self.credentialStore.updateCredentials(credentials)
-            return data // return mofified response regardless of update result
+            return modifiedResponse ?? response // return mofified response regardless of update result
         } catch {
             return response
         }
