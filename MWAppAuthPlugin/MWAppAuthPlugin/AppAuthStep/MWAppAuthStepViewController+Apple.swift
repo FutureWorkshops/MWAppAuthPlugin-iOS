@@ -13,7 +13,7 @@ import AuthenticationServices
 
 extension MWAppAuthStepViewController: SignInWithAppleButtonTableViewCellDelegate {
     func appleCell(_ cell: SignInWithAppleButtonTableViewCell, didTapButton button: UIButton) {
-        guard let indexPath = self.tableView.indexPath(for: cell), let item = self.appAuthStep.items[safe: indexPath.row] as? AuthStepItem, let representation = try? item.respresentation() else { return }
+        guard let indexPath = self.tableView.indexPath(for: cell), let item = self.appAuthStep.items[safe: indexPath.row], let representation = try? item.respresentation() else { return }
         
         switch representation {
         case .apple:

@@ -8,7 +8,7 @@
 import UIKit
 import MobileWorkflowCore
 
-public protocol MWROPCTextFieldDelegate : class {
+public protocol MWROPCTextFieldDelegate: AnyObject {
     func onReturnTapped(textField: MWROPCTextField)
     func valueDidChange(textField: MWROPCTextField)
 }

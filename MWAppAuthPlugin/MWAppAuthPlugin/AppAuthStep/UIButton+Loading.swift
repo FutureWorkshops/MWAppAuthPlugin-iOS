@@ -22,7 +22,7 @@ extension UIButton {
         self.isUserInteractionEnabled = false
         
         let activityIndicatorView = UIActivityIndicatorViewWithStorage()
-        activityIndicatorView.style = .white
+        activityIndicatorView.style = .medium
         activityIndicatorView.hidesWhenStopped = true
         activityIndicatorView.color = self.titleColor(for: .normal)
         activityIndicatorView.tag = ButtonActivityIndicatorTag

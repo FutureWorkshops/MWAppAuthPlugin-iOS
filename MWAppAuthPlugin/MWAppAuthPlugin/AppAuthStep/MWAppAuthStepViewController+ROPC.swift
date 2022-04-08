@@ -140,7 +140,7 @@ extension MWAppAuthStepViewController {
                     tokens.append(refresh)
                 }
                 
-                self?.appAuthStep.services.credentialStore.updateCredentials(tokens, completion: { [weak self] result in
+                self?.appAuthStep.services.credentialStore.updateCredentials(tokens, completion: { result in
                     switch result {
                     case .success:
                         loginViewController.goForward()

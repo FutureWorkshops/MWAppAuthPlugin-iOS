@@ -115,7 +115,7 @@ extension MWAppAuthStepViewController: MWButtonTableViewCellDelegate {
     
     func buttonCell(_ cell: MWButtonTableViewCell, didTapButton button: UIButton) {
         guard let indexPath = self.tableView.indexPath(for: cell),
-              let item = self.appAuthStep.items[indexPath.row] as? AuthStepItem,
+              let item = self.appAuthStep.items[safe: indexPath.row],
               let representation = try? item.respresentation()
         else { return }
         
