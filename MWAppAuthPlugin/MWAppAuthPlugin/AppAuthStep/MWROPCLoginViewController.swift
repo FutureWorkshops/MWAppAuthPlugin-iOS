@@ -372,12 +372,12 @@ extension MWROPCLoginViewController: MWROPCTextFieldDelegate {
     
     func onReturnTapped(textField: MWROPCTextField) {
         if textField === self.usernameField {
-            self.passwordField.becomeFirstResponder()
+            _ = self.passwordField.becomeFirstResponder()
         }else if textField === self.passwordField {
             if self.isValid {
                 self.submit()
             }else{
-                textField.resignFirstResponder()
+                _ = textField.resignFirstResponder()
             }
         }
     }

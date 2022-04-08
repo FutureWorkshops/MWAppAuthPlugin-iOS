@@ -97,7 +97,7 @@ class MWAppAuthStep: MWStep, TableStep {
         case 0: return MWImageTableViewCell.defaultReuseIdentifier
         case 1: return MWSubtitleTableViewCell.defaultReuseIdentifier
         case 2:
-            guard let item = self.items[safe: indexPath.row] as? AuthStepItem else { fallthrough }
+            guard let item = self.items[safe: indexPath.row] else { fallthrough }
             switch item.type {
             case .apple: return SignInWithAppleButtonTableViewCell.defaultReuseIdentifier
             case .modalLink,
@@ -131,7 +131,7 @@ class MWAppAuthStep: MWStep, TableStep {
             return
         }
         
-        guard let item = self.items[safe: indexPath.row] as? AuthStepItem,
+        guard let item = self.items[safe: indexPath.row],
               let representation = try? item.respresentation()
         else {
             preconditionFailure()

@@ -8,7 +8,7 @@
 import UIKit
 import AuthenticationServices
 
-protocol SignInWithAppleButtonTableViewCellDelegate: class {
+protocol SignInWithAppleButtonTableViewCellDelegate: AnyObject {
     func appleCell(_ cell: SignInWithAppleButtonTableViewCell, didTapButton button: UIButton)
 }
 

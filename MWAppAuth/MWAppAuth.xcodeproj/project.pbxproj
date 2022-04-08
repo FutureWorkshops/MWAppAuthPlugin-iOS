@@ -10,15 +10,12 @@
 		23F6522F671EADEE6E7093F8 /* Pods_MWAppAuthTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847C7D362500A1D3BE9B18BF /* Pods_MWAppAuthTests.framework */; };
 		36C18373256EA08D0044A74B /* MWAppAuthPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C18372256EA08D0044A74B /* MWAppAuthPlugin.framework */; };
 		36C18374256EA08D0044A74B /* MWAppAuthPlugin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36C18372256EA08D0044A74B /* MWAppAuthPlugin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		36E1C299280084B100083D41 /* MobileWorkflowAppAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6613F27AD736D00157DD2 /* MobileWorkflowAppAuthTests.swift */; };
 		78B6614227AD736D00157DD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78B6613327AD736D00157DD2 /* Assets.xcassets */; };
 		78B6614327AD736D00157DD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78B6613427AD736D00157DD2 /* LaunchScreen.storyboard */; };
-		78B6614427AD736D00157DD2 /* fw-shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 78B6613827AD736D00157DD2 /* fw-shared.xcconfig */; };
-		78B6614527AD736D00157DD2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78B6613927AD736D00157DD2 /* Info.plist */; };
 		78B6614627AD736D00157DD2 /* app.json in Resources */ = {isa = PBXBuildFile; fileRef = 78B6613B27AD736D00157DD2 /* app.json */; };
 		78B6614727AD736D00157DD2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6613C27AD736D00157DD2 /* AppDelegate.swift */; };
 		78B6614827AD736D00157DD2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6613D27AD736D00157DD2 /* SceneDelegate.swift */; };
-		78B6614927AD736D00157DD2 /* MobileWorkflowAppAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6613F27AD736D00157DD2 /* MobileWorkflowAppAuthTests.swift */; };
-		78B6614A27AD736D00157DD2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78B6614127AD736D00157DD2 /* Info.plist */; };
 		C9F2C9042DFBD1CB244DE920 /* Pods_MWAppAuth_MWAppAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F65C712464527886D8385CD /* Pods_MWAppAuth_MWAppAuth.framework */; };
 /* End PBXBuildFile section */
 
@@ -298,10 +295,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78B6614527AD736D00157DD2 /* Info.plist in Resources */,
 				78B6614227AD736D00157DD2 /* Assets.xcassets in Resources */,
-				78B6614A27AD736D00157DD2 /* Info.plist in Resources */,
-				78B6614427AD736D00157DD2 /* fw-shared.xcconfig in Resources */,
 				78B6614627AD736D00157DD2 /* app.json in Resources */,
 				78B6614327AD736D00157DD2 /* LaunchScreen.storyboard in Resources */,
 			);
@@ -325,7 +319,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MWAppAuth-MWAppAuth/Pods-MWAppAuth-MWAppAuth-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MobileWorkflow/Core/MobileWorkflowCore.framework/MobileWorkflowCore",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MobileWorkflowCore/MobileWorkflowCore.framework/MobileWorkflowCore",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -389,7 +383,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				78B6614727AD736D00157DD2 /* AppDelegate.swift in Sources */,
-				78B6614927AD736D00157DD2 /* MobileWorkflowAppAuthTests.swift in Sources */,
 				78B6614827AD736D00157DD2 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -398,6 +391,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36E1C299280084B100083D41 /* MobileWorkflowAppAuthTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -116,8 +116,8 @@ class RefreshTokenInterceptor: AsyncTaskInterceptor {
         switch error.extractCode() {
         case URLError.Code.userAuthenticationRequired.rawValue,
              401:
-            self.credentialStore.removeCredential(.token)
-            self.credentialStore.removeCredential(.refreshToken)
+            _ = self.credentialStore.removeCredential(.token)
+            _ = self.credentialStore.removeCredential(.refreshToken)
         default: break
         }
     }
