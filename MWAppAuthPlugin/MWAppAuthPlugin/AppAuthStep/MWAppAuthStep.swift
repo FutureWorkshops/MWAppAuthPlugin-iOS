@@ -120,7 +120,7 @@ class MWAppAuthStep: MWStep, TableStep {
     func configureTableCell(_ cell: UITableViewCell, indexPath: IndexPath, tableView: UITableView) {
         if indexPath.section == 0 {
             guard let imageCell = cell as? MWImageTableViewCell else { preconditionFailure() }
-            imageCell.backgroundImage = nil
+            imageCell.configure(backgroundImage: nil, animated: false)
             return
         }
         

@@ -77,19 +77,19 @@ class MWAppAuthStepViewController: MWTableStepViewController<MWAppAuthStep>, Pre
     
     private func loadImage(for cell: UITableViewCell, at indexPath: IndexPath) {
         guard let imageURL = self.appAuthStep.imageURL else {
-            self.update(image: nil, of: cell)
+            self.update(image: nil, of: cell, animated: false)
             return
         }
         let cancellable = self.appAuthStep.services.imageLoadingService.asyncLoad(image: imageURL, session: self.appAuthStep.session) { [weak self] image in
-            self?.update(image: image, of: cell)
+            self?.update(image: image, of: cell, animated: true)
             self?.ongoingImageLoads.removeValue(forKey: indexPath)
         }
         self.ongoingImageLoads[indexPath] = cancellable
     }
     
-    private func update(image: UIImage?, of cell: UITableViewCell) {
+    private func update(image: UIImage?, of cell: UITableViewCell, animated: Bool) {
         guard let cell = cell as? MWImageTableViewCell else { return }
-        cell.backgroundImage = image
+        cell.configure(backgroundImage: image, animated: animated)
         cell.setNeedsLayout()
     }
     
