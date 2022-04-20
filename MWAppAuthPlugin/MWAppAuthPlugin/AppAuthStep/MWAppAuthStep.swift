@@ -166,6 +166,11 @@ class MWAppAuthStep: MWStep, TableStep {
 
 extension MWAppAuthStep: BuildableStep {
 
+    static var mandatoryCodingPaths: [CodingKey] {
+        /// Each type has a different set of mandatory properties, and these are covered by proprety-specific errors thrown by `representation()` method in `AuthStepItem`.
+        [["items": ["type"]]]
+    }
+    
     static func build(stepInfo: StepInfo, services: StepServices) throws -> Step {
         let data = stepInfo.data
         let localizationService = services.localizationService
