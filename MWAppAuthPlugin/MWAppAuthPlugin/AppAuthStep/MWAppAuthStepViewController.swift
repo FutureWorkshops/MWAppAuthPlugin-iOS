@@ -80,8 +80,8 @@ class MWAppAuthStepViewController: MWTableStepViewController<MWAppAuthStep>, Pre
             self.update(image: nil, of: cell, animated: false)
             return
         }
-        let cancellable = self.appAuthStep.services.imageLoadingService.fromCacheElseAsyncLoad(image: imageURL, session: self.appAuthStep.session) { [weak self] image, fromCache in
-            self?.update(image: image, of: cell, animated: !fromCache)
+        let cancellable = self.appAuthStep.services.imageLoadingService.load(image: imageURL, session: self.appAuthStep.session) { [weak self] result in
+            self?.update(image: result.image, of: cell)
             self?.ongoingImageLoads.removeValue(forKey: indexPath)
         }
         self.ongoingImageLoads[indexPath] = cancellable // will be nil if image was returned from cache

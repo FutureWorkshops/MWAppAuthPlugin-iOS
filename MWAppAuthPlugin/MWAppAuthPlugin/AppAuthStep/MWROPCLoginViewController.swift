@@ -150,8 +150,8 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         
         if image == nil, let imageUrl = imageUrl {
-            self.imageLoad = self.ropcStep.services.imageLoadingService.fromCacheElseAsyncLoad(image: imageUrl, session: self.ropcStep.session) { [weak self] image, fromCache in
-                self?.updateImage(image, showPlaceholder: false, animated: !fromCache)
+            self.imageLoad = self.ropcStep.services.imageLoadingService.load(image: imageUrl, session: self.ropcStep.session) { [weak self] result in
+                self?.updateImage(result.image, showPlaceholder: false)
                 self?.imageLoad = nil
             }
             if self.imageView.image == nil {
