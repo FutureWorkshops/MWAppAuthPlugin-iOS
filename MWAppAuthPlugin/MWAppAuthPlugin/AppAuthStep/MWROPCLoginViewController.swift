@@ -151,7 +151,7 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         
         if image == nil, let imageUrl = imageUrl {
             self.imageLoad = self.ropcStep.services.imageLoadingService.load(image: imageUrl, session: self.ropcStep.session) { [weak self] result in
-                self?.updateImage(result.image, showPlaceholder: false)
+                self?.updateImage(result.image, showPlaceholder: false, animated: result.wasLoadedRemotely)
                 self?.imageLoad = nil
             }
             if self.imageView.image == nil {
