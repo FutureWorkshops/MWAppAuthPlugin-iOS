@@ -6,199 +6,108 @@ on:
 
 jobs:
   publish:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout plugin
         uses: actions/checkout@v2
         with:
-          path: main
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7.3
+          ssh-key: ${{ secrets.FW_CI_ACCOUNT_SSH }}
       - name: Extract Tag
         id: tag
         run: echo ::set-output name=name::${GITHUB_REF#refs/*/}
+      - name: Extract origin URL
+        id: origin
+        run: |
+          ORIGIN_URL="$(git remote -v | awk '{ print $2; }' | head -1)"
+          echo ::set-output name=url::${ORIGIN_URL}
       - name: Get Podspec file
         id: podspec
         run: |
-          PODSPEC_FILE="$(ls main | grep ".*\.podspec")"
+          PODSPEC_FILE="$(ls . | grep ".*\.podspec")"
           PODSPEC_NAME="$(echo "${PODSPEC_FILE}" | cut -f 1 -d '.')"
           echo ::set-output name=file::${PODSPEC_FILE}
           echo ::set-output name=name::${PODSPEC_NAME}
-      - name: Build XCFramework
-        id: build
+      - name: Trigger Main build
+        id: main
         env:
           PLUGIN_NAME: ${{ steps.podspec.outputs.name }}
+          GIT_TAG: ${{ steps.tag.outputs.name }}
+          ORIGIN_URL: ${{ steps.origin.outputs.url }}
+          WORKFLOW_ID: preview
+          APP_ID: ${{ secrets.BITRISE_AR_PLUGIN_BUILD_ID }}
+          TRIGGER_TOKEN: ${{ secrets.BITRISE_BUILD_TRIGGER_TOKEN }}
         run: |
-          (cd main ; ./scripts/build.sh)
-          ARTEFACT_NAME="${PLUGIN_NAME}.zip"
-          FRAMEWORK_NAME="${PLUGIN_NAME}.xcframework"
-          FRAMEWORK_PATH="./main/Build/${FRAMEWORK_NAME}"
-
-          if [ -d "./main/${FRAMEWORK_NAME}" ]; then
-            rm -r "./main/${FRAMEWORK_NAME}"
-          fi
-
-          cp -r "${FRAMEWORK_PATH}" "./main/${FRAMEWORK_NAME}"
-
-          (cd main ; zip -r "${ARTEFACT_NAME}" "${FRAMEWORK_NAME}" "LICENSE")
-
-          echo ::set-output name=name::${FRAMEWORK_NAME}
-          echo ::set-output name=path::${FRAMEWORK_PATH}
-          echo ::set-output name=artefact::${ARTEFACT_NAME}
-      - name: Checkout distribution repo
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.FW_MWPODSPEC_DEPLOY_PAT }}
-          repository: FutureWorkshops/AppRailPluginRepository-iOS
-          path: distribution
-      - name: Copy Files to distribution
-        env:
-          PLUGIN: ${{ steps.podspec.outputs.name }}
-          TAG_VERSION: ${{ steps.tag.outputs.name }}
-          ARTEFACT_NAME: ${{ steps.build.outputs.artefact }}
-        run: |
-          if [ ! -d "./distribution/${PLUGIN}" ]; then
-            mkdir "./distribution/${PLUGIN}"
-          fi
-          if [ ! -d "./distribution/${PLUGIN}/${TAG_VERSION}" ]; then
-            mkdir "./distribution/${PLUGIN}/${TAG_VERSION}"
-          fi
-          if [ -f "./distribution/${PLUGIN}/${TAG_VERSION}/${ARTEFACT_NAME}" ]; then
-            rm "./distribution/${PLUGIN}/${TAG_VERSION}/${ARTEFACT_NAME}"
-          fi
-          cp "./main/${ARTEFACT_NAME}" "./distribution/${PLUGIN}/${TAG_VERSION}/${ARTEFACT_NAME}"
-      - name: Commit distribution
-        env:
-          PLUGIN: ${{ steps.podspec.outputs.name }}
-          TAG_VERSION: ${{ steps.tag.outputs.name }}
-        run: |
-          cd distribution
-          git config --local user.email "c-i@futureworkshops.com"
-          git config --local user.name "Continuous Integration"
-          git add .
-          git commit -m "${PLUGIN} [${TAG_VERSION}]"
-          cd ..
-      - name: Push distribution
-        run: |
-          cd distribution
-          git checkout main
-          while true
-          do
-            git fetch --all --prune
-            git rebase origin/main
-            set +e
-            git push origin
-            if [ $? -eq 0 ]; then
-              break;
-            fi
-            set -e
-          done
           set -e
-          cd ..
-      - name: Update source
-        id: source
-        env:
-          SOURCE_EXPRESSION: s.source[[:blank:]]*=
-          SOURCE_URL_BASE: https://raw.githubusercontent.com/FutureWorkshops/AppRailPluginRepository-iOS/main
-          PLUGIN: ${{ steps.podspec.outputs.name }}
-          TAG_VERSION: ${{ steps.tag.outputs.name }}
-          ARTEFACT_NAME: ${{ steps.build.outputs.artefact }}
-          PODSPEC: ${{ steps.podspec.outputs.file }}
-        run: |
-          SOURCE_URL="${SOURCE_URL_BASE}/${PLUGIN}/${TAG_VERSION}/${ARTEFACT_NAME}"
-
-          echo "Updating podspec to new source ${SOURCE_URL}"
-
-          NEW_SOURCE_LINE="    s.source                = { :http => '${SOURCE_URL}' }"
-          SOURCE_LINE="$(cat "./main/${PODSPEC}" | grep -e "${SOURCE_EXPRESSION}")"
-
-          echo "Current source: ${SOURCE_LINE}"
-          echo "New source: ${NEW_SOURCE_LINE}"
-
-          sed -i "" "s|${SOURCE_LINE}|${NEW_SOURCE_LINE}|g" "./main/${PODSPEC}"
-      - name: Update source_files
-        id: source_files 
-        env:
-          SOURCE_EXPRESSION: "[[:blank:]]*cs.source_files[[:blank:]]*="
-          FRAMEWORK_NAME: ${{ steps.build.outputs.name }}
-          PODSPEC: ${{ steps.podspec.outputs.file }}
-        run: |
-          NEW_SOURCE_LINE="        cs.vendored_frameworks   = '${FRAMEWORK_NAME}'\n        cs.preserve_paths        = ['${FRAMEWORK_NAME}']"
-          SOURCE_LINE="$(cat "./main/${PODSPEC}" | grep -e "${SOURCE_EXPRESSION}")"
-
-          echo "Current source: ${SOURCE_LINE}"
-          echo "New source: ${NEW_SOURCE_LINE}"
-
-          CLEAN=${SOURCE_LINE//[*]/\\*}
-          sed -i "" "s|${CLEAN}|${NEW_SOURCE_LINE}|g" "./main/${PODSPEC}"
-      - name: Remove Resources files
-        id: resource_files 
-        env:
-          SOURCE_EXPRESSION: "cs.resource[[:blank:]]*="
-          PODSPEC: ${{ steps.podspec.outputs.file }}
-        run: |
-          set +e
-          SOURCE_LINE="$(cat "./main/${PODSPEC}" | grep -e "${SOURCE_EXPRESSION}")"
-          set -e
-
-          if [[ ! -z "${SOURCE_LINE}" ]]; then
-              CLEAN=${SOURCE_LINE//[*]/\\*}
-              CLEAN=${CLEAN//[\[]/\\[}
-              CLEAN=${CLEAN//[\]]/\\]}
-              echo "Current source: ${SOURCE_LINE}"
-
-              sed -i "" "s|${CLEAN}||g" "./main/${PODSPEC}"
-          else
-              echo "Skipping because there is no resource line"
-          fi
-      - name: Checkout Podspec repo
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.FW_MWPODSPEC_DEPLOY_PAT }}
-          repository: FutureWorkshops/MWPodspecs
-          path: repo
-      - name: Create Plugin Folder
-        env:
-          PODSPEC: ${{ steps.podspec.outputs.file }}
-          PLUGIN: ${{ steps.podspec.outputs.name }}
-          TAG_VERSION: ${{ steps.tag.outputs.name }}
-        run: |
-          if [ ! -d "./repo/${PLUGIN}" ]; then
-            mkdir "./repo/${PLUGIN}"
-          fi
-          if [ -d "./repo/${PLUGIN}/${TAG_VERSION}" ]; then
-            rm -r "./repo/${PLUGIN}/${TAG_VERSION}"
-          fi
           
-          mkdir "./repo/${PLUGIN}/${TAG_VERSION}"
-          cp "./main/${PODSPEC}" "./repo/${PLUGIN}/${TAG_VERSION}/${PODSPEC}"
-      - name: Commit new version
+          COMMIT_MESSAGE="${PLUGIN_NAME} (${GIT_TAG})"
+          PAYLOAD="{
+              \"hook_info\":
+              {
+                  \"type\": \"bitrise\",
+                  \"build_trigger_token\": \"${TRIGGER_TOKEN}\"
+              },
+              \"build_params\":
+              {
+                  \"branch\": \"main\",
+                  \"workflow_id\": \"${WORKFLOW_ID}\",
+                  \"commit_message\": \"${COMMIT_MESSAGE}\",
+                  \"environments\":
+                  [
+                      {
+                          \"mapped_to\": \"PROJECT_GIT_URL\",
+                          \"value\": \"${ORIGIN_URL}\",
+                          \"is_expand\": true
+                      },
+                      {
+                          \"mapped_to\": \"PROJECT_GIT_TAG\",
+                          \"value\": \"${GIT_TAG}\",
+                          \"is_expand\": true
+                      }
+                  ]
+              },
+              \"triggered_by\": \"${COMMIT_MESSAGE}\"
+          }"
+
+          curl --fail -X POST "https://app.bitrise.io/app/${APP_ID}/build/start.json" --data "${PAYLOAD}"
+      - name: Trigger preview build
+        id: preview
         env:
-          PLUGIN: ${{ steps.podspec.outputs.name }}
-          TAG_VERSION: ${{ steps.tag.outputs.name }}
+          PLUGIN_NAME: ${{ steps.podspec.outputs.name }}
+          GIT_TAG: ${{ steps.tag.outputs.name }}
+          ORIGIN_URL: ${{ steps.origin.outputs.url }}
+          WORKFLOW_ID: preview
+          APP_ID: ${{ secrets.BITRISE_AR_PLUGIN_BUILD_ID }}
+          TRIGGER_TOKEN: ${{ secrets.BITRISE_BUILD_TRIGGER_TOKEN }}
         run: |
-          cd repo
-          git config --local user.email "c-i@futureworkshops.com"
-          git config --local user.name "Continuous Integration"
-          git add .
-          git commit -m "${PLUGIN} [${TAG_VERSION}]"
-          cd ..
-      - name: Push new version
-        run: |
-          cd repo
-          git checkout main
-          while true
-          do
-            git fetch --all --prune
-            git rebase origin/main
-            set +e
-            git push origin
-            if [ $? -eq 0 ]; then
-              break;
-            fi
-            set -e
-          done
           set -e
-          cd ..
+          
+          COMMIT_MESSAGE="${PLUGIN_NAME} (${GIT_TAG})"
+          PAYLOAD="{
+              \"hook_info\":
+              {
+                  \"type\": \"bitrise\",
+                  \"build_trigger_token\": \"${TRIGGER_TOKEN}\"
+              },
+              \"build_params\":
+              {
+                  \"branch\": \"main\",
+                  \"workflow_id\": \"${WORKFLOW_ID}\",
+                  \"commit_message\": \"${COMMIT_MESSAGE}\",
+                  \"environments\":
+                  [
+                      {
+                          \"mapped_to\": \"PROJECT_GIT_URL\",
+                          \"value\": \"${ORIGIN_URL}\",
+                          \"is_expand\": true
+                      },
+                      {
+                          \"mapped_to\": \"PROJECT_GIT_TAG\",
+                          \"value\": \"${GIT_TAG}\",
+                          \"is_expand\": true
+                      }
+                  ]
+              },
+              \"triggered_by\": \"${COMMIT_MESSAGE}\"
+          }"
+
+          curl --fail -X POST "https://app.bitrise.io/app/${APP_ID}/build/start.json" --data "${PAYLOAD}"
