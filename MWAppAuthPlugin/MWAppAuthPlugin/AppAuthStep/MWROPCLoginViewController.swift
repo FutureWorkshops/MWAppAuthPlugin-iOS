@@ -150,26 +150,26 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         
         if image == nil, let imageUrl = imageUrl {
-            self.imageLoad = self.ropcStep.services.imageLoadingService.asyncLoad(image: imageUrl, session: self.ropcStep.session) { [weak self] in
-                self?.updateImage($0, showPlaceholder: false)
+            self.imageLoad = self.ropcStep.services.imageLoadingService.load(image: imageUrl, session: self.ropcStep.session) { [weak self] result in
+                self?.updateImage(result.image, showPlaceholder: false, animated: result.wasLoadedRemotely)
                 self?.imageLoad = nil
             }
             if self.imageView.image == nil {
-                self.updateImage(nil, showPlaceholder: true)
+                self.updateImage(nil, showPlaceholder: true, animated: false)
             }
         } else {
-            self.updateImage(image, showPlaceholder: false)
+            self.updateImage(image, showPlaceholder: false, animated: false)
         }
     }
     
-    private func updateImage(_ image: UIImage?, showPlaceholder: Bool) {
+    private func updateImage(_ image: UIImage?, showPlaceholder: Bool, animated: Bool) {
         if image == nil, showPlaceholder {
             let imageConfig = UIImage.SymbolConfiguration(textStyle: .largeTitle)
             let image = UIImage(systemName: "photo", withConfiguration: imageConfig)
-            self.imageView.image = image
+            self.imageView.transition(to: image, animated: animated)
             self.imageView.contentMode = .center
         } else {
-            self.imageView.image = image
+            self.imageView.transition(to: image, animated: animated)
             self.imageView.contentMode = .scaleAspectFill
         }
         let heightMultiplier: CGFloat = self.imageView.image == nil ? 0.0 : 0.3
