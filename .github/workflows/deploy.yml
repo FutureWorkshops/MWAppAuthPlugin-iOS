@@ -33,7 +33,7 @@ jobs:
           PLUGIN_NAME: ${{ steps.podspec.outputs.name }}
           GIT_TAG: ${{ steps.tag.outputs.name }}
           ORIGIN_URL: ${{ steps.origin.outputs.url }}
-          WORKFLOW_ID: preview
+          WORKFLOW_ID: main
           APP_ID: ${{ secrets.BITRISE_AR_PLUGIN_BUILD_ID }}
           TRIGGER_TOKEN: ${{ secrets.BITRISE_BUILD_TRIGGER_TOKEN }}
         run: |
