@@ -8,7 +8,7 @@ require 'xcodeproj'
 
 def is_resource(file)
     extname= file[/\.[^\.]+$/]
-    if extname == '.bundle' || extname == '.xcassets' then
+    if extname == '.bundle' || extname == '.xcassets' || extname == '.xib' then
         return true
     else
         return false
