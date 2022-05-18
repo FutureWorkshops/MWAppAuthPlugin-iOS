@@ -19,7 +19,7 @@ fileprivate class ROPCFormTaskViewController: StepNavigationViewController {
         initialStep: Step,
         session: Session,
         theme: Theme = .current,
-        analytics: Analytics? = nil,
+        services: StepServices? = nil,
         outputDirectory: URL?,
         presentation: Presentation?
     ) {
@@ -29,7 +29,7 @@ fileprivate class ROPCFormTaskViewController: StepNavigationViewController {
             initialStep: initialStep,
             session: session,
             theme: theme,
-            analytics: analytics,
+            services: services,
             outputDirectory: outputDirectory,
             presentation: presentation
         )
@@ -65,7 +65,7 @@ extension MWAppAuthStepViewController {
             initialStep: step,
             session: childSession,
             theme: self.mwStep.theme,
-            analytics: nil,
+            services: self.appAuthStep.services,
             outputDirectory: self.outputDirectory,
             presentation: .init(
                 context: .init(
