@@ -13,9 +13,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           ssh-key: ${{ secrets.FW_CI_ACCOUNT_SSH }}
-      - name: Extract Tag
-        id: tag
-        run: echo ::set-output name=name::${GITHUB_REF#refs/*/}
       - name: Extract origin URL
         id: origin
         run: |
@@ -28,6 +25,20 @@ jobs:
           PODSPEC_NAME="$(echo "${PODSPEC_FILE}" | cut -f 1 -d '.')"
           echo ::set-output name=file::${PODSPEC_FILE}
           echo ::set-output name=name::${PODSPEC_NAME}
+      - name: Extract Tag
+        id: tag
+        env:
+          PODSPEC_FILE: ${{ steps.podspec.outputs.file }}
+          PODSPEC_NAME: ${{ steps.podspec.outputs.name }}
+        run: |
+          VERSION_EXPRESSION='[[:blank:]]*s.version[[:blank:]]*=[[:blank:]]*'
+          VERSION_LINE="$(cat "${PODSPEC_FILE}" | grep -e "${VERSION_EXPRESSION}")"
+          VERSION_LINE="$(cat "${PODSPEC_FILE}" | grep -e "${VERSION_EXPRESSION}")"
+
+          CLEAN_VERSION="$(sed "s|${VERSION_EXPRESSION}||g" <<< "${VERSION_LINE}")"
+          CLEAN_VERSION="$(sed "s|\'||g" <<< "${CLEAN_VERSION}")"
+
+          echo ::set-output name=name::${GITHUB_REF#refs/*/}
       - name: Trigger preview build
         id: preview
         env:
