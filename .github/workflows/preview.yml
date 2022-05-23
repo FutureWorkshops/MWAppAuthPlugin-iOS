@@ -75,11 +75,6 @@ jobs:
                           \"mapped_to\": \"PROJECT_GIT_TAG\",
                           \"value\": \"${GIT_TAG}\",
                           \"is_expand\": true
-                      },
-                      {
-                          \"mapped_to\": \"PROJECT_COMMIT_HASH\",
-                          \"value\": \"${GITHUB_SHA}\",
-                          \"is_expand\": true
                       }
                   ]
               },
