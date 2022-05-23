@@ -3,7 +3,7 @@ name: Deploy Preview Podspec
 on:
   push:
     branches:
-      - main
+      - pitch/ci_preview
 
 jobs:
   publish:
@@ -77,7 +77,7 @@ jobs:
                       },
                       {
                           \"mapped_to\": \"PROJECT_COMMIT_HASH\",
-                          \"value\": \"${GIT_CLONE_COMMIT_HASH}\",
+                          \"value\": \"${GITHUB_SHA}\",
                           \"is_expand\": true
                       }
                   ]
