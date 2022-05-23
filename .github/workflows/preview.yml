@@ -3,7 +3,7 @@ name: Deploy Preview Podspec
 on:
   push:
     branches:
-      - pitch/ci_preview
+      - main
 
 jobs:
   publish:
