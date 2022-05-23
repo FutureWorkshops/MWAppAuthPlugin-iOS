@@ -60,10 +60,9 @@ jobs:
               },
               \"build_params\":
               {
-                  \"branch\": \"${GITHUB_REF#refs/heads/}\",
+                  \"branch\": \"main\",
                   \"workflow_id\": \"${WORKFLOW_ID}\",
                   \"commit_message\": \"${COMMIT_MESSAGE}\",
-                  \"commit_hash\": \"${GITHUB_SHA}\",
                   \"environments\":
                   [
                       {
@@ -74,6 +73,11 @@ jobs:
                       {
                           \"mapped_to\": \"PROJECT_GIT_TAG\",
                           \"value\": \"${GIT_TAG}\",
+                          \"is_expand\": true
+                      },
+                      {
+                          \"mapped_to\": \"PROJECT_COMMIT_HASH\",
+                          \"value\": \"${GIT_CLONE_COMMIT_HASH}\",
                           \"is_expand\": true
                       }
                   ]
