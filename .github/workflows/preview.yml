@@ -38,7 +38,7 @@ jobs:
           CLEAN_VERSION="$(sed "s|${VERSION_EXPRESSION}||g" <<< "${VERSION_LINE}")"
           CLEAN_VERSION="$(sed "s|\'||g" <<< "${CLEAN_VERSION}")"
 
-          echo ::set-output name=name::${GITHUB_REF#refs/*/}
+          echo ::set-output name=name::${CLEAN_VERSION}
       - name: Trigger preview build
         id: preview
         env:
@@ -60,9 +60,10 @@ jobs:
               },
               \"build_params\":
               {
-                  \"branch\": \"main\",
+                  \"branch\": \"${GITHUB_REF#refs/heads/}\",
                   \"workflow_id\": \"${WORKFLOW_ID}\",
                   \"commit_message\": \"${COMMIT_MESSAGE}\",
+                  \"commit_hash\": \"${GITHUB_SHA}\",
                   \"environments\":
                   [
                       {
@@ -73,6 +74,11 @@ jobs:
                       {
                           \"mapped_to\": \"PROJECT_GIT_TAG\",
                           \"value\": \"${GIT_TAG}\",
+                          \"is_expand\": true
+                      },
+                      {
+                          \"mapped_to\": \"PROJECT_COMMIT_HASH\",
+                          \"value\": \"${GITHUB_SHA}\",
                           \"is_expand\": true
                       }
                   ]
