@@ -33,10 +33,12 @@ jobs:
         run: |
           VERSION_EXPRESSION='[[:blank:]]*s.version[[:blank:]]*=[[:blank:]]*'
           VERSION_LINE="$(cat "${PODSPEC_FILE}" | grep -e "${VERSION_EXPRESSION}")"
-          VERSION_LINE="$(cat "${PODSPEC_FILE}" | grep -e "${VERSION_EXPRESSION}")"
 
           CLEAN_VERSION="$(sed "s|${VERSION_EXPRESSION}||g" <<< "${VERSION_LINE}")"
-          CLEAN_VERSION="$(sed "s|\'||g" <<< "${CLEAN_VERSION}")"
+          CLEAN_VERSION="$(sed "s|'||g" <<< "${CLEAN_VERSION}")"
+          CLEAN_VERSION="$(sed "s|'||g" <<< "${CLEAN_VERSION}")"
+
+          echo "Version: ${CLEAN_VERSION}"
 
           echo ::set-output name=name::${CLEAN_VERSION}
       - name: Trigger preview build
