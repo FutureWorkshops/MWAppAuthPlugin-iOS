@@ -66,8 +66,6 @@ archive $TARGET $CONFIGURATION
 
 compose $TARGET $TARGET
 
-rm -rf $BUILD_DIR
-
 if [[ "${IS_CI}" = "false" ]]; then
   open $DESTINATION_DIR
 fi
