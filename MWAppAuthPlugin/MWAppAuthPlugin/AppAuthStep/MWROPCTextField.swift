@@ -14,6 +14,8 @@ public protocol MWROPCTextFieldDelegate: AnyObject {
 }
 
 public class MWROPCTextField: UIView {
+
+    static var ContentMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
     
     public weak var delegate : MWROPCTextFieldDelegate?
     
@@ -80,7 +82,7 @@ public class MWROPCTextField: UIView {
         stackView.alignment = .fill
         stackView.spacing = 5
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+        stackView.directionalLayoutMargins = Self.ContentMargins
         return stackView
     }()
     

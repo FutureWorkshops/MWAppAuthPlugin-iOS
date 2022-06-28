@@ -48,6 +48,8 @@ final class MWROPCLoginViewController: MWContentStepViewController {
     
     public override var titleMode: StepViewControllerTitleMode { .largeTitle }
     private var scrollView: UIScrollView!
+    private var separatorLineStackView: UIStackView!
+    private var containerStackView: UIStackView!
     private var contentStackView: UIStackView!
     private var imageView: UIImageView!
     
@@ -142,6 +144,11 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         super.traitCollectionDidChange(previousTraitCollection)
         self.configureStyle()
     }
+    
+    override func viewLayoutMarginsDidChange() {
+        super.viewLayoutMarginsDidChange()
+        self.configureMargins()
+    }
 
     private func configureImageView(imageUrl: String?, image: UIImage?) {
         self.imageView = self.imageView ?? UIImageView()
@@ -180,14 +187,19 @@ final class MWROPCLoginViewController: MWContentStepViewController {
     
     private func configureStackView() {
         
-        let separatorLineStackView = UIStackView( arrangedSubviews: [self.separatorLine])
-        separatorLineStackView.isLayoutMarginsRelativeArrangement = true
-        separatorLineStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0)
+        self.separatorLineStackView = UIStackView( arrangedSubviews: [self.separatorLine])
+        self.separatorLineStackView.isLayoutMarginsRelativeArrangement = true
+        self.separatorLineStackView.directionalLayoutMargins = .init(
+            top: 0,
+            leading: MWROPCTextField.ContentMargins.leading,
+            bottom: 0,
+            trailing: 0
+        )
         
         let fieldsStackView = UIStackView(
             arrangedSubviews: [
                 self.usernameField,
-                separatorLineStackView,
+                self.separatorLineStackView,
                 self.passwordField
             ]
         )
@@ -200,20 +212,19 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         fieldsStackView.spacing = 0
         
         // container to ensure top alignment
-        let containerStackView = UIStackView(
+        self.containerStackView = UIStackView(
             arrangedSubviews: [self.bodyLabel, fieldsStackView, self.loginButton]
         )
-        containerStackView.translatesAutoresizingMaskIntoConstraints = false
-        containerStackView.axis = .vertical
-        containerStackView.alignment = .fill
-        containerStackView.spacing = 20
-        containerStackView.isLayoutMarginsRelativeArrangement = true
-        containerStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+        self.containerStackView.translatesAutoresizingMaskIntoConstraints = false
+        self.containerStackView.axis = .vertical
+        self.containerStackView.alignment = .fill
+        self.containerStackView.spacing = 20
+        self.containerStackView.isLayoutMarginsRelativeArrangement = true
         
         let contentStackView = UIStackView(
             arrangedSubviews: [
                 self.imageView,
-                containerStackView
+                self.containerStackView
             ]
         )
         contentStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -233,6 +244,17 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         self.scrollView?.removeFromSuperview()
         self.scrollView = scrollView
         self.contentView.addSubview(scrollView)
+        
+        self.configureMargins()
+    }
+    
+    private func configureMargins() {
+        self.containerStackView.directionalLayoutMargins = .init(
+            top: 0,
+            leading: self.view.directionalLayoutMargins.leading,
+            bottom: 0,
+            trailing: self.view.directionalLayoutMargins.trailing
+        )
     }
     
     private func configureConstraints() {

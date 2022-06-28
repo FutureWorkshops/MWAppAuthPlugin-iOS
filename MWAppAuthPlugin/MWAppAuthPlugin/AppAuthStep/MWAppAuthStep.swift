@@ -142,24 +142,27 @@ class MWAppAuthStep: MWStep, TableStep {
             guard let buttonCell = cell as? MWButtonTableViewCell else {
                 preconditionFailure()
             }
-            buttonCell.configureButton(label: buttonTitle, style: .primary)
+            buttonCell.configureButton(label: buttonTitle, style: .primary, theme: self.theme)
         case .oauthRopc(let buttonTitle, _):
             guard let buttonCell = cell as? MWButtonTableViewCell else {
                 preconditionFailure()
             }
-            buttonCell.configureButton(label: buttonTitle, style: .primary)
+            buttonCell.configureButton(label: buttonTitle, style: .primary, theme: self.theme)
         case .twitter(let buttonTitle):
             guard let buttonCell = cell as? MWButtonTableViewCell else {
                 preconditionFailure()
             }
-            buttonCell.configureButton(label: buttonTitle, style: .primary)
+            buttonCell.configureButton(label: buttonTitle, style: .primary, theme: self.theme)
         case .modalLink(let buttonTitle, _):
             guard let buttonCell = cell as? MWButtonTableViewCell else {
                 preconditionFailure()
             }
-            buttonCell.configureButton(label: buttonTitle, style: .outline)
+            buttonCell.configureButton(label: buttonTitle, style: .outline, theme: self.theme)
         case .apple:
-            break // no configuration required
+            guard let buttonCell = cell as? SignInWithAppleButtonTableViewCell else {
+                preconditionFailure()
+            }
+            buttonCell.theme = self.theme
         }
     }
 }
