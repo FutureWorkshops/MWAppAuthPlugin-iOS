@@ -66,6 +66,7 @@ struct OAuthROPCConfig {
     let oAuth2TokenUrl: String
     let oAuth2ClientId: String
     let oAuth2ClientSecret: String?
+    let oAuth2Scope: String?
     let imageURL: String?
     let text: String?
 }
@@ -101,7 +102,7 @@ extension AuthStepItem {
         case .oauthRopc:
             guard let oAuth2TokenUrl = self.oAuth2TokenUrl else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2TokenUrl' parameter") }
             guard let oAuth2ClientId = self.oAuth2ClientId else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2ClientId' parameter") }
-            return .oauthRopc(buttonTitle: self.buttonTitle, config: OAuthROPCConfig(oAuth2TokenUrl: oAuth2TokenUrl, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, imageURL: self.imageURL, text: self.text))
+            return .oauthRopc(buttonTitle: self.buttonTitle, config: OAuthROPCConfig(oAuth2TokenUrl: oAuth2TokenUrl, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2Scope: self.oAuth2Scope, imageURL: self.imageURL, text: self.text))
         case .twitter:
             return .twitter(buttonTitle: self.buttonTitle)
         case .modalLink:
