@@ -179,7 +179,7 @@ struct ROPCResponse: Decodable {
     
     let accessToken: String
     let refreshToken: String?
-    let scope: String
+    let scope: String?
     let tokenType: String
     let expiresIn: Int
 }
