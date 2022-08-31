@@ -143,14 +143,7 @@ extension MWAppAuthStepViewController {
                     tokens.append(refresh)
                 }
                 
-                self?.appAuthStep.services.credentialStore.updateCredentials(tokens, completion: { result in
-                    switch result {
-                    case .success:
-                        loginViewController.goForward()
-                    case .failure(let error):
-                        loginViewController.show(error)
-                    }
-                })
+                self?.handle(tokens: tokens, loginViewController: loginViewController)
             case .failure(let error):
                 
                 if error.isAuthenticationError {
@@ -162,6 +155,16 @@ extension MWAppAuthStepViewController {
                 }
                 
             }
+        }
+    }
+    
+    func handle(tokens: [Credential], loginViewController: MWROPCLoginViewController) {
+        let result = self.appAuthStep.services.credentialStore.updateCredentials(tokens)
+        switch result {
+        case .success:
+            loginViewController.goForward()
+        case .failure(let error):
+            loginViewController.show(error)
         }
     }
     

@@ -70,18 +70,21 @@ extension MWAppAuthStepViewController {
                 self?.hideLoading()
                 switch response {
                 case .success(let credential):
-                    self?.appAuthStep.services.credentialStore.updateCredential(credential, completion: { result in
-                        switch result {
-                        case .success:
-                            self?.goForward()
-                        case .failure(let error):
-                            self?.show(error)
-                        }
-                    })
+                    self?.handle(credential: credential)
                 case .failure(let error):
                     self?.show(error)
                 }
             }
+        }
+    }
+    
+    func handle(credential: Credential) {
+        let result = self.appAuthStep.services.credentialStore.updateCredential(credential)
+        switch result {
+        case .success:
+            self.goForward()
+        case .failure(let error):
+            self.show(error)
         }
     }
     
@@ -145,14 +148,12 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
                 expirationDate: .distantFuture
             )
 
-            self.appAuthStep.services.credentialStore.updateCredential(userIdCredential) { [weak self] result in
-                switch result {
-                case .success:
-                    self?.performSignInWithApple(userId: appleIDCredential.user, name: name, identityToken: identityTokenString)
-                    
-                case .failure(let error):
-                    self?.show(error)
-                }
+            let result = self.appAuthStep.services.credentialStore.updateCredential(userIdCredential)
+            switch result {
+            case .success:
+                self.performSignInWithApple(userId: appleIDCredential.user, name: name, identityToken: identityTokenString)
+            case .failure(let error):
+                self.show(error)
             }
             
         default:
