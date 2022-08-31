@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Combine
 import MobileWorkflowCore
 
 typealias Credentials = (username: String, password: String)
@@ -99,7 +98,7 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         return button
     }()
     
-    private var imageLoad: AnyCancellable?
+    private var imageLoad: Task<(), Never>?
     
     private var imageViewHeightConstraint: NSLayoutConstraint?
     private var constraints: [NSLayoutConstraint] = [] {
@@ -157,9 +156,10 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         
         if image == nil, let imageUrl = imageUrl {
-            self.imageLoad = self.ropcStep.services.imageLoadingService.load(image: imageUrl, session: self.ropcStep.session) { [weak self] result in
-                self?.updateImage(result.image, showPlaceholder: false, animated: result.wasLoadedRemotely)
-                self?.imageLoad = nil
+            self.imageLoad = Task {
+                let result = await self.ropcStep.services.imageLoadingService.load(image: imageUrl, session: self.ropcStep.session)
+                self.updateImage(result.image, showPlaceholder: false, animated: result.wasLoadedRemotely)
+                self.imageLoad = nil
             }
             if self.imageView.image == nil {
                 self.updateImage(nil, showPlaceholder: true, animated: false)
@@ -169,6 +169,7 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         }
     }
     
+    @MainActor
     private func updateImage(_ image: UIImage?, showPlaceholder: Bool, animated: Bool) {
         if image == nil, showPlaceholder {
             let imageConfig = UIImage.SymbolConfiguration(textStyle: .largeTitle)
