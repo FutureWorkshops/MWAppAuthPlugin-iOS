@@ -11,6 +11,7 @@ bitrise.yml
 #CocoaPods
 Pods/
 Pods/CocoaPodsKeys
+Podfile.lock
 
 # Xcode
 build/*
