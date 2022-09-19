@@ -2,7 +2,7 @@ source 'https://cdn.cocoapods.org/'
 source 'https://github.com/FutureWorkshops/MWPodspecs.git'
 
 workspace 'MWAppAuth'
-platform :ios, '13.0'
+platform :ios, '15.0'
 
 inhibit_all_warnings!
 use_frameworks!
