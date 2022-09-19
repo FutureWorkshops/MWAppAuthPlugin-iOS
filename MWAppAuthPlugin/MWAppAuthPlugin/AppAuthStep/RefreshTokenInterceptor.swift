@@ -44,13 +44,12 @@ class RefreshTokenInterceptor: AsyncTaskInterceptor {
         self.credentialStore = credentialStore
     }
     
-    func intercept<T>(task: URLAsyncTask<T>, session: ContentProvider, networkService: AsyncTaskService, completion: @escaping (URLAsyncTask<T>) -> Void) {
+    func intercept<T>(task: URLAsyncTask<T>, session: ContentProvider, networkService: AsyncTaskService) async -> URLAsyncTask<T> {
         
         // if we have an unexpired auth token, do not continue with interception
         if let credential = try? self.credentialStore.retrieveCredential(.token, isRequired: false).get(),
            Date() < credential.expirationDate {
-            completion(task)
-            return
+            return task
         }
         
         // if we have a refresh token, an OAuth config, and this task isn't an equivalent refresh task, continue with interception
@@ -59,8 +58,7 @@ class RefreshTokenInterceptor: AsyncTaskInterceptor {
               let tokenURL = session.resolve(url: config.tokenUrl + "/token"),
               task.input.url != tokenURL // don't intercept already running refresh task
         else {
-            completion(task)
-            return
+            return task
         }
                 
         var params: [String: String] = [
@@ -82,33 +80,28 @@ class RefreshTokenInterceptor: AsyncTaskInterceptor {
             parser: { try OAuthRefreshTokenResponse.parse(data: $0) }
         )
         
-        networkService.perform(task: refreshTask, session: session) { [weak self] result in
+        do {
+            let response = try await networkService.perform(task: refreshTask, session: session)
+            let token = Credential(
+                type: CredentialType.token.rawValue,
+                value: response.accessToken,
+                expirationDate: Date().addingTimeInterval(TimeInterval(response.expiresIn))
+            )
+            let refresh = Credential(
+                type: CredentialType.refreshToken.rawValue,
+                value: response.refreshToken,
+                expirationDate: .distantFuture
+            )
+            let result = self.credentialStore.updateCredentials([token, refresh])
             switch result {
-            case .success(let response):
-                let token = Credential(
-                    type: CredentialType.token.rawValue,
-                    value: response.accessToken,
-                    expirationDate: Date().addingTimeInterval(TimeInterval(response.expiresIn))
-                )
-                let refresh = Credential(
-                    type: CredentialType.refreshToken.rawValue,
-                    value: response.refreshToken,
-                    expirationDate: .distantFuture
-                )
-                self?.credentialStore.updateCredentials([token, refresh], completion: { [weak self] result in
-                    switch result {
-                    case .success:
-                        let updated = task.adding(headers: ["Authorization": "Bearer \(token.value)"])
-                        completion(updated)
-                    case .failure(let error):
-                        self?.handleRefreshError(error)
-                        completion(task) // failed to update token, so complete with unmodified task
-                    }
-                })
+            case .success:
+                return task.adding(headers: ["Authorization": "Bearer \(token.value)"])
             case .failure(let error):
-                self?.handleRefreshError(error)
-                completion(task) // failed to update token, so complete with unmodified task
+                self.handleRefreshError(error)
+                return task
             }
+        } catch {
+            return task
         }
     }
     

@@ -26,7 +26,7 @@ class MWAppAuthStepViewController: MWTableStepViewController<MWAppAuthStep>, Pre
         return self.mwStep as! MWAppAuthStep
     }
     
-    private var ongoingImageLoads: [IndexPath: AnyCancellable] = [:]
+    private var ongoingImageLoads: [IndexPath: Task<(), Never>] = [:]
     
     var appleAccessTokenURL: String?
     var appleUsername: String?
@@ -80,13 +80,15 @@ class MWAppAuthStepViewController: MWTableStepViewController<MWAppAuthStep>, Pre
             self.update(image: nil, of: cell, animated: false)
             return
         }
-        let cancellable = self.appAuthStep.services.imageLoadingService.load(image: imageURL, session: self.appAuthStep.session) { [weak self] result in
-            self?.update(image: result.image, of: cell, animated: result.wasLoadedRemotely)
-            self?.ongoingImageLoads.removeValue(forKey: indexPath)
+        let cancellable = Task {
+            let result = await self.appAuthStep.services.imageLoadingService.load(image: imageURL, session: self.appAuthStep.session)
+            self.update(image: result.image, of: cell, animated: result.wasLoadedRemotely)
+            self.ongoingImageLoads.removeValue(forKey: indexPath)
         }
         self.ongoingImageLoads[indexPath] = cancellable // will be nil if image was returned from cache
     }
     
+    @MainActor
     private func update(image: UIImage?, of cell: UITableViewCell, animated: Bool) {
         guard let cell = cell as? MWImageTableViewCell else { return }
         cell.configure(backgroundImage: image, animated: animated)
