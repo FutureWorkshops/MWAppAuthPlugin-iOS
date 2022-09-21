@@ -10,17 +10,15 @@ import MobileWorkflowCore
 
 private let kOAuthSession = "oauth_session"
 
-private typealias UploadResponse = (statusCode: Int, data: Data?) // adding here until available publicly from core
-
-class OAuthSessionResponseInterceptor: AsyncTaskInterceptor {
+public class OAuthSessionResponseInterceptor: AsyncTaskInterceptor {
     
-    let credentialStore: CredentialStoreProtocol
+    private let credentialStore: CredentialStoreProtocol
     
-    init(credentialStore: CredentialStoreProtocol) {
+    public init(credentialStore: CredentialStoreProtocol) {
         self.credentialStore = credentialStore
     }
     
-    func interceptResponse<T>(_ response: T, session: ContentProvider) -> T {
+    public func interceptResponse<T>(_ response: T, session: ContentProvider) -> T {
         var data: Data?
         if let response = response as? Data {
             data = response
