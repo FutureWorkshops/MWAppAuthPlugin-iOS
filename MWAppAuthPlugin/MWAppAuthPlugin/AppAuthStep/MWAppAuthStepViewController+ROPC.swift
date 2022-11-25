@@ -110,11 +110,13 @@ extension MWAppAuthStepViewController {
         }
         
         let paramsString = params.map({ "\($0.key)=\($0.value)" }).joined(separator: "&") // url encoding
+        let allowedChars = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "=&"))
+        let escapedParamsString = paramsString.addingPercentEncoding(withAllowedCharacters: allowedChars) ?? paramsString // e.g. '+' is reserved char for postman, and if unescaped and it gets replaced with a space char
         
         let task = URLAsyncTask<ROPCResponse>.build(
             url: tokenURL,
             method: .POST,
-            body: paramsString.data(using: .utf8),
+            body: escapedParamsString.data(using: .utf8),
             session: self.appAuthStep.session,
             headers: ["Content-Type": "application/x-www-form-urlencoded"],
             parser: { try ROPCResponse.parse(data: $0) }
