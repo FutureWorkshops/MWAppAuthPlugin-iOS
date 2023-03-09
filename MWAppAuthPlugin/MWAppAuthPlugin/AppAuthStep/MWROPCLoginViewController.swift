@@ -158,28 +158,21 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         if image == nil, let imageUrl = imageUrl {
             self.imageLoad = Task {
                 let result = await self.ropcStep.services.imageLoadingService.load(image: imageUrl, session: self.ropcStep.session)
-                self.updateImage(result.image, showPlaceholder: false, animated: result.wasLoadedRemotely)
+                self.updateImage(result.image, animated: result.wasLoadedRemotely)
                 self.imageLoad = nil
             }
             if self.imageView.image == nil {
-                self.updateImage(nil, showPlaceholder: true, animated: false)
+                self.updateImage(nil, animated: false)
             }
         } else {
-            self.updateImage(image, showPlaceholder: false, animated: false)
+            self.updateImage(image, animated: false)
         }
     }
     
     @MainActor
-    private func updateImage(_ image: UIImage?, showPlaceholder: Bool, animated: Bool) {
-        if image == nil, showPlaceholder {
-            let imageConfig = UIImage.SymbolConfiguration(textStyle: .largeTitle)
-            let image = UIImage(systemName: "photo", withConfiguration: imageConfig)
-            self.imageView.transition(to: image, animated: animated)
-            self.imageView.contentMode = .center
-        } else {
-            self.imageView.transition(to: image, animated: animated)
-            self.imageView.contentMode = .scaleAspectFill
-        }
+    private func updateImage(_ image: UIImage?, animated: Bool) {
+        self.imageView.transition(to: image, animated: animated)
+        self.imageView.contentMode = .scaleAspectFill
         let heightMultiplier: CGFloat = self.imageView.image == nil ? 0.0 : 0.3
         self.imageViewHeightConstraint = self.imageView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: heightMultiplier)
         
