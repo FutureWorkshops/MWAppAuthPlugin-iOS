@@ -153,30 +153,23 @@ final class MWROPCLoginViewController: MWContentStepViewController {
         self.imageView = self.imageView ?? UIImageView()
         self.imageView.backgroundColor = self.ropcStep.theme.imagePlaceholderBackgroundColor
         self.imageView.clipsToBounds = true
-        self.imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        if image == nil, let imageUrl = imageUrl {
-            self.imageLoad = Task {
-                let result = await self.ropcStep.services.imageLoadingService.load(image: imageUrl, session: self.ropcStep.session)
-                self.updateImage(result.image, animated: result.wasLoadedRemotely)
-                self.imageLoad = nil
-            }
-            if self.imageView.image == nil {
-                self.updateImage(nil, animated: false)
-            }
-        } else {
-            self.updateImage(image, animated: false)
-        }
-    }
-    
-    @MainActor
-    private func updateImage(_ image: UIImage?, animated: Bool) {
-        self.imageView.transition(to: image, animated: animated)
         self.imageView.contentMode = .scaleAspectFill
-        let heightMultiplier: CGFloat = self.imageView.image == nil ? 0.0 : 0.3
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        self.imageView.isHidden = image == nil && (imageUrl?.isEmpty ?? true)
+        
+        let heightMultiplier: CGFloat = self.imageView.isHidden ? 0.0 : 0.3
         self.imageViewHeightConstraint = self.imageView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: heightMultiplier)
         
-        self.imageView.isHidden = self.imageView.image == nil
+        self.imageView.transition(to: image, animated: false)
+        
+        if image == nil, let imageUrl = imageUrl {
+            self.imageLoad = Task { [weak self] in
+                guard let self else { return }
+                let result = await self.ropcStep.services.imageLoadingService.load(image: imageUrl, session: self.ropcStep.session)
+                self.imageView.transition(to: result.image, animated: result.wasLoadedRemotely)
+                self.imageLoad = nil
+            }
+        }
     }
     
     private func configureStackView() {
