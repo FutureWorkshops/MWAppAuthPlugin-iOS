@@ -267,3 +267,98 @@ extension MWAppAuthStep: InterceptorConfigurator {
         }
     }
 }
+
+public struct SignInSignInItem: Codable {
+    let label: String
+    let oAuth2ClientId: String
+    let oAuth2ClientSecret: String
+    let oAuth2Scope: String
+    let appleAccessTokenURL: String?
+    let appleEmailScope: String?
+    let appleFullNameScope: String?
+    let imageURL: String?
+    let oAuth2RedirectScheme: String?
+    let oAuth2TokenUrl: String?
+    let oAuth2Url: String?
+    let text: String?
+    let type: String?
+    
+    public static func signInSignInItem(
+        label: String,
+        oAuth2ClientId: String,
+        oAuth2ClientSecret: String,
+        oAuth2Scope: String,
+        appleAccessTokenURL: String? = nil,
+        appleEmailScope: String? = nil,
+        appleFullNameScope: String? = nil,
+        imageURL: String? = nil,
+        oAuth2RedirectScheme: String? = nil,
+        oAuth2TokenUrl: String? = nil,
+        oAuth2Url: String? = nil,
+        text: String? = nil,
+        type: String? = nil
+    ) -> SignInSignInItem {
+        return SignInSignInItem(label: label, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, appleAccessTokenURL: appleAccessTokenURL, appleEmailScope: appleEmailScope, appleFullNameScope: appleFullNameScope, imageURL: imageURL, oAuth2RedirectScheme: oAuth2RedirectScheme, oAuth2TokenUrl: oAuth2TokenUrl, oAuth2Url: oAuth2Url, text: text, type: type)
+    }
+    
+    public static func signInSignInROPCItem(
+        label: String,
+        oAuth2ClientId: String,
+        oAuth2ClientSecret: String,
+        oAuth2Scope: String,
+        oAuth2TokenUrl: String,
+        imageURL: String? = nil,
+        text: String? = nil
+    ) -> SignInSignInItem {
+        return SignInSignInItem(label: label, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, appleAccessTokenURL: nil, appleEmailScope: nil, appleFullNameScope: nil, imageURL: imageURL, oAuth2RedirectScheme: nil, oAuth2TokenUrl: oAuth2TokenUrl, oAuth2Url: nil, text: text, type: AuthStepItem.ItemType.oauthRopc.rawValue)
+    }
+    
+    public static func signInSignInOauthItem(
+        label: String,
+        oAuth2ClientId: String,
+        oAuth2ClientSecret: String,
+        oAuth2Scope: String,
+        oAuth2RedirectScheme: String,
+        oAuth2TokenUrl: String,
+        oAuth2Url: String,
+        imageURL: String? = nil,
+        text: String? = nil
+    ) -> SignInSignInItem {
+        return SignInSignInItem(label: label, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, appleAccessTokenURL: nil, appleEmailScope: nil, appleFullNameScope: nil, imageURL: imageURL, oAuth2RedirectScheme: oAuth2RedirectScheme, oAuth2TokenUrl: oAuth2TokenUrl, oAuth2Url: oAuth2Url, text: text, type: AuthStepItem.ItemType.oauth.rawValue)
+    }
+}
+
+public class SignInSignInMetadata: StepMetadata {
+    enum CodingKeys: CodingKey {
+        case options
+        case imageURL
+        case text
+    }
+    
+    let options: [SignInSignInItem]
+    let imageURL: String?
+    let text: String?
+    
+    init(id: String, title: String, options: [SignInSignInItem], imageURL: String?, text: String?, next: PushLinkMetadata?, links: [LinkMetadata]) {
+        self.options = options
+        self.imageURL = imageURL
+        self.text = text
+        super.init(id: id, type: "networkOAuth2", title: title, next: next, links: links)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.options = try container.decode([SignInSignInItem].self, forKey: .options)
+        self.imageURL = try container.decodeIfPresent(String.self, forKey: .imageURL)
+        self.text = try container.decodeIfPresent(String.self, forKey: .text)
+        try super.init(from: decoder)
+    }
+    
+    public override func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.options, forKey: .options)
+        try container.encodeIfPresent(self.imageURL, forKey: .imageURL)
+        try container.encodeIfPresent(self.text, forKey: .text)
+        try super.encode(to: encoder)
+    }
+}
