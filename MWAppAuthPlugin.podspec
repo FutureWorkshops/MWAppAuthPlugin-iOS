@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name                  = 'MWAppAuthPlugin'
-    s.version               = '0.3.5'
+    s.version               = '0.3.6'
     s.summary               = 'AppAuth plugin for MobileWorkflow on iOS.'
     s.description           = <<-DESC
     OAuth plugin for MobileWorkflow on iOS, based on AppAuth-iOS: https://github.com/openid/AppAuth-iOS
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 	
     s.subspec 'Core' do |cs|
         cs.dependency            'MobileWorkflow', '~> 2.1.12'
-      cs.dependency            'AppAuth', '~> 1.4.0'
+      cs.dependency            'AppAuth', '~> 1.7.5'
       cs.source_files          = 'MWAppAuthPlugin/MWAppAuthPlugin/**/*.swift'
     end
 end
