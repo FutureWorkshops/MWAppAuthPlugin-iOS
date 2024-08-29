@@ -66,15 +66,18 @@ extension MWAppAuthStepViewController {
         let authTask = URLAsyncTask<Credential>.build(url: url, method: .POST, body: data, session: self.appAuthStep.session, parser: parser)
         
         self.appAuthStep.services.perform(task: authTask, session: self.appAuthStep.session) { [weak self] (response) in
-            DispatchQueue.main.async {
-                self?.hideLoading()
-                switch response {
-                case .success(let credential):
-                    self?.handle(credential: credential)
-                case .failure(let error):
-                    self?.show(error)
-                }
-            }
+            Task { await self?.handle(response: response) }
+        }
+    }
+    
+    @MainActor
+    private func handle(response: Result<URLAsyncTask<Credential>.Response, any Error>) async {
+        self.hideLoading()
+        switch response {
+        case .success(let credential):
+            self.handle(credential: credential)
+        case .failure(let error):
+            await self.show(error)
         }
     }
     
@@ -84,7 +87,7 @@ extension MWAppAuthStepViewController {
         case .success:
             self.goForward()
         case .failure(let error):
-            self.show(error)
+                Task { await self.show(error) }
         }
     }
     
@@ -137,7 +140,10 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
             let name = self.makeName(fullName: appleIDCredential.fullName)
             
             guard let identityToken = appleIDCredential.identityToken, let identityTokenString = String(data: identityToken, encoding: .utf8) else {
-                self.showConfirmationAlert(title: L10n.AppleLogin.errorTitle, message: L10n.AppleLogin.errorMessage) { _ in }
+                Task { let _ = await self.showAlert(
+                    title: L10n.AppleLogin.errorTitle,
+                    message: L10n.AppleLogin.errorMessage
+                ) }
                 return
             }
             
@@ -153,7 +159,7 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
             case .success:
                 self.performSignInWithApple(userId: appleIDCredential.user, name: name, identityToken: identityTokenString)
             case .failure(let error):
-                self.show(error)
+                    Task { await self.show(error) }
             }
             
         default:
@@ -166,6 +172,8 @@ extension MWAppAuthStepViewController: ASAuthorizationControllerDelegate {
             return
         }
         
-        self.showConfirmationAlert(title: L10n.AppleLogin.errorTitle, message: L10n.AppleLogin.errorMessage) { _ in }
+        Task {
+            let _ = await self.showAlert(title: L10n.AppleLogin.errorTitle, message: L10n.AppleLogin.errorMessage)
+        }
     }
 }

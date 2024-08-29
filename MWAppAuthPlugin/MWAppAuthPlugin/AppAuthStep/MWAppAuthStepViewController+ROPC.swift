@@ -106,7 +106,7 @@ extension MWAppAuthStepViewController {
             params["client_secret"] = secret
         }
         if let scope = config.oAuth2Scope {
-            params["scope"] = config.oAuth2Scope
+            params["scope"] = scope
         }
         
         let paramsString = params.map({ "\($0.key)=\($0.value)" }).joined(separator: "&") // url encoding
@@ -153,7 +153,7 @@ extension MWAppAuthStepViewController {
                     alert.addAction(UIAlertAction(title: L10n.AppAuth.unauthorisedAlertButton, style: .default, handler: nil))
                     loginViewController.present(alert, animated: true, completion: nil)
                 } else{
-                    loginViewController.show(error)
+                    Task { await loginViewController.show(error) }
                 }
                 
             }
@@ -166,7 +166,7 @@ extension MWAppAuthStepViewController {
         case .success:
             loginViewController.goForward()
         case .failure(let error):
-            loginViewController.show(error)
+                Task { await loginViewController.show(error) }
         }
     }
     

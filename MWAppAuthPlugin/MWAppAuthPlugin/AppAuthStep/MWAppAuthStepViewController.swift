@@ -8,7 +8,6 @@
 
 import UIKit
 import MobileWorkflowCore
-import AppAuth
 import Combine
 import AuthenticationServices
 
@@ -123,7 +122,7 @@ extension MWAppAuthStepViewController: MWButtonTableViewCellDelegate {
         
         switch representation {
         case .oauth(_, let config):
-            self.performOAuth(config: config)
+            Task { await self.performOAuth(config: config) }
         case .oauthRopc(let buttonTitle, let config):
             self.performOAuthROPC(title: buttonTitle, config: config)
         case .twitter(_):
