@@ -319,9 +319,9 @@ public struct SignInSignInItem: Codable {
         oAuth2ClientSecret: String,
         oAuth2Scope: String,
         oAuth2RedirectScheme: String,
-        oAuth2TokenUrl: String,
         oAuth2Url: String,
         imageURL: String? = nil,
+        oAuth2TokenUrl: String? = nil,
         text: String? = nil
     ) -> SignInSignInItem {
         return SignInSignInItem(label: label, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, appleAccessTokenURL: nil, appleEmailScope: nil, appleFullNameScope: nil, imageURL: imageURL, oAuth2RedirectScheme: oAuth2RedirectScheme, oAuth2TokenUrl: oAuth2TokenUrl, oAuth2Url: oAuth2Url, text: text, type: AuthStepItem.ItemType.oauth.rawValue)
@@ -329,8 +329,8 @@ public struct SignInSignInItem: Codable {
 }
 
 public class SignInSignInMetadata: StepMetadata {
-    enum CodingKeys: CodingKey {
-        case options
+    enum CodingKeys: String, CodingKey {
+        case options = "items"
         case imageURL
         case text
     }
@@ -360,5 +360,27 @@ public class SignInSignInMetadata: StepMetadata {
         try container.encodeIfPresent(self.imageURL, forKey: .imageURL)
         try container.encodeIfPresent(self.text, forKey: .text)
         try super.encode(to: encoder)
+    }
+}
+
+public extension StepMetadata {
+    static func appAuthStep(
+        id: String,
+        title: String,
+        options: [SignInSignInItem],
+        imageURL: String? = nil,
+        text: String? = nil,
+        next: PushLinkMetadata? = nil,
+        links: [LinkMetadata] = []
+    ) -> SignInSignInMetadata {
+        SignInSignInMetadata(
+            id: id,
+            title: title,
+            options: options,
+            imageURL: imageURL,
+            text: text,
+            next: next,
+            links: links
+        )
     }
 }

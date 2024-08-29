@@ -18,4 +18,8 @@ class SceneDelegate: MWSceneDelegate {
         
         super.scene(scene, willConnectTo: session, options: connectionOptions)
     }
+    
+    override func preferredConfigurations(urlContexts: Set<UIOpenURLContext>) -> [AppConfigurationContext] {
+        return [.config(app, serverId: 125)]
+    }
 }

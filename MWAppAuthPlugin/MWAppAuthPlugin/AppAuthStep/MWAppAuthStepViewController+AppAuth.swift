@@ -21,8 +21,18 @@ extension MWAppAuthStepViewController {
             let oAuth2Url = URL(string: oAuth2Path)
         else { return }
         
-        let authorizationEndpoint = oAuth2Url.appendingPathComponent(OAuthPaths.authorization)
-        let tokenEndpoint = oAuth2Url.appendingPathComponent(OAuthPaths.token)
+        let authorizationEndpoint: URL
+        let tokenEndpoint: URL
+        
+        if let tokenPath = config.oAuth2TokenUrl,
+           !tokenPath.isEmpty,
+           let tokenURL = URL(string: tokenPath) {
+            authorizationEndpoint = oAuth2Url
+            tokenEndpoint = tokenURL
+        } else {
+            authorizationEndpoint = oAuth2Url.appendingPathComponent(OAuthPaths.authorization)
+            tokenEndpoint = oAuth2Url.appendingPathComponent(OAuthPaths.token)
+        }
         
         self.showLoading()
         
@@ -40,7 +50,7 @@ extension MWAppAuthStepViewController {
             
             let response = try await self.authenticate(
                 oAuth2Url: fullValidURL,
-                callbackURLScheme: config.oAuth2RedirectScheme + "://callback"
+                callbackURLScheme: config.oAuth2RedirectScheme
             )
             
             guard let code = URLComponents(url: response, resolvingAgainstBaseURL: false)?
@@ -134,6 +144,7 @@ extension MWAppAuthStepViewController {
                     return continuation.resume(throwing: URLError(.badServerResponse))
                 }
             }
+            session.presentationContextProvider = self
             session.start()
         }
     }
@@ -214,6 +225,17 @@ extension MWAppAuthStepViewController {
 }
 
 // MARK: - Authorization Controller Presentation
+
+extension MWAppAuthStepViewController: ASWebAuthenticationPresentationContextProviding {
+
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        guard let windows = self.view.window else {
+            preconditionFailure()
+        }
+        
+        return windows
+    }
+}
 
 extension MWAppAuthStepViewController: ASAuthorizationControllerPresentationContextProviding {
     

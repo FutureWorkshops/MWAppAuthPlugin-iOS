@@ -56,6 +56,7 @@ class AuthStepItem: Codable {
 
 struct OAuth2Config {
     let oAuth2Url: String
+    let oAuth2TokenUrl: String?
     let oAuth2ClientId: String
     let oAuth2ClientSecret: String?
     let oAuth2Scope: String
@@ -98,7 +99,7 @@ extension AuthStepItem {
             guard let oAuth2ClientId = self.oAuth2ClientId else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2ClientId' parameter") }
             guard let oAuth2Scope = self.oAuth2Scope else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2Scope' parameter") }
             guard let oAuth2RedirectScheme = self.oAuth2RedirectScheme else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2RedirectScheme' parameter") }
-            return .oauth(buttonTitle: self.buttonTitle, config: OAuth2Config(oAuth2Url: oAuth2Url, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, oAuth2RedirectScheme: oAuth2RedirectScheme))
+            return .oauth(buttonTitle: self.buttonTitle, config: OAuth2Config(oAuth2Url: oAuth2Url, oAuth2TokenUrl: oAuth2TokenUrl, oAuth2ClientId: oAuth2ClientId, oAuth2ClientSecret: self.oAuth2ClientSecret, oAuth2Scope: oAuth2Scope, oAuth2RedirectScheme: oAuth2RedirectScheme))
         case .oauthRopc:
             guard let oAuth2TokenUrl = self.oAuth2TokenUrl else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2TokenUrl' parameter") }
             guard let oAuth2ClientId = self.oAuth2ClientId else { throw ParseError.invalidStepData(cause: "Missing required 'oAuth2ClientId' parameter") }
